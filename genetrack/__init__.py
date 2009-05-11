@@ -10,7 +10,7 @@ from time import strftime, gmtime
 
 tstamp = strftime("%Y-%j", gmtime() )
 
-__version__ = '2.0.0-betabuild-%s' % tstamp
+__version__ = '2.0.0b-%s' % tstamp
 
 print __version__
 
