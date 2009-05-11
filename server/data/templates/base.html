@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>{% block title %}Title{% endblock %}</title>
+<link rel="stylesheet" href="/static/genetrack.css" type="text/css" media="screen">
+<link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+{% block javascript %}
+    <script type="text/javascript" src="/static/js/jquery.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/base.js"></script>
+{% endblock %}
+</head>
+
+<body>
+    
+    <div id="pageheader">{% block pageheader %}PageHeader{% endblock %}</div>
+    
+    <div id="pagetitle">{% block pagetitle %}PageTitle{% endblock %}</div>
+    
+    {% block messages %}
+        {% if messages %}
+            <div class="messages" align="center">
+                {% for message in messages %}
+                    <div class="messageline" >&bull;&nbsp;{{ message|safe }} </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endblock %}
+    
+    <div id="pagebody">{% block body %}Body{% endblock %}</div>
+    
+    
+    <!-- footer -->
+    <div id="pagefooter">
+        {% block pagefooter %}
+            <a href="/">Home Page<a/>
+            &nbsp;&nbsp;&bull;&nbsp;&nbsp;
+            <a href="/about/">About GeneTrack<a/>
+        {% endblock %}
+    </div>      
+    
+</body>
+</html>

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Server error (404){% endblock %}
+
+{% block pageheader %}Server error (404){% endblock %}
+
+{% block pagetitle %}Page not found: {{request_path}}{% endblock %}
+
+{% block body %}
+
+<table class="datatable"  align="center" cellpadding="10" cellspacing="10" width="80%">
+    <tr align="center">
+        <td class="error">
+            We're sorry, but the requested page could not be found.
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

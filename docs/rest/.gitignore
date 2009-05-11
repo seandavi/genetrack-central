@@ -1,0 +1,12 @@
+formatdb.log
+hbb1_mouse.fa.*
+sp_hbb1.*
+mysql.cnf
+temp/*
+sandbox/*
+.figleaf
+coverage/*
+mega
+_build
+*.pureseq
+*.seqlen

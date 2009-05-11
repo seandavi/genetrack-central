@@ -1,0 +1,17 @@
+{% extends "!layout.html" %}
+
+{% block rootrellink %}
+        <li><a href="{{ pathto('index') }}">GeneTrack home</a> |&nbsp;</li>
+        <li><a href="{{ pathto('contents') }}">Table of contents</a> &raquo;</li>
+{% endblock %}
+
+{% block relbar1 %}
+<div style="background-color: white; text-align: left; padding: 10px 10px 10px 10px">
+<img src="{{ pathto("_static/genetrack-logo.png", 1) }}" alt="Yeti logo" />
+</div>
+{{ super() }}
+{% endblock %}
+
+{# put the sidebar before the body #}
+{% block sidebar1 %}{{ sidebar() }}{% endblock %}
+{% block sidebar2 %}{% endblock %}

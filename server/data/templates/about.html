@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}About GeneTrack{% endblock %}
+
+{% block pageheader %}<a href="/">Home</a> &gt; About{% endblock %}
+
+{% block pagetitle %}About GeneTrack{% endblock %}
+
+{% block body %}
+
+<table class="datatable"  align="center" cellpadding="10" cellspacing="10" width="80%">
+    <tr>
+        <td>
+            
+            <p><b>GeneTrack</b> is a <a href="http://www.python.org/">Python</a> 
+            based genomic data analysis and
+            visualization framework. It aims to provide generic building blocks
+            for creating sophisticated web based genomic data visualization sites.
+            </p>
+
+            <p>It runs on multiple platforms such as: Windows, Unix, MacOSX and has modest  computational requirements. It provides an embedded database and webserver to allow for a simple and straightforward deployment for small traffic websites. It may also be run behind high performance servers such as Apache. 
+            </p>
+
+            <p>The site that you are visiting is used to present visualizations, for more details on the system's capabilities and installation
+            see the <a href="http://genetrack.bx.psu.edu">main GeneTrack</a> site.
+            </p>
+
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

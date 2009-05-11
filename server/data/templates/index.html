@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}GeneTrack{% endblock %}
+
+{% block pageheader %}Genomic Data Analysis and Visualization{% endblock %}
+
+{% block pagetitle %}Welcome to GeneTrack{% endblock %}
+
+{% block body %}
+
+<table class="datatable"  align="center" cellpadding="10" cellspacing="10" width="80%">
+    <tr>
+        <td>
+            <a href="/mapping/">Visualizing sequence reads<a>
+        </td>
+         <td>
+            <img src="/static/icons/visual1.png"> 
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <a href="/coverage/">Visualizing genomic coverage<a>
+        </td>
+         <td>
+            <img src="/static/icons/coverage1.png"> 
+        </td>
+    </tr>
+
+</table>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Server error (500){% endblock %}
+
+{% block pageheader %}Server error (500){% endblock %}
+
+{% block pagetitle %}Internal server error{% endblock %}
+
+{% block body %}
+
+<table class="datatable"  align="center" cellpadding="10" cellspacing="10" width="80%">
+    <tr align="center">
+        <td class="error">
+            {{debug}}
+        </td>
+    </tr>
+</table>
+
+{% endblock %}

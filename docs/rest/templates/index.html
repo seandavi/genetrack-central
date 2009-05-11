@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% set title = 'GeneTrack Overview' %}
+{% block body %}
+  <h1>Welcome</h1>
+
+  <p>
+    <b>GeneTrack</b> is a python based bioinformatics framework designed to 
+    visualize genomic data. Its main focus is accessiblity
+    while providing sophisticated features for advanced users. We aim 
+    to build a simple and flexible software tool that can be deployed 
+    with minimal effort withouth sacrificing efficiency and performance.
+  </p>
+
+  
+  <h2>Documentation</h2>
+  <table class="contentstable" align="center" style="margin-left: 30px"><tr>
+    
+    <td width="50%">
+      <p class="biglink"><a class="biglink" href="{{ pathto("contents") }}">Full Contents</a><br/>
+         <span class="linkdescr">a complete list of all documents</span></p>
+      
+      <p class="biglink"><a class="biglink" href="{{ pathto("search") }}">Search page</a><br/>
+         <span class="linkdescr">search the documentation</span></p>
+
+    </td>
+    
+    <td width="50%">
+      <p class="biglink"><a class="biglink" href="{{ pathto("guides/index") }}">Tutorials and Guides</a><br/>
+         <span class="linkdescr">recipes, guides and tutorials</span></p>
+      <p class="biglink"><a class="biglink" href="{{ pathto("epydoc/index") }}">Genetrack Python API</a><br/>
+         <span class="linkdescr">genetrack module documentation</span></p>
+      
+    </td>
+    
+  </tr>
+  </table>
+
+  <h2>Get GeneTrack</h2>
+ 
+  <p>To accomodate adding new data analysis visualizations
+  <b>GeneTrack</b> is published in frequent (backward compatible) releases. 
+  The file naming follows is in the form 
+  <tt>genetrack-2.0.0-2009-035.zip</tt> 
+  The first version numbers indicate the release version of GeneTrack (in this case <tt>2.0.0</tt>). 
+  The second version numbers indicate the year and day of the release 
+  <tt>2009-035</tt> means the 35th day of 2009.</p>
+
+  <p>
+    <ul>
+      <li>
+        source code and Windows binaries can be found in <a href="downloads/">downloads</a>
+      </li>
+      <li>git repository 
+          <a href="http://github.com/ialbert/genetrack/tree/master">git://github.com/ialbert/genetrack.git</a>
+      </li>
+    </ul>
+  <p>
+  
+{% endblock %}
