@@ -26,9 +26,6 @@ ADMINS = (
     ('Istvan Albert', 'istvan.albert@gmail.com'),
 )
 
-print 'here'
-1/0
-
 MANAGERS = ADMINS
 
 DATABASE_ENGINE = ''           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.

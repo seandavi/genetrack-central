@@ -1,0 +1,7 @@
+*.pyc
+*~
+.pygr_data
+sync
+*.gz
+*lnk
+html
