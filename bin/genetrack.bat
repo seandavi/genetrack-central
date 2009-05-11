@@ -55,6 +55,8 @@ if "%1"=="test" goto :test
 if "%1"=="editor" goto :editor
 if "%1"=="sphinx" goto :sphinx
 if "%1"=="apidoc" goto :sphinx
+if "%1"=="jobrunner" goto :jobrunner
+
 
 echo.
 echo USAGE:
