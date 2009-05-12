@@ -55,6 +55,9 @@ def run(targets, options):
         except ImportError:
             testutil.error( "unable to import module '%s'" % name )
 
+    # enable the logger
+    logger.disable(None)
+
     # summarize the run
     testutil.info('=' * 59)
     testutil.info('''%s tests passed, %s tests failed, %s tests skipped; %d total''' % \
@@ -81,9 +84,13 @@ if __name__ == '__main__':
         targets = [ name for name in all_tests() if name not in targets ]
 
     # disables debug messages at < 2 verbosity
-    if options.verbosity != 2:
+    if options.verbosity == 0:
+        logger.disable('INFO')
+    elif options.verbosity == 1:
         logger.disable('DEBUG')
-    
+    else :
+        logger.disable(None)
+
     # cleans full entire test directory
     if options.reset:
         pass

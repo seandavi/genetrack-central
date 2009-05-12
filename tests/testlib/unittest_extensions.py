@@ -47,9 +47,12 @@ class TestRunner(unittest.TextTestRunner):
         result.printErrors()
         #self.stream.writeln(result.separator2)
         run = result.testsRun
-        #self.stream.writeln("Ran %d test%s in %.3fs" %
-        #                   (run, run != 1 and "s" or "", timeTaken))
-        #self.stream.writeln()
+
+        if self.verbosity>0:
+            self.stream.writeln("Ran %d test%s in %.3fs" %
+                               (run, run != 1 and "s" or "", timeTaken))
+            self.stream.writeln()
+
         if not result.wasSuccessful():
             self.stream.write("FAILED (")
             failed, errored = map(len, (result.failures, result.errors))
@@ -60,7 +63,7 @@ class TestRunner(unittest.TextTestRunner):
                 self.stream.write("errors=%d" % errored)
             self.stream.writeln(")")
         else:
-            #self.stream.writeln("NOK")
+            #self.stream.writeln("OK")
             pass
         return result
 
