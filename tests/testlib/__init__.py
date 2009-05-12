@@ -18,6 +18,10 @@ class SkipMessages(object):
     def __iter__(self):
         return iter(self.messages)
 
+
+BASE_URL = 'http://127.0.0.1:8080'
+TWILL_QUIET = True
+
 SKIP_MESSAGES = SkipMessages()
 
 from pathfix import test_dir as TEST_DIR

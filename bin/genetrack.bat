@@ -33,22 +33,21 @@ rem
 set DJANGO_SETTINGS_MODULE=server.settings
 echo DJANGO_SETTINGS_MODULE=%DJANGO_SETTINGS_MODULE%
 
-rem 
-rem A few extra python paths  
-rem
-set PYTHON_PATH_1=%DEFAULT_HOME%\library;%DEFAULT_HOME%\library\library.zip
 
-rem
-rem Adding the development version of bx python on our machine
-rem not needed if you have it installed otherwise
-rem 
-set PYTHON_PATH_2=%DEFAULT_HOME%;%DEFAULT_HOME%\..\bx-python-psu\lib
+rem Adding genetrack and the server apps to the python path
+set PYTHON_PATH_1=%DEFAULT_HOME%;%GENETRACK_SERVER_HOME%
 
+rem Adding libraries to the python path
+set PYTHON_PATH_2=%DEFAULT_HOME%\library;%DEFAULT_HOME%\library\library.zip
+
+rem Adding the development version of bx python 
+rem not needed if you have it already installed
+set PYTHON_PATH_3=%DEFAULT_HOME%\..\bx-python-psu\lib
 
 rem
 rem Appends paths to the python import
 rem
-set PYTHONPATH=%PYTHONPATH%;%PYTHON_PATH_1%;%PYTHON_PATH_2%
+set PYTHONPATH=%PYTHONPATH%;%PYTHON_PATH_1%;%PYTHON_PATH_2%;%PYTHON_PATH_3%
 
 if "%1"=="runserver" goto :runserver
 if "%1"=="test" goto :test
