@@ -1,7 +1,7 @@
 body { 	
 	margin:0px;
 	padding:0px; 
-	border-top: 5px solid #5C3D39;
+	border-top: 9px solid #F4C03E;
 	font: 0.9em Verdana, Arial, Helvetica, sans-serif;
 	line-height: 1.3em;  
 }
@@ -16,9 +16,8 @@ img {
 }
 
 .datatable{
-	border: 1px solid #C4A87F;
-	background-color: #F0EABF;
-    margin-bottom:15px;
+	border: 1px solid #F4C03E;
+	background-color: #FDF3D8;
 }
 
 .smaller{
@@ -114,15 +113,13 @@ img {
 	font: Verdana, Arial, Helvetica, sans-serif;
 	padding:3px;
 	text-align: center;
-	background-color: #C4A87F;
-    border-bottom: 1px solid #5C3D39;
+	background-color: #FAE3A8;
 }
 
 #pagefooter {
 	font-size: smaller;
-	border-bottom: 1px solid #5C3D39;
-    
-	background-color: #C4A87F;
+	border-bottom: 1px solid #F4C03E;
+	background-color: #FAE3A8;
 	padding: 1px;
 	margin-top: 5px;
 	text-align: center;
