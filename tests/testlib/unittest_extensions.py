@@ -4,7 +4,7 @@ Provide support for test skipping.
 Based on work by Titus Brown in pygr
 """
 
-import unittest
+import unittest, time
 import pathfix
 from genetrack import logger
 
@@ -36,6 +36,33 @@ class TestRunner(unittest.TextTestRunner):
     def _makeResult(self):
         return TestResult(self.stream, self.descriptions,
                               self.verbosity)
+
+    def run(self, test):
+        "Run the given test case or test suite."
+        result = self._makeResult()
+        startTime = time.time()
+        test(result)
+        stopTime = time.time()
+        timeTaken = stopTime - startTime
+        result.printErrors()
+        #self.stream.writeln(result.separator2)
+        run = result.testsRun
+        #self.stream.writeln("Ran %d test%s in %.3fs" %
+        #                   (run, run != 1 and "s" or "", timeTaken))
+        #self.stream.writeln()
+        if not result.wasSuccessful():
+            self.stream.write("FAILED (")
+            failed, errored = map(len, (result.failures, result.errors))
+            if failed:
+                self.stream.write("failures=%d" % failed)
+            if errored:
+                if failed: self.stream.write(", ")
+                self.stream.write("errors=%d" % errored)
+            self.stream.writeln(")")
+        else:
+            #self.stream.writeln("NOK")
+            pass
+        return result
 
 class TestProgram(unittest.TestProgram):
     

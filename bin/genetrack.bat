@@ -80,6 +80,7 @@ goto :eof
 echo.
 echo *** running the tests
 echo.
+%PYTHON_EXE% %DEFAULT_HOME%\tests\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 
 :editor

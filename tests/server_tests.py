@@ -39,6 +39,10 @@ class ServerTest( unittest.TestCase ):
         tc.code(200)
         tc.find("GeneTrack") 
 
+    def test_fail(self):
+        "Server access"
+        #1/0
+
         
 def get_suite():
     "Returns the testsuite"

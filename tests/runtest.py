@@ -29,7 +29,7 @@ def run(targets, options):
     # run the tests by importing the module and getting its test suite
     for name in targets:
         try:
-            testutil.info('running tests for module %s' % name)
+
             l = unittest.TestLoader()
             suite = l.loadTestsFromName(name)
 
