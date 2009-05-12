@@ -4,14 +4,10 @@ Module that contains configuration
 import sys, os
 import logger
 
-def error(msg):
-    "Fatal error handler"
-    logger.error( msg )
-    sys.exit()
-
-# version check
+# Python version check
 if sys.version_info < (2, 5):
-    error( 'genetrack requires python 2.5 or higher' )
+    logger.error( 'genetrack requires python 2.5 or higher' )
+    sys.exit()
 
 def path_join(*args):
     "Builds absolute path"
@@ -19,44 +15,45 @@ def path_join(*args):
 
 # set up paths relative to the location of this file
 curr_dir = os.path.dirname( __file__ )
-base_dir = path_join( curr_dir, '..' )
-test_dir = path_join( base_dir, 'tests' )
-temp_dir = path_join( test_dir, 'tempdir' )
-test_data_dir = path_join( test_dir, 'testdata' )
-coverage_dir = path_join( test_dir, 'coverage' )
+BASE_DIR = path_join( curr_dir, '..' )
+TEST_DIR = path_join( BASE_DIR, 'tests' )
+TEST_DATA_DIR = path_join( TEST_DIR, 'testdata' )
+TEMP_DATA_DIR = path_join( TEST_DIR, 'tempdir' )
+COVERAGE_DIR = path_join( TEST_DIR, 'coverage' )
 
 def module_check():
     "Verifies that required modules are present"
-    try:
-        import numpy, tables, django, twill
-    except ImportError, exc:
-        error('software requirements not met: %s' % exc)
 
+    # required modules
+    try:
+        import numpy, tables, django
+    except ImportError, exc:
+        logger.error('software requirements not met: %s' % exc)
+        logger.error('see http://genetrack.bx.psu.edu for installation instructions')
+        sys.exit()
+
+    # optional modules
     try:
         import pychartdir
     except ImportError, exc:
         logger.error('software requirements not met: %s' % exc)
         logger.error('charting module missing, some visualizations may not work')
+        logger.error('see http://genetrack.bx.psu.edu for installation instructions')
 
 #perform the module check    
 module_check()
 
-# make the temporary data directory
-if not os.path.isdir( temp_dir ):
-    os.mkdir( temp_dir )
-
-# path creation utilites
-def appdata(*args):
-    "Path to temporary test"
-    return path_join( *args )
+# create the temporary data directory if not present
+if not os.path.isdir( TEMP_DATA_DIR ):
+    os.mkdir( TEMP_DATA_DIR )
 
 def testdata(*args):
-    "Path to test data"
-    return appdata(test_data_dir, *args)
+    "Generates paths to test data"
+    return path_join(TEST_DATA_DIR, *args)
 
 def tempdata(*args):
-    "Path to temporary test data"
-    return appdata(temp_dir, *args)
+    "Generates paths to temporary data"
+    return path_join(TEMP_DATA_DIR, *args)
 
 def test(verbose=0):
     "Performs module level testing"

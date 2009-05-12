@@ -36,13 +36,13 @@ echo DJANGO_SETTINGS_MODULE=%DJANGO_SETTINGS_MODULE%
 rem 
 rem A few extra python paths  
 rem
-set PTYHON_PATH_1=%DEFAULT_HOME%\library;%DEFAULT_HOME%\library\library.zip
+set PYTHON_PATH_1=%DEFAULT_HOME%\library;%DEFAULT_HOME%\library\library.zip
 
 rem
 rem Adding the development version of bx python on our machine
 rem not needed if you have it installed otherwise
 rem 
-set PTYHON_PATH_2=%DEFAULT_HOME%;%DEFAULT_HOME%\..\bx-python-psu\lib
+set PYTHON_PATH_2=%DEFAULT_HOME%;%DEFAULT_HOME%\..\bx-python-psu\lib
 
 
 rem
