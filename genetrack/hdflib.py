@@ -23,18 +23,27 @@ class TripletSchema( IsDescription ):
     rev = FloatCol( pos=3 )  # value on the reverse strand
     val = FloatCol( pos=4 )  # weighted value on the combined strands
 
-def triplet_parser( row ):
+def triplet_list_parser( row ):
     """
-    Default parser. Takes as input a dictionary keyed by the data header,
+    Default parser. Takes as a list and returns a tuple that fits the schema.
+
+    Note: a parser *MUST* return items in the same order as they are listed pos 
+    argument of each field of the schema
+    """
+    return int(row[0]), float(row[1]), float(row[2]), float(row[3])
+
+def triplet_dict_parser( row ):
+    """
+    Takes as input a dictionary keyed by the data header,
     returns a tuple that fits the schema.
 
-    A parser *MUST* return items in the same order as they are listed pos 
+    Note: a parser *MUST* return items in the same order as they are listed pos 
     argument of each field of the schema
     """
     idx = int  ( row['index']   )
     fwd = float( row['forward'] )
     rev = float( row['reverse'] )
-    val = fwd + rev
+    val = float( row['value'] )
     return idx, fwd, rev, val
 
 class LinearData(object):
@@ -210,6 +219,8 @@ def build_index( data_path, index_path, parser=None, schema=None):
     """
     Indexer for the data
     """
+
+    # fetch the default parsers if these are missing
     parser = parser or triplet_parser
     schema = schema or TripletSchema
 
