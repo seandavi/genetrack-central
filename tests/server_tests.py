@@ -27,21 +27,26 @@ class ServerTest( unittest.TestCase ):
     
     def setUp(self):
         twill_setup()
+        twill_quiet()
 
     def tearDown(self):
         twill_teardown()
 
-
     def test_all(self):
-        "Server access"
-        twill_quiet()
+        "Home page"
+        
         tc.go( testlib.BASE_URL )
         tc.code(200)
         tc.find("GeneTrack") 
 
-    def test_fail(self):
-        "Server access"
-        #1/0
+    def test_about(self):
+        "About page"
+        tc.go( testlib.BASE_URL )
+        tc.go( 'about' )
+        tc.code(200)
+        tc.find("About") 
+
+
 
         
 def get_suite():

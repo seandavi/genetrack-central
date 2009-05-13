@@ -17,7 +17,7 @@ def path_join(*args):
 
 def stop( text ):
     "Unrecoverable error"
-    logger.error ( text )
+    error ( text )
     sys.exit()
 
 class Timer:
@@ -32,10 +32,10 @@ class Timer:
         total = (time.time() - self.start )
 
         if reps == 1:
-            logger.info( "%s takes %.3f seconds" % (msg, total) )
+            info( "%s takes %.3f seconds" % (msg, total) )
         else:
             value = total/reps
-            logger.info( "%s performs at %.3f per second" % (msg, value) )
+            info( "%s performs at %.3f per second" % (msg, value) )
 
         self.reset()
 
@@ -77,17 +77,20 @@ def generate_coverage( func, path, *args, **kwds):
 
     figleaf.start() 
     # execute the function itself
-    func( *args, **kwds)
+    return_vals = func( *args, **kwds)
     figleaf.stop()
     
-    logger.info( 'generating coverage' )
+    info( 'generating coverage' )
     coverage = figleaf.get_data().gather_files()
+    
     annotate_html.prepare_reportdir( path )
     
     # skip python modules and the test modules
     regpatt  = lambda patt: re.compile( patt, re.IGNORECASE )
-    patterns = map( regpatt, [ 'python', 'tests', 'path*' ] )
+    patterns = map( regpatt, [ 'python', 'tests', 'django', 'path*' ] )
     annotate_html.report_as_html( coverage, path, exclude_patterns=patterns, files_list='')
+    
+    return return_vals
 
 if __name__ == '__main__':
     pass

@@ -8,7 +8,7 @@ Collects all files ending in _test.py and executes them.
 import os, sys, re, unittest, shutil, re, shutil
 from testlib import testutil, testoptions
 from testlib.unittest_extensions import TestRunner
-from genetrack import logger
+from genetrack import logger, conf
 
 def all_tests():
     "Returns all file names that end in _test.py"
@@ -102,7 +102,8 @@ if __name__ == '__main__':
     
     # run all the tests
     if options.coverage:
-        good, bad, skip = testutil.generate_coverage(run, 'coverage',
+        coverdir = conf.path_join(conf.TEST_DIR, 'coverage')
+        good, bad, skip = testutil.generate_coverage(run, coverdir,
                                                      targets=targets,
                                                      options=options)
     else:

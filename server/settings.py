@@ -7,12 +7,6 @@ def path_join(*args):
 
 # establish current location
 curr_dir = os.path.dirname( __file__ )
-base_dir = path_join( curr_dir, '..' )
-
-# insert the paths that did not exist
-for path in [ base_dir ]:
-    if path not in sys.path:
-        sys.path.insert(0, path )
 
 # set up the data specific directories
 TEMPLATE_PATH = path_join( curr_dir, 'data', 'templates')

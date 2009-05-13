@@ -24,6 +24,8 @@ class FileDict(object):
     >>> blob = pickle.dumps(fdict)
     >>> db = pickle.loads(blob)
    
+    >>> db['1']
+    10
     >>> list(db.keys())
     ['0', '1', '2', '3', '4']
     >>> list(db.values())
@@ -89,7 +91,7 @@ class FileDict(object):
         self.db.close()
 
     def __del__(self):
-        self.db.close()
+        self.close()
 
 def test():
     fname = conf.testdata('filedict-testdata.bin')
