@@ -61,6 +61,9 @@ def disable( level=0 ):
 log = get_logger()
 debug, info, warn, error = log.debug, log.info, log.warn, log.error
 
+# disable DEBUG level logging by default
+disable('DEBUG')
+
 def test( verbose=0 ):
     "Performs module level testing"
     import doctest

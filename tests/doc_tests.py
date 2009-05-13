@@ -3,7 +3,7 @@ This script runs the doctests
 """
 import testlib
 import os, unittest, doctest
-from genetrack import data
+from genetrack import data, hdflib
 
 def codetest():
     "Test the code here before adding to doctest"
@@ -17,7 +17,7 @@ def get_suite():
     ]
 
     module_names = [
-        data,
+        data, hdflib
     ]
 
     # needs relative paths for some reason

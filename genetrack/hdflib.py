@@ -23,29 +23,6 @@ class TripletSchema( IsDescription ):
     rev = FloatCol( pos=3 )  # value on the reverse strand
     val = FloatCol( pos=4 )  # weighted value on the combined strands
 
-def triplet_list_parser( row ):
-    """
-    Default parser. Takes as a list and returns a tuple that fits the schema.
-
-    Note: a parser *MUST* return items in the same order as they are listed pos 
-    argument of each field of the schema
-    """
-    return int(row[0]), float(row[1]), float(row[2]), float(row[3])
-
-def triplet_dict_parser( row ):
-    """
-    Takes as input a dictionary keyed by the data header,
-    returns a tuple that fits the schema.
-
-    Note: a parser *MUST* return items in the same order as they are listed pos 
-    argument of each field of the schema
-    """
-    idx = int  ( row['index']   )
-    fwd = float( row['forward'] )
-    rev = float( row['reverse'] )
-    val = float( row['value'] )
-    return idx, fwd, rev, val
-
 class LinearData(object):
     """
     A linear data consists of a coordinate and one or more values associated with the 
@@ -71,44 +48,36 @@ class LinearData(object):
     >>> from genetrack import conf
     >>>
     >>> fname = conf.testdata('test-hdflib-input.txt')
-    >>> index = LinearData(fname=fname, workdir=conf.TEMP_DATA_DIR, update=True)   
-    
-    """
-
-    """
-   
-    >>>
+    >>> index = LinearData(fname=fname, workdir=conf.TEMP_DATA_DIR, update=False)   
     >>> index.labels
-    ['chr01', 'chr02', 'chr03']
-    
+    ['chr1', 'chr2', 'chr3']
+
     The `workdir` parameter is optional and if present must point 
     to the directory into which the resulting index file will be placed. 
-    The contents of the linear data object
-    may be accessed as a list but note that only the accessed slice 
-    is loaded into memory (lazy access).
+    The contents of the linear data object may be accessed as a list 
+    but note that only the accessed slice is loaded into memory (lazy access).
 
-    >>> table = index.table('chr01')
-    >>>
-    >>> list (table.cols.idx[:10] )
+    >>> table = index.table('chr1')
+    >>> list (table.cols.idx[:10])
     [146, 254, 319, 328, 330, 339, 341, 342, 345, 362]
     >>>
-    >>> list( table.cols.fwd[:10] )
+    >>> list( table.cols.fwd[:10])
     [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 1.0]
     >>>
-    >>> list( table.cols.rev[:10] )
+    >>> list( table.cols.rev[:10])
     [1.0, 3.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 0.0]
     
     We may also find the indices for real coordinates. For example the genomic
-    coordinates 400 and 600 map to internap indices 20 to 31 (it is a binary search 
-    that returns the left index)
+    coordinates 400 and 600 map to internal data indices of 20 to 31 
+    (it works as a binary search that returns the left index)
 
-    >>> start, end = index.indices( 'chr01', 400, 600)
+    >>> start, end = index.indices('chr1', 400, 600)
     >>> (start, end)
     (20, 31)
-    
-    We may also query for slices of data that span over a real genomic interval
 
-    >>> results = index.query( 'chr01', 400, 600)
+    We may also query for slices of data that span over an interval
+
+    >>> results = index.query( 'chr1', 400, 600)
     >>> results.idx
     [402, 403, 411, 419, 427, 432, 434, 443, 587, 593, 596]
     >>> results.fwd
@@ -216,7 +185,6 @@ class LinearData(object):
         # close database
         db.close()
 
-
     @property
     def labels(self):
         "Labels in the file"
@@ -277,65 +245,6 @@ class LinearData(object):
     
     def __del__(self):
         self.close()
-
-def build_index( data_path, index_path, parser=None, schema=None):
-    """
-    Indexer for the data
-    """
-
-    # fetch the default parsers if these are missing
-    parser = parser or triplet_list_parser
-    schema = schema or TripletSchema
-
-    logger.info( "file='%s'" % data_path )
-    logger.info( "index='%s'" % index_path )
-
-    if missing(data_path):
-        raise IOError('missing data %s' % data_path)
-
-    # provides timing information
-    timer = util.Timer()
-
-    def flush( table, name ):
-        "Helper function to flush a table"
-        if table is not None:
-            table.flush() # commit the changes
-            size = util.commify( len(table) )
-            logger.info('table=%s, wrote %s rows' % (name, size) )
-    
-    # print messages at every CHUNK line
-    last_chrom = table = None
-    db = openFile( index_path, mode='w', title='HDF index database')
-   
-    # iterate over the file and insert into table
-    reader = util.dict_reader( data_path )
-    
-    #reader = islice(reader, 0, 13000)
-    
-    for lineno, row in reader:
-        if (lineno % CHUNK) == 0:
-           liondb.info("... processed %s lines" % util.commify(lineno) )    
-        
-        chrom = row['chrom']
-        
-        if chrom != last_chrom:
-            # flush when switching chromosomes
-            flush( table, last_chrom )
-            table = db.createTable(  "/", chrom, schema, 'no description' )
-            last_chrom = chrom
-            logger.info("creating table:%s" % chrom)
-
-        # parser must match schema
-        row = parser( row )
-        table.append( [ row ] )
-
-    # flush for last chromosome
-    flush(table, chrom)
-    lineno = util.commify(lineno)
-    elapsed = timer.report()
-    logger.info("finished inserting %s lines in %s" % (lineno, elapsed) )
-
-    db.close()
 
 def test( verbose=0 ):
     """
