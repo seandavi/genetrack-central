@@ -11,7 +11,8 @@ def path_join(*args):
 
 class FileDict(object):
     """
-    File based dictionary that can be pickled.
+    File based dictionary that can be pickled and restored 
+    from a pickle. Built around bsddb.btopen.
 
     >>> fname = conf.tempdata('filedict-testdata.bin')
     >>> fdict = FileDict(fname, mode='n')
