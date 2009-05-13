@@ -9,6 +9,7 @@ Contents:
 .. toctree::
     :maxdepth: 3
     
+    installation
     tutorials/tutorial-index
     people
 
