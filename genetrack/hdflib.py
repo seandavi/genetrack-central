@@ -5,7 +5,7 @@ from tables import openFile
 from tables import IsDescription, IntCol, FloatCol
 from genetrack import logger, util, conf
 from itertools import *
-import os, bisect, gc
+import os, bisect, gc, csv
 
 # missing file
 missing = lambda f: not os.path.isfile(f)
@@ -70,8 +70,8 @@ class LinearData(object):
 
     >>> from genetrack import conf
     >>>
-    >>> fname = conf.testdata('hdflib-testinput.txt')
-    >>> index = LinearData(fname=fname, workdir=conf.temp_dir)   
+    >>> fname = conf.testdata('test-hdflib-input.txt')
+    >>> index = LinearData(fname=fname, workdir=conf.TEMP_DATA_DIR, update=True)   
     
     """
 
@@ -153,9 +153,69 @@ class LinearData(object):
     def build(self):
         "May be overriden to use different parsers and schemas"
 
-        # it is calling an module level function with two parameters
-        # original file name and desired index location
-        build_index(self.fname, self.index)
+        logger.info( "file='%s'" % self.fname )
+        logger.info( "index='%s'" % self.index)
+
+        if missing(self.fname):
+            raise IOError('missing data %s' % self.fname)
+
+        # provides timing information
+        timer = util.Timer()
+
+        # iterate over the file and insert into table
+        reader = csv.reader( file(self.fname, 'rt'), delimiter='\t' )
+    
+        # unwind the reader until it hits the headers
+        for row in reader:
+            if row[0] == 'chrom':
+                break
+
+        def flush( table, name ):
+            "Helper function to flush a table"
+            table.flush() # commit the changes
+            size = util.commify( len(table) )
+            logger.info('table=%s, contains %s rows' % (name, size) )
+    
+        
+        # print messages at every CHUNK line
+        last_chrom = table = None
+        db = openFile( self.index, mode='w', title='HDF index database')
+
+        # continue on with reading, optimized for throughput
+        # with minimal function calls (expensive in python)
+
+        for index, row in izip(count(1), reader):
+
+            # prints progress on processing
+            if (index % CHUNK) == 0:
+               liondb.info("... processed %s lines" % util.commify(index))    
+            
+            # get the values from each row
+            chrom, index, fwd, rev, value = row
+            fwd, rev, value = float(fwd), float(rev), float(value)
+        
+            # flush when switching chromosomes
+            if chrom != last_chrom:
+                # None at the beginning
+                if table:
+                    flush( table, last_chrom )
+
+                # creates the HDF table here
+                table = db.createTable(  "/", chrom, TripletSchema, 'no description' )
+                logger.info("creating table:%s" % chrom)
+                last_chrom = chrom
+
+            table.append( [ (index, fwd, rev, value) ] )
+
+        # flush for last chromosome, report some timing information
+        flush(table, chrom)
+        lineno = util.commify(index)
+        elapsed = timer.report()
+        logger.info("finished inserting %s lines in %s" % (index, elapsed) )
+
+        # close database
+        db.close()
+
 
     @property
     def labels(self):
@@ -215,13 +275,16 @@ class LinearData(object):
     def close(self):
         self.db.close()
     
+    def __del__(self):
+        self.close()
+
 def build_index( data_path, index_path, parser=None, schema=None):
     """
     Indexer for the data
     """
 
     # fetch the default parsers if these are missing
-    parser = parser or triplet_parser
+    parser = parser or triplet_list_parser
     schema = schema or TripletSchema
 
     logger.info( "file='%s'" % data_path )
