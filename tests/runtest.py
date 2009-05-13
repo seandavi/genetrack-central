@@ -26,12 +26,17 @@ def run(targets, options):
     
     success = errors = skipped = 0
 
+    import_modules = [ 'doc_tests' ]
     # run the tests by importing the module and getting its test suite
     for name in targets:
         try:
 
-            l = unittest.TestLoader()
-            suite = l.loadTestsFromName(name)
+            if name in import_modules:
+                mod = __import__(name)
+                suite = mod.get_suite()
+            else:
+                loader = unittest.TestLoader()
+                suite = loader.loadTestsFromName(name)
 
             runner = TestRunner(verbosity=options.verbosity,
                                     descriptions=0)
