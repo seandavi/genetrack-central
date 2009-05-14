@@ -9,7 +9,7 @@ def transform(inpname, outname, shift=0):
     Transforms reads stored in bedfile to a genetrack input file.
     Requires at least 6 bed columns.
 
-    it is a three step process, transform, sort and consolidate. It 
+    It is a three step process, transform, sort and consolidate. It 
     will create files placed in the temporary data directory.
     """
 
@@ -58,13 +58,10 @@ def transform(inpname, outname, shift=0):
             fwd, rev, val = 1, 0, 1
         op.write('%s\t%09d\t%s\t%s\t%s\n' % (chrom, idx, fwd, rev, val))
     op.close()
-
     logger.debug("parsing finished in %s" % timer.report() )
 
     # now let sorting commence
-    
     sortdata = conf.tempdata( '%s.sorted' % basename )
-
     cmd = "sort %s > %s" % (nonsort, sortdata)
     logger.debug("sorting into '%s'" % sortdata)
     os.system(cmd)
@@ -75,8 +72,12 @@ def transform(inpname, outname, shift=0):
     logger.debug("consolidate finished in %s" % timer.report() )
     logger.debug("full run finished in %s" % full.report() )
 
-    os.remove(nonsort)
-    os.remove(sortdata)
+    # attempting a cleanup
+    for name in (nonsort, sortdata):
+        try:
+            os.remove(nonsort)
+        except IOError, exc:
+            logger.error( "error removing '%s' -> %s" % exc)
 
 if __name__ == '__main__':
     import optparse
@@ -115,12 +116,12 @@ if __name__ == '__main__':
 
     options, args = parser.parse_args()
 
-    # missing file names
-    if not (options.inpname and options.outname):
-        parser.print_help()
-        sys.exit()
-
+    # set verbosity
     if options.verbosity > 0:
         logger.disable(None)
 
-    #transform(inpname=options.inpname, outname=options.outname, shift=options.shift)
+    # missing file names
+    if not (options.inpname and options.outname):
+        parser.print_help()
+    else:
+        transform(inpname=options.inpname, outname=options.outname, shift=options.shift)
