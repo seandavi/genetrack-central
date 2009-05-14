@@ -39,6 +39,47 @@ def uuid(KEY_SIZE=128):
     id  = str( random.getrandbits( KEY_SIZE ) )
     return hashlib.md5(id).hexdigest()
 
+def bedreads2genetrack(inpname, outname, shift=0):
+    """
+    Transforms reads stored in bedfile to a genetrack input file.
+    Requires at least 6 bed columns.
+    """
+
+    # check for track information on first line, 
+    # faster this way than conditional checking on each line
+    fp = file(inpname, 'rU')
+    first = fp.readline()
+    fp.close()
+
+    # create the reader
+    reader = csv.reader(file(inpname, 'rU'), delimiter='\t')
+
+    # skip if trackline exists
+    if first.startswith == 'track':
+        reader.next()
+
+    # write to the output file
+    op = file(outname, 'wt')
+    op.write('#\n# transformed from \%s\n#\n' % inpname)
+    op.write('chrom\tindex\tforward\treverse\tvalue\n')
+    for row in reader:
+        chrom, start, end, strand = row[0], row[1], row[2], row[5]
+        if strand == '+':
+            start = int(start)
+            idx = start + shift 
+            fwd, rev, val = 1, 0, 1
+        elif strand == '-':
+            end = int(end)
+            idx = end - shift
+            fwd, rev, val = 1, 0, 1
+        else:
+            start = int(start)
+            end = int(end)
+            idx = (start+end)/2
+            fwd, rev, val = 1, 0, 1
+        op.write('%s\t%09d\t%s\t%s\t%s\n' % (chrom, idx, fwd, rev, val))
+    op.close()
+    
 def make_stream(fname):
     """
     Creates a django style chunked file stream (used in testing)
@@ -151,40 +192,6 @@ class Timer(object):
         elapsed = time.time() - self.start_time
         self.start()
         return elapsed
-
-class CommentedFile:
-    """
-    A file reader that skips commented lines but 
-    maintains correct line numbers
-    """
-    def __init__(self, fp):
-        if isinstance(fp, str) or isinstance(fp, unicode):
-            fp = file(fp, 'rU')
-        self.fp = fp
-        self.linecount = 0
-
-    def next(self):
-        line = self.fp.next()
-        self.linecount += 1
-        while line.startswith('#'):
-            line = self.fp.next()
-            self.linecount += 1
-        return line
-
-    def __iter__(self):
-        return self
-
-    def close(self):
-        self.fp.close()
-
-def dict_reader( fname, delimiter='\t' ):
-    """
-    Reads delimited file, returns the linenumber and elements of each row
-    """
-    stream = CommentedFile( fname )
-    reader = csv.DictReader( stream, delimiter=delimiter )
-    for row in reader:
-        yield stream.linecount, row
 
 def gc_off( func ):
     """ 

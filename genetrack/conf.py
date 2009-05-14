@@ -47,9 +47,13 @@ module_check()
 if not os.path.isdir( TEMP_DATA_DIR ):
     os.mkdir( TEMP_DATA_DIR )
 
-def testdata(*args):
+def testdata(*args, **kwds):
     "Generates paths to test data"
-    return path_join(TEST_DATA_DIR, *args)
+    path = path_join(TEST_DATA_DIR, *args)
+    if 'verify' in kwds:
+        if not os.path.isfile(path):
+            raise IOError("file '%s' not found" % path )
+    return path
 
 def tempdata(*args):
     "Generates paths to temporary data"

@@ -25,10 +25,10 @@ class TripletSchema( IsDescription ):
 
 class LinearData(object):
     """
-    A linear data consists of a coordinate and one or more values associated with the 
-    coordinate. It may contain various labels (chromosomes). In the input data within one 
-    label the coordinates must be sorted (increasing order). The default parsers 
-    can process files in the following format
+    A linear data class instance is an HFD representation of coordinate and 
+    one or more values associated with the coordinate. 
+    It may contain such data for various labels (chromosomes). 
+    The default parsers can process files in the following format::
 
         chrom	index	forward	reverse	value
         chr1	146	0.0	1.0	1.0
@@ -43,21 +43,29 @@ class LinearData(object):
     The default representation is to store a value for the forward and reverse strands, 
     and to produce a composite value (stored as `value` column). In the most common
     case the composite value is simply the sum of the values on the forward 
-    and reverse strands. Processing is performed in the following manner:
+    and reverse strands. In the input data within one label the coordinates 
+    must be sorted (increasing order). Processing is performed in the 
+    following manner:
 
     >>> from genetrack import conf
     >>>
     >>> fname = conf.testdata('test-hdflib-input.txt')
-    >>> index = LinearData(fname=fname, workdir=conf.TEMP_DATA_DIR, update=False)   
-    >>> index.labels
-    ['chr1', 'chr2', 'chr3']
+    >>> index = LinearData(fname=fname, workdir=conf.TEMP_DATA_DIR)   
+    
+    Upon the first instantiation the index will be created if it did
+    not exist or if the `update=True` parameter was set.
 
     The `workdir` parameter is optional and if present must point 
     to the directory into which the resulting index file will be placed. 
     The contents of the linear data object may be accessed as a list 
     but note that only the accessed slice is loaded into memory (lazy access).
 
+    >>> index.labels
+    ['chr1', 'chr2', 'chr3']
+    >>>
+    >>> # this will return the HDF table as implmenented in pytables
     >>> table = index.table('chr1')
+    >>>
     >>> list (table.cols.idx[:10])
     [146, 254, 319, 328, 330, 339, 341, 342, 345, 362]
     >>>
@@ -71,6 +79,7 @@ class LinearData(object):
     coordinates 400 and 600 map to internal data indices of 20 to 31 
     (it works as a binary search that returns the left index)
 
+    >>>
     >>> start, end = index.indices('chr1', 400, 600)
     >>> (start, end)
     (20, 31)
@@ -78,13 +87,19 @@ class LinearData(object):
     We may also query for slices of data that span over an interval
 
     >>> results = index.query( 'chr1', 400, 600)
-    >>> results.idx
+    >>> 
+    >>> # the attributes are numeric arrays, here are cast to list
+    >>>
+    >>> list(results.idx)
     [402, 403, 411, 419, 427, 432, 434, 443, 587, 593, 596]
-    >>> results.fwd
+    >>>
+    >>> list(results.fwd)
     [0.0, 1.0, 0.0, 0.0, 0.0, 2.0, 1.0, 0.0, 0.0, 0.0, 1.0]
-    >>> results.rev
+    >>>
+    >>> list(results.rev)
     [3.0, 0.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 0.0]
-    >>> results.val
+    >>>
+    >>> list(results.val)
     [3.0, 1.0, 1.0, 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     >>> index.close()
     """
@@ -125,26 +140,28 @@ class LinearData(object):
         logger.info( "file='%s'" % self.fname )
         logger.info( "index='%s'" % self.index)
 
+        # check file for existance
         if missing(self.fname):
             raise IOError('missing data %s' % self.fname)
 
         # provides timing information
         timer = util.Timer()
 
-        # iterate over the file and insert into table
+        # iterate over the file 
         reader = csv.reader( file(self.fname, 'rt'), delimiter='\t' )
     
-        # unwind the reader until it hits the headers
+        # unwind the reader until it hits the header
         for row in reader:
             if row[0] == 'chrom':
                 break
 
+        # helper function that flushes a table
         def flush( table, name ):
-            "Helper function to flush a table"
-            table.flush() # commit the changes
+            # commit the changes
+            table.flush() 
+            # nicer information
             size = util.commify( len(table) )
             logger.info('table=%s, contains %s rows' % (name, size) )
-    
         
         # print messages at every CHUNK line
         last_chrom = table = None
@@ -152,7 +169,6 @@ class LinearData(object):
 
         # continue on with reading, optimized for throughput
         # with minimal function calls (expensive in python)
-
         for index, row in izip(count(1), reader):
 
             # prints progress on processing
@@ -165,11 +181,11 @@ class LinearData(object):
         
             # flush when switching chromosomes
             if chrom != last_chrom:
-                # None at the beginning
+                # table==None at the beginning
                 if table:
                     flush( table, last_chrom )
 
-                # creates the HDF table here
+                # creates the new HDF table here
                 table = db.createTable(  "/", chrom, TripletSchema, 'no description' )
                 logger.info("creating table:%s" % chrom)
                 last_chrom = chrom
@@ -214,10 +230,11 @@ class LinearData(object):
         step  = 1
         table = self.table( label )
         istart, iend = self.indices(label=label, start=start-pad, end=end+pad)
-        idx = table.cols.idx[istart:iend:step].tolist()
-        fwd = table.cols.fwd[istart:iend:step].tolist()
-        rev = table.cols.rev[istart:iend:step].tolist()
-        val = table.cols.val[istart:iend:step].tolist()        
+
+        idx = table.cols.idx[istart:iend:step]
+        fwd = table.cols.fwd[istart:iend:step]
+        rev = table.cols.rev[istart:iend:step]
+        val = table.cols.val[istart:iend:step]
         params = util.Params( idx=idx, fwd=fwd, rev=rev, val=val )
         return params
     
