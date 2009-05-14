@@ -1,7 +1,7 @@
 import os, unittest, random
 
 import testlib
-from genetrack import conf, util
+from genetrack import conf, util, helper, logger
 
 class Hdflib( unittest.TestCase ):
     'basic sequence class tests'
@@ -13,8 +13,8 @@ class Hdflib( unittest.TestCase ):
     def test_bed2genetrack(self):
         "Testing bed2genetrack transformation"
         inpfile = conf.testdata('short-data.bed', verify=True)
-        outfile = conf.tempdata('short-data.bed.genetrack')
-        util.bedreads2genetrack(inpfile, outfile)
+        outfile = conf.tempdata('short-data.genetrack')
+        helper.bedreads2genetrack(inpfile, outfile)
 
 def get_suite():
     "Returns the testsuite"
@@ -26,4 +26,7 @@ def get_suite():
 
 if __name__ == '__main__':
     suite = get_suite()
+    logger.disable(None)
     unittest.TextTestRunner(verbosity=2).run( suite )
+
+    

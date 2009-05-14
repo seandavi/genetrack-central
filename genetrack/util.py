@@ -1,6 +1,7 @@
 """
 Utility functions
 """
+import logger, conf
 import os, sys, random, hashlib, re, string, csv, gc
 import tempfile, os, random, glob, time
 
@@ -39,46 +40,7 @@ def uuid(KEY_SIZE=128):
     id  = str( random.getrandbits( KEY_SIZE ) )
     return hashlib.md5(id).hexdigest()
 
-def bedreads2genetrack(inpname, outname, shift=0):
-    """
-    Transforms reads stored in bedfile to a genetrack input file.
-    Requires at least 6 bed columns.
-    """
 
-    # check for track information on first line, 
-    # faster this way than conditional checking on each line
-    fp = file(inpname, 'rU')
-    first = fp.readline()
-    fp.close()
-
-    # create the reader
-    reader = csv.reader(file(inpname, 'rU'), delimiter='\t')
-
-    # skip if trackline exists
-    if first.startswith == 'track':
-        reader.next()
-
-    # write to the output file
-    op = file(outname, 'wt')
-    op.write('#\n# transformed from \%s\n#\n' % inpname)
-    op.write('chrom\tindex\tforward\treverse\tvalue\n')
-    for row in reader:
-        chrom, start, end, strand = row[0], row[1], row[2], row[5]
-        if strand == '+':
-            start = int(start)
-            idx = start + shift 
-            fwd, rev, val = 1, 0, 1
-        elif strand == '-':
-            end = int(end)
-            idx = end - shift
-            fwd, rev, val = 1, 0, 1
-        else:
-            start = int(start)
-            end = int(end)
-            idx = (start+end)/2
-            fwd, rev, val = 1, 0, 1
-        op.write('%s\t%09d\t%s\t%s\t%s\n' % (chrom, idx, fwd, rev, val))
-    op.close()
     
 def make_stream(fname):
     """
