@@ -13,8 +13,8 @@ more details.
 The GeneTrack manager script
 ----------------------------
 
-On Windows run: bin\genetrack.bat 
-On Unix like systems run: bin\genetrack.sh 
+On Windows run: genetrack.bat 
+On Unix like systems run: genetrack.sh 
 
 to see all the possible parameters that this script takes.
 The default setting will work with the default server layout.

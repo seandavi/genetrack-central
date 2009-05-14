@@ -15,11 +15,11 @@ echo PYTHON=%PYTHON_EXE%
 rem
 rem Setting environment variables
 rem
-rem Default home directory will be the parent of the directory
-rem that contains this batch script, change it as needed
+rem Default home directory of the genetrack installation
 rem
-set BATCH_SCRIPT_DIR=%~dp0
-set DEFAULT_HOME=%BATCH_SCRIPT_DIR%..
+rem (the directory that contains this batch script)
+rem
+set DEFAULT_HOME=%~dp0
 
 rem
 rem The default server home directory

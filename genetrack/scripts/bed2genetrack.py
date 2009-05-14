@@ -4,13 +4,13 @@ Helper functions
 import os, sys, csv
 from genetrack import logger, conf, util
 
-def bedreads2genetrack(inpname, outname, shift=0):
+def transform(inpname, outname, shift=0):
     """
     Transforms reads stored in bedfile to a genetrack input file.
     Requires at least 6 bed columns.
 
-    Three step process, transform, sort and consolidate. Will create 
-    files placed in the temporary data directory.
+    it is a three step process, transform, sort and consolidate. It 
+    will create files placed in the temporary data directory.
     """
 
     # find the basename of the outputname
@@ -79,4 +79,48 @@ def bedreads2genetrack(inpname, outname, shift=0):
     os.remove(sortdata)
 
 if __name__ == '__main__':
-    pass
+    import optparse
+
+    usage = "usage: %prog -i inputfile -o outputfile -s correction (default=0)"
+
+    parser = optparse.OptionParser(usage=usage)
+
+    # setting the input file name
+    parser.add_option(
+        '-i', '--input', action="store", 
+        dest="inpname", type='str', default=None,
+        help="the input file name"
+    )
+
+    # setting the output file name
+    parser.add_option(
+        '-o', '--output', action="store", 
+        dest="outname", type='str', default=None,
+        help="output file name"
+    )
+
+    # verbosity can be 0,1 and 2 (increasing verbosity)
+    parser.add_option(
+        '-v', '--verbosity', action="store", 
+        dest="verbosity", type="int", default=1, 
+        help="sets the verbosity (0, 1) [default]",
+    )
+
+    # correction shift added in 5' direction for start/end coordinates
+    parser.add_option(
+        '-s', '--shift', action="store", 
+        dest="shift", type="int", default=0, 
+        help="sets the correction shift for each strand (default=0)",
+    )
+
+    options, args = parser.parse_args()
+
+    # missing file names
+    if not (options.inpname and options.outname):
+        parser.print_help()
+        sys.exit()
+
+    if options.verbosity > 0:
+        logger.disable(None)
+
+    #transform(inpname=options.inpname, outname=options.outname, shift=options.shift)

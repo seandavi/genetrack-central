@@ -9,12 +9,6 @@ class Hdflib( unittest.TestCase ):
     def test_all(self):
         "Testing sequence operations"
         #self.assertEqual(1, 0)
-    
-    def test_bed2genetrack(self):
-        "Testing bed2genetrack transformation"
-        inpfile = conf.testdata('short-data.bed', verify=True)
-        outfile = conf.tempdata('short-data.genetrack')
-        helper.bedreads2genetrack(inpfile, outfile)
 
 def get_suite():
     "Returns the testsuite"
