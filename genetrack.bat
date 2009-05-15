@@ -57,6 +57,9 @@ if "%1"=="apidoc" goto :sphinx
 if "%1"=="jobrunner" goto :jobrunner
 
 
+rem  internal use
+if "%1" == "pushdoc" goto :pushdoc
+
 echo.
 echo USAGE:
 echo.
@@ -110,4 +113,11 @@ echo.
 echo *** executes jobrunner ***
 echo.
 %PYTHON_EXE% %DEFAULT_HOME%\genetrack\scripts\jobrunner.py %$
+goto :eof
+
+:pushdoc
+echo.
+echo *** pushing docs to webserver ***
+echo.
+rsync docs/html/* rsync -zav --rsh=ssh html/ webserver@atlas.bx.psu.edu:~/www/genetrack.bx.psu.edu
 goto :eof
