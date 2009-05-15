@@ -74,10 +74,7 @@ def transform(inpname, outname, shift=0):
 
     # attempting a cleanup
     for name in (nonsort, sortdata):
-        try:
-            os.remove(nonsort)
-        except IOError, exc:
-            logger.error( "error removing '%s' -> %s" % exc)
+        os.remove(name)
 
 if __name__ == '__main__':
     import optparse
