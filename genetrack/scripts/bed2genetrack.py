@@ -1,5 +1,20 @@
 """
-Helper functions
+Bed file transformer. It may be invoked in multiple ways::
+
+    python bed2genetrack.py
+
+As python modules via the python module loader::
+
+    python -m genetrack.scripts.bed2genetrack
+
+Or in other python scripts::
+
+>>>
+>>> from genetrack.scripts import bed2genetrack
+>>> bed2genetrack( input_name, output_name, shift=0)
+>>>
+
+Run the script with no parameters to soo the options.
 """
 import os, sys, csv
 from genetrack import logger, conf, util
@@ -16,11 +31,17 @@ def transform(inpname, outname, shift=0):
     The transformation is a three step process, transform, 
     sort and consolidate. It will create files placed in the 
     temporary data directory.
+
+    It will invoke the system `sort` command to sort the file. 
     """
 
     # find the basename of the outputname
     basename = os.path.basename(outname)
    
+    # two files store intermediate results
+    flat = conf.tempdata( '%s.flat' % basename )
+    sorted  = conf.tempdata( '%s.sorted' % basename )
+
     # check for track information on first line, 
     # faster this way than conditional checking on each line
     fp = file(inpname, 'rU')
@@ -40,45 +61,41 @@ def transform(inpname, outname, shift=0):
     logger.debug("output to '%s'" % outname)
 
     # write the unsorted output file
-    nonsort = conf.tempdata( '%s.temp' % basename )
-    logger.debug("unsorted file '%s'" % nonsort)
+    logger.debug("unsorted flat file '%s'" % flat)
 
-    op = file(nonsort, 'wt')
-    #op.write('#\n# transformed from \%s\n#\n' % inpname)
-    #op.write('chrom\tindex\tforward\treverse\tvalue\n')
+    fp = file(flat, 'wt')
     for row in reader:
         chrom, start, end, strand = row[0], row[1], row[2], row[5]
         if strand == '+':
-            start = int(start)
-            idx = start + shift 
+            # forward strand, 5' is at start
+            idx = int(start) + shift
             fwd, rev, val = 1, 0, 1
         elif strand == '-':
-            end = int(end)
-            idx = end - shift
+            # reverse strand, 5' is at end
+            idx = int(end) - shift
             fwd, rev, val = 1, 0, 1
         else:
-            start = int(start)
-            end = int(end)
-            idx = (start+end)/2
-            fwd, rev, val = 1, 0, 1
-        op.write('%s\t%09d\t%s\t%s\t%s\n' % (chrom, idx, fwd, rev, val))
-    op.close()
+            # no strand specified, display as interval centers
+            idx = (int(start)+int(end))/2
+            fwd, rev, val = 0, 0, 1
+        fp.write('%s\t%09d\t%s\t%s\t%s\n' % (chrom, idx, fwd, rev, val))
+    fp.close()
+
     logger.debug("parsing finished in %s" % timer.report() )
 
     # now let sorting commence
-    sortdata = conf.tempdata( '%s.sorted' % basename )
-    cmd = "sort %s > %s" % (nonsort, sortdata)
-    logger.debug("sorting into '%s'" % sortdata)
+    cmd = "sort %s > %s" % (flat, sorted)
+    logger.debug("sorting into '%s'" % sorted)
     os.system(cmd)
     logger.debug("sorting finished in %s" % timer.report() )
 
-    logger.debug("consolidating into '%s'" % sortdata)
+    logger.debug("consolidating into '%s'" % outname)
     #os.system(cmd)
     logger.debug("consolidate finished in %s" % timer.report() )
     logger.debug("full run finished in %s" % full.report() )
 
     # attempting a cleanup
-    for name in (nonsort, sortdata):
+    for name in (flat, sorted):
         os.remove(name)
 
 if __name__ == '__main__':
