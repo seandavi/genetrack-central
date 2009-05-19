@@ -25,10 +25,11 @@ class TripletSchema( IsDescription ):
 
 class LinearData(object):
     """
-    A linear data class instance is an HFD representation of coordinate and 
-    one or more values associated with the coordinate. 
-    It may contain such data for various labels (chromosomes). 
-    The default parsers can process files in the following format::
+    A linear data class instance is an HFD representation of millions of 
+    coordinates with one or more values associated with each of these 
+    coordinates. The class can store such data for various labels (chromosomes). 
+    The default parser built into the class can process files in the following 
+    format::
 
         chrom	index	forward	reverse	value
         chr1	146	0.0	1.0	1.0
@@ -43,8 +44,8 @@ class LinearData(object):
     The default representation is to store a value for the forward and reverse strands, 
     and to produce a composite value (stored as `value` column). In the most common
     case the composite value is simply the sum of the values on the forward 
-    and reverse strands. In the input data within one label the coordinates 
-    must be sorted (increasing order). Processing is performed in the 
+    and reverse strands. The input file must be sorted by both coordinates 
+    and chromosome (increasing order). Processing is performed in the 
     following manner:
 
     >>> from genetrack import conf
@@ -102,6 +103,11 @@ class LinearData(object):
     >>> list(results.val)
     [3.0, 1.0, 1.0, 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     >>> index.close()
+
+    In order to provide the fastes parsing the internal parser
+    is not overridable. There are transformers that can 
+    change bed and gff files to this input format. See the 
+    `genetrack.scripts' module.
     """
 
     def __init__(self, fname, workdir=None, update=False ):

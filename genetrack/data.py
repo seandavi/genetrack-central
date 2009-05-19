@@ -1,5 +1,5 @@
 """
-A file based dictionary
+Core data represenation modules.
 """
 from itertools import *
 import cPickle as pickle

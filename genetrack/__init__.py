@@ -2,7 +2,11 @@
 GeneTrack
 =========
 
-Data analysis and visualization framework for genomic data.
+Data analysis and visualization framework for genomic data. 
+
+Note:: The default webserver is located under the `server` directory 
+and is completely independent of the main genetrack package. The server 
+is implemented with the Django web framework.
 
 """
 import sys

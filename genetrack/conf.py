@@ -1,7 +1,7 @@
 """
 Module that contains configuration
 """
-import sys, os
+import sys, os, shutil
 import logger
 
 # Python version check
@@ -42,6 +42,12 @@ def module_check():
 
 #perform the module check    
 module_check()
+
+def reset_dir(path):
+    "Resets a directory path"
+    if os.path.isdir( path ):
+        shutil.rmtree( path)
+        os.mkdir( path )
 
 # create the temporary data directory if not present
 if not os.path.isdir( TEMP_DATA_DIR ):

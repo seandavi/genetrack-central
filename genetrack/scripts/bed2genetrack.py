@@ -7,10 +7,15 @@ from genetrack import logger, conf, util
 def transform(inpname, outname, shift=0):
     """
     Transforms reads stored in bedfile to a genetrack input file.
-    Requires at least 6 bed columns.
+    Requires at least 6 bed columns to access the strand.
 
-    It is a three step process, transform, sort and consolidate. It 
-    will create files placed in the temporary data directory.
+    A genetrack input file format is a tab delimited text file
+    described in the API documentation of the LinearData 
+    class: `genetrack.hdflib.LinearData`
+
+    The transformation is a three step process, transform, 
+    sort and consolidate. It will create files placed in the 
+    temporary data directory.
     """
 
     # find the basename of the outputname

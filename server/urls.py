@@ -8,8 +8,8 @@ from django.conf import settings
 urlpatterns = patterns('',
 
     # index page
-    (r'^$', 'app.views.index'),
-    (r'^about/', 'app.views.about')
+    (r'^$', 'web.views.index'),
+    (r'^about/', 'web.views.about')
 
     # (r'^server/', include('server.foo.urls')),
 

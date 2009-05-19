@@ -52,12 +52,12 @@ set PYTHONPATH=%PYTHONPATH%;%PYTHON_PATH_1%;%PYTHON_PATH_2%;%PYTHON_PATH_3%
 if "%1"=="runserver" goto :runserver
 if "%1"=="test" goto :test
 if "%1"=="editor" goto :editor
-if "%1"=="sphinx" goto :sphinx
-if "%1"=="apidoc" goto :sphinx
+if "%1"=="docs" goto :docs
+if "%1"=="apidoc" goto :docs
 if "%1"=="jobrunner" goto :jobrunner
 
 
-rem  internal use
+rem  internal use, pushes the docs to the public server
 if "%1" == "pushdoc" goto :pushdoc
 
 echo.
@@ -65,7 +65,7 @@ echo USAGE:
 echo.
 echo     genetrack.bat runserver  (runs server)
 echo     genetrack.bat test       (runs all tests)
-echo     genetrack.bat sphinx     (generates documentation)
+echo     genetrack.bat docs       (generates documentation)
 echo     genetrack.bat apidoc     (generates API html via epydoc)
 echo     genetrack.bat editor     (starts the editor in environment)
 echo     genetrack.bat jobrunner  (executes the jobrunner)
@@ -97,7 +97,7 @@ echo.
 cmd /c "c:\Program Files\EditPlus 2\editplus.exe"
 goto :eof
 
-:sphinx
+:docs
 echo.
 echo *** documentation generation ***
 echo.

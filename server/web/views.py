@@ -1,6 +1,6 @@
 # Create your views here.
 from django.conf import settings
-from genetrack.web import html
+from server.web import html
 
 def index(request):
     "Main index page"

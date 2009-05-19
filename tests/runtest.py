@@ -98,7 +98,7 @@ if __name__ == '__main__':
 
     # cleans full entire test directory
     if options.reset:
-        pass
+        conf.reset_dir(conf.TEMP_DATA_DIR)
     
     # run all the tests
     if options.coverage:
