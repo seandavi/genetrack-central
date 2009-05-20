@@ -23,7 +23,6 @@ more details about the server settings.
 .. _django: http://www.djangoproject.com/
 .. _pytables: http://www.pytables.org/
 .. _chartdirector: http://www.advsofteng.com
-
 """
 import sys
 from time import strftime, gmtime

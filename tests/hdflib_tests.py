@@ -1,7 +1,7 @@
 import os, unittest, random
 
 import testlib
-from genetrack import conf, util, helper, logger
+from genetrack import conf, util, logger
 
 class Hdflib( unittest.TestCase ):
     'basic sequence class tests'

@@ -1,7 +1,7 @@
 import os, unittest, random
 
 import testlib
-from genetrack import conf, util, helper, logger, scripts
+from genetrack import conf, util, logger, scripts
 
 class ScriptTests( unittest.TestCase ):
     'basic sequence class tests'
