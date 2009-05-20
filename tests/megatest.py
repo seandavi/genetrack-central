@@ -1,14 +1,15 @@
 """
 Runs a more demaniding test
 """
+import os
 from genetrack import util, conf, logger, scripts
 from genetrack.scripts import bed2genetrack
 
 logger.disable(None)
 
-def bed1():
-    inpfile = conf.testdata('big-yeast.bed', verify=True)
-    outfile = conf.tempdata('big-yeast.genetrack')
+def bedfile(inpfile):
+    basename = os.path.basename(inpfile)
+    outfile = conf.tempdata('%s.genetrack' % basename)
     bed2genetrack.transform(inpfile, outfile)
 
 if __name__ == '__main__':
@@ -18,13 +19,14 @@ if __name__ == '__main__':
 
     # setting the input file name
     parser.add_option(
-        '--bed1', action="store_true", 
-        dest="bed1",  default=False,
-        help="run the bed2genetrack tests"
+        '--bed2genetrack', 
+        dest="bed2genetrack",
+        help="run the bed2genetrack transform on a file"
     )
 
     options, args = parser.parse_args()
     
-    if options.bed1:
-        bed1()
+    if options.bed2genetrack:
+        bedfile(options.bed2genetrack)
     
+

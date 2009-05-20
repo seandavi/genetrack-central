@@ -1,6 +1,7 @@
 """
-Bed file transformer. Requires at least 6 bed columns to access the strand.
-It may be optionally be used to shift the 5' ends with 
+Bed file transformer. Requires the presence of 
+at least 6 bed columns to access the strand.
+Optional parameters may be used to shift the 5' ends with 
 a specified amount. This is useful if the bed file corresponds to data with fixed fragment 
 widths you can move each fragment to the center location. 
 The program may be invoked in multiple ways. As a standalone script::
@@ -28,9 +29,10 @@ The transformation is a three step process, *transform*,
 genetrack temporary data directory and it will remove the intermediate files 
 when the process is complete.
 
-**Observed runtime**: 1 million lines per minute
+**Observed runtime**: tranformation rate of 2 million lines per minute
 
-**Note**: The script will invoke the system `sort` command to sort the file.
+**Note1**: The script will invoke the system `sort` command to sort the file 
+that is substantially faster under Unix than Windows.
 
 """
 import os, sys, csv
@@ -119,7 +121,7 @@ def transform(inpname, outname, shift=0):
         elif strand == '-':
             # on reverse strand, 5' is at end
             idx = int(end) - shift
-            fwd, rev, val = 1, 0, 1
+            fwd, rev, val = 0, 1, 1
         else:
             # no strand specified, generate interval centers
             idx = (int(start)+int(end))/2
@@ -145,7 +147,8 @@ def transform(inpname, outname, shift=0):
 
     # attempting to cleanup the remaining files
     for name in (flat, sorted):
-        os.remove(name)
+        #os.remove(name)
+        pass
 
 if __name__ == '__main__':
     import optparse
