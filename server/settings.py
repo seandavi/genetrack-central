@@ -5,15 +5,16 @@ def path_join(*args):
     "Builds absolute path"
     return os.path.abspath(os.path.join(*args))
 
-# establish current location
-curr_dir = os.path.dirname( __file__ )
+# establish the current location
+curr_dir  = os.path.dirname( __file__ )
 
-# set up the data specific directories
+# set up the data specific directories relative to this file's location
 TEMPLATE_PATH = path_join( curr_dir, 'data', 'templates')
 STATIC_DIR = path_join( curr_dir, 'data', 'static')
 STORAGE = path_join( curr_dir, 'data', 'storage')
 
-DEBUG = True
+# debug mode set to on if a sentinel file is present
+DEBUG = os.path.isfile(path_join(curr_dir, 'debug-mode'))
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -62,8 +63,9 @@ MEDIA_URL = ''
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
 
-# Make this unique, and don't share it with anybody.
-SECRET_KEY = 'ew0=2!ibs3d58+=m!(qcq22_89v(fa*(fw7#@kjs@fg_w#zu0m'
+# Make this long and unique, and don't share it with anybody.
+# This key below will raise an error
+SECRET_KEY = '1'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -89,4 +91,5 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.sites',
+    #'django.contrib.admindocs',
 )

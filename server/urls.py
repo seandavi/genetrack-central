@@ -5,6 +5,9 @@ from django.conf import settings
 # from django.contrib import admin
 # admin.autodiscover()
 
+if not settings.DEBUG:
+    handler500 = 'web.views.error500'
+
 urlpatterns = patterns('',
 
     # index page
@@ -15,14 +18,15 @@ urlpatterns = patterns('',
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
-    # (r'^admin/doc/', include('django.contrib.admindocs.urls')),
+    #(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
-    # (r'^admin/(.*)', admin.site.root),
+    #(r'^admin/(.*)', admin.site.root),
 )
 
 # static content to be served for test server only
-if settings.DEBUG:
+# disabled for now
+if 1 or settings.DEBUG:
     urlpatterns += patterns('',
         (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_DIR }),
     )
