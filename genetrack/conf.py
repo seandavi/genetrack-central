@@ -1,5 +1,7 @@
 """
-Module that contains configuration
+Configuration namespace.
+
+
 """
 import sys, os, shutil
 import logger

@@ -1,12 +1,28 @@
 """
-GeneTrack
+Data analysis and visualization framework for genomic data. 
+See the genetrack_ site for installation instructions.
+
+Framework
 =========
 
-Data analysis and visualization framework for genomic data. 
+Required libraries: numpy_ , bx-python_ and pytables_
 
-Note:: The default webserver is located under the `server` directory 
-and is completely independent of the main genetrack package. The server 
-is implemented with the Django web framework.
+Server
+======
+
+Required libraries: django_ and chartdirector_
+
+The default webserver is located under the `server` directory 
+and is completely independent of the main genetrack package and therefore is **NOT** documented
+here. The server is implemented with the django_ web framework. See the genetrack_ site for 
+more details about the server settings.
+
+.. _genetrack: http://genetrack.bx.psu.edu
+.. _numpy: http://numpy.scipy.org
+.. _bx-python: http://bitbucket.org/james_taylor/bx-python/wiki/Home
+.. _django: http://www.djangoproject.com/
+.. _pytables: http://www.pytables.org/
+.. _chartdirector: http://www.advsofteng.com
 
 """
 import sys

@@ -1,5 +1,7 @@
 """
-Core data represenation modules.
+Core data represenation.
+
+
 """
 from itertools import *
 import cPickle as pickle

@@ -1,6 +1,6 @@
 """
-Visualization package
-=====================
+Chart and graph related modules.
+
 """
 
 def test( verbose=0 ):

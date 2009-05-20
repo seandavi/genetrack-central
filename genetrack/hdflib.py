@@ -1,5 +1,6 @@
 """
-Utitility classes that wrap files in the HDF (hierarchical data format).
+Utilities for the hierarchical data format (HDF).
+
 """
 from tables import openFile
 from tables import IsDescription, IntCol, FloatCol
@@ -103,6 +104,7 @@ class LinearData(object):
     >>> list(results.val)
     [3.0, 1.0, 1.0, 1.0, 1.0, 2.0, 1.0, 1.0, 1.0, 1.0, 1.0]
     >>> index.close()
+    >>>
 
     In order to provide the fastes parsing the internal parser
     is not overridable. There are transformers that can 

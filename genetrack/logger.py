@@ -1,10 +1,10 @@
 """
-Implements logging functionality
+Logging functions.
 
 Upon import creates a module level log class (log) and 
-the following logging functions:
+the following logging functions::
 
-debug, info, warn and error
+    debug, info, warn and error
 
 The default formatters will print out the function the log was triggered from.
 """

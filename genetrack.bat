@@ -105,7 +105,7 @@ set DOC_DIR=%DEFAULT_HOME%\docs\rest
 set BUILD_DIR=%DEFAULT_HOME%\docs\html
 set EPYDOC_DIR=%BUILD_DIR%\epydoc
 sphinx-build -b html %DOC_DIR% %BUILD_DIR%
-if "%1"=="apidoc" epydoc --docformat restructuredtext genetrack -o %EPYDOC_DIR%
+if "%1"=="apidoc" epydoc %2 %3 %4 %5 %6 %7 %8 %9 --docformat restructuredtext genetrack -o %EPYDOC_DIR% 
 goto :eof
 
 :jobrunner
