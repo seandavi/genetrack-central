@@ -50,6 +50,7 @@ rem
 set PYTHONPATH=%PYTHONPATH%;%PYTHON_PATH_1%;%PYTHON_PATH_2%;%PYTHON_PATH_3%
 
 if "%1"=="runserver" goto :runserver
+if "%1"=="init" goto :init
 if "%1"=="test" goto :test
 if "%1"=="editor" goto :editor
 if "%1"=="docs" goto :docs
@@ -63,6 +64,7 @@ if "%1" == "pushdoc" goto :pushdoc
 echo.
 echo USAGE:
 echo.
+echo     genetrack.bat init       (initializes the database)
 echo     genetrack.bat runserver  (runs server)
 echo     genetrack.bat test       (runs all tests)
 echo     genetrack.bat docs       (generates documentation)
@@ -72,11 +74,20 @@ echo     genetrack.bat jobrunner  (executes the jobrunner)
 
 goto :eof
 
+:init
+echo.
+echo *** Initializing the data ***
+echo.
+%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
+%PYTHON_EXE% -m genetrack.scripts.initializer --users %GENETRACK_SERVER_HOME%\data\init\initial-users.csv
+goto :eof
+
+
 :runserver
 echo.
 echo *** Starting the test server ***
 echo.
-%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb
+%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
 %PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py runserver 127.0.0.1:8080
 goto :eof
 
@@ -120,5 +131,5 @@ goto :eof
 echo.
 echo *** pushing docs to webserver ***
 echo.
-rsync docs/html/* rsync -zav --rsh=ssh html/ webserver@atlas.bx.psu.edu:~/www/genetrack.bx.psu.edu
+rsync docs/html/* rsync -zav --rsh=ssh webserver@atlas.bx.psu.edu:~/www/genetrack.bx.psu.edu
 goto :eof

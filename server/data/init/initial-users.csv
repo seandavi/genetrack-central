@@ -1,15 +1,7 @@
-username,email,first_name,last_name,is_superuser,email_reset
-admin,admin,Admin,User,yes,no
-demo,demo,Demo,User,no,no
-public,public,Public,User,no,no
-ialbert,iua1@psu.edu,Istvan,Albert,yes,yes
-bfp2,bfp2@psu.edu,Frank,Pugh,no,yes
-hx3149,hxr149@psu.edu,Ho Sung,Rhee,no,yes
-cuj5,cuj5@psu.edu,Cizhong,Jiang,no,yes
-zyz5012,zyz5012@psu.edu,Zhenhai,Zhang,no,yes
-jup139,jup139@psu.edu,Jihye,Park,no,yes
-shin,shinwachi@gmail.com,Shinichiro,Wachi,no,yes
-rtk138,rtk138@psu.edu,Tom,Koerber,no,yes
-csh12,csh12@psu.edu,Christine,Hemeryck,no,yes
-bjv129,bjv129@psu.edu,Bryan,Venters,no,yes
-eus163,eus163@psu.edu,Eric,Samorodnitsky,no,yes
+username,email,first_name,last_name,is_superuser
+admin,admin,Admin,User,yes
+demo,demo,Demo,User,no
+public,public,Public,User,no
+ialbert,iua1@psu.edu,Istvan,Albert,yes
+johndoe,johndoe,John,Doe,no
+janedoe,janedoe,Jane,Doe,no

@@ -11,10 +11,6 @@ if not settings.DEBUG:
 def index(request):
     "Main index page"
 
-    # check the lenght of secret key in non debug modes
-    if not settings.DEBUG and len(settings.SECRET_KEY) < 5:
-        msg = 'The value of the SECRET_KEY setting is too short. Please make it longer!'
-        raise Exception(msg)
     
     params = html.Params()
     return html.template( request, name='index.html', params=params )
