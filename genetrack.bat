@@ -42,7 +42,7 @@ set PYTHON_PATH_2=%DEFAULT_HOME%\library;%DEFAULT_HOME%\library\library.zip
 
 rem Adding the development version of bx python 
 rem not needed if you have it already installed
-set PYTHON_PATH_3=%DEFAULT_HOME%\..\bx-python-psu\lib
+set PYTHON_PATH_3=%DEFAULT_HOME%\..\bx-dev\bx-python-psu\lib
 
 rem
 rem Appends paths to the python import
@@ -76,6 +76,7 @@ goto :eof
 echo.
 echo *** Starting the test server ***
 echo.
+%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb
 %PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py runserver 127.0.0.1:8080
 goto :eof
 

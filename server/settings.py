@@ -10,8 +10,10 @@ curr_dir  = os.path.dirname( __file__ )
 
 # set up the data specific directories relative to this file's location
 TEMPLATE_PATH = path_join( curr_dir, 'data', 'templates')
-STATIC_DIR = path_join( curr_dir, 'data', 'static')
-STORAGE = path_join( curr_dir, 'data', 'storage')
+DATA_DIR = path_join( curr_dir, 'data')
+STATIC_DIR = path_join( DATA_DIR, 'static')
+STORAGE_DIR = path_join( DATA_DIR, 'storage')
+DATABASE_DIR = path_join(  DATA_DIR, 'db')
 
 # debug mode set to on if a sentinel file is present
 DEBUG = os.path.isfile(path_join(curr_dir, 'debug-mode'))
@@ -23,8 +25,8 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASE_ENGINE = ''           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-DATABASE_NAME = ''             # Or path to database file if using sqlite3.
+DATABASE_ENGINE = 'sqlite3'           # 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+DATABASE_NAME = path_join(DATABASE_DIR, 'genetrack.db') # Or path to database file if using sqlite3.
 DATABASE_USER = ''             # Not used with sqlite3.
 DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
