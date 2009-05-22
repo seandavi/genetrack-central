@@ -2,13 +2,26 @@
 
 {% block title %}GeneTrack{% endblock %}
 
-{% block pageheader %}GeneTrack: Genomic Data Analysis and Visualization{% endblock %}
+{% block pageheader %}GeneTrack: Genomic Data Analysis and Visualization Framework{% endblock %}
 
-{% block pagetitle %}Viewing Public Datasets{% endblock %}
+{% block pagetitle %}Welcome to GeneTrack{% endblock %}
 
 {% block body %}
 
-<table class="datatable"  align="center" cellpadding="10" cellspacing="10" width="80%">
+<table class="datatable"  align="center" cellpadding="10" cellspacing="0" width="80%">
+    <tr>
+        <td colspan="2" align="center">
+            Click here to <a href="/account/">access your account<a>
+        </td>
+    </tr>
+
+    <tr>
+        <td colspan="2">
+            <h3>Published Visualizations</h3>
+        </td>
+    </tr>
+
+    <!--
     <tr>
         <td>
             <a href="/mapping/">Visualizing sequence reads<a>
@@ -26,6 +39,7 @@
             <img src="/static/icons/coverage1.png"> 
         </td>
     </tr>
+    -->
 
 </table>
 {% endblock %}

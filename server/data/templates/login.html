@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Login Page{% endblock %}
+
+{% block pageheader %}<a href="/">Home</a> &gt; Login{% endblock %}
+
+{% block pagetitle %}User Login{% endblock %}
+
+{% block body %}
+
+<form action="/accounts/login/" method="POST">
+
+
+<table class="datatable" align="center">
+    
+    {% if error %}
+    <tr>
+        <td colspan="2" class="error" align="center">
+            {{error}}
+        </td>
+    </tr>
+    {% endif %}
+
+    <tr>
+        <td align="right">Email: </td>
+        <td>{{form.email}}</td>
+    </tr>
+    <tr>
+        <td align="right">Password: </td>
+        <td>{{form.password}}</td>
+    </tr>
+    <tr>
+        <td align="center" colspan="2"><input type="submit" name="submit" value="Submit"></td>
+    </tr>
+     <tr>
+        <td align="center" colspan="2" class="smaller">
+            <a href="/password/password_reset/">Forgot Password?</a> | 
+            <a href="/user/list/">See Userlist</a>
+        </td>
+    </tr>
+</table>
+</form>
+
+{% endblock %}
+

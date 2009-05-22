@@ -69,6 +69,11 @@ ADMIN_MEDIA_PREFIX = '/media/'
 # This key below will raise an error
 SECRET_KEY = '1'
 
+
+# this settings allows superusers to log in as other users
+# with the SECRET_KEY as password (used for debugging problems)
+SUPERUSER_PASSWORD_OVERRIDE = True
+
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.load_template_source',
@@ -86,8 +91,12 @@ ROOT_URLCONF = 'server.urls'
 
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,
+
     # custom pages for password recovery
     path_join(TEMPLATE_PATH, 'password'),
+
+    # custom pages for administration
+    path_join(TEMPLATE_PATH, 'admin'),
 
 )
 
