@@ -86,6 +86,9 @@ ROOT_URLCONF = 'server.urls'
 
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,
+    # custom pages for password recovery
+    path_join(TEMPLATE_PATH, 'password'),
+
 )
 
 INSTALLED_APPS = (
