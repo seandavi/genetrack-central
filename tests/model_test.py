@@ -17,11 +17,12 @@ class ModelTest( unittest.TestCase ):
         connection.creation.create_test_db(verbosity=0, autoclobber=True)
         options = util.Params(test_mode=True, delete_everything=False, flush=False, verbosity=0)
         fname = conf.testdata('test-users.csv')
-        logger.disable('INFO')
+        logger.disable('INFO') # too many user created messages
         initializer.load_users(fname, options)
         logger.disable(None)
 
     def tearDown(self):
+        "Tearing down the database after test"
         connection.creation.destroy_test_db(self.old_name, 0)
         utils.teardown_test_environment()
     
