@@ -1,0 +1,7 @@
+username,email,first_name,last_name,is_superuser
+admin,admin,Admin,User,yes
+demo,demo,Demo,User,no
+public,public,Public,User,no
+johndoe,johndoe@foo.bar,John,Doe,no
+janedoe,janedoe@foo.bar,Jane,Doe,no
+kiddoe,kiddoe@foo.bar,Kid,Doe,no

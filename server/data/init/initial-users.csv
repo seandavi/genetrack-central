@@ -1,6 +1,15 @@
-username,email,first_name,last_name,is_superuser
-admin,admin,Admin,User,yes
-demo,demo,Demo,User,no
-public,public,Public,User,no
-johndoe,johndoe,John,Doe,no
-janedoe,janedoe,Jane,Doe,no
+username,email,first_name,last_name,is_superuser,is_staff
+admin,admin,Admin,User,yes,no
+demo,demo,Demo,User,no,no
+public,public,Public,User,no,no
+ialbert,iua1@psu.edu,Istvan,Albert,yes,yes
+bfp2,bfp2@psu.edu,Frank,Pugh,no,no
+hx3149,hxr149@psu.edu,Ho Sung,Rhee,no,no
+cuj5,cuj5@psu.edu,Cizhong,Jiang,no,no
+zyz5012,zyz5012@psu.edu,Zhenhai,Zhang,no,no
+jup139,jup139@psu.edu,Jihye,Park,no,no
+shin,shinwachi@gmail.com,Shinichiro,Wachi,no,no
+rtk138,rtk138@psu.edu,Tom,Koerber,no,no
+csh12,csh12@psu.edu,Christine,Hemeryck,no,yes
+bjv129,bjv129@psu.edu,Bryan,Venters,no,no
+eus163,eus163@psu.edu,Eric,Samorodnitsky,no,no
