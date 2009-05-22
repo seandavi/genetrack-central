@@ -70,7 +70,7 @@ def load_users(fname, options):
     for row in csv.DictReader( stream ):
         username, email, first_name, last_name = row['username'], row['email'], row['first_name'], row['last_name']
         is_superuser = (row['is_superuser'] == 'yes')
-        user, flag = user_get(username=username, email=email, first_name=first_name, last_name=last_name, is_superuser=is_superuser, is_staff=False)
+        user, flag = user_get(username=username, email=email, first_name=first_name, last_name=last_name, is_superuser=is_superuser, is_staff=is_superuser)
         if flag:
             logger.info( 'created user: %s' % user.get_full_name() )
             if username in ('admin', 'demo'):
