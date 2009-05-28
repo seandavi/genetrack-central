@@ -37,12 +37,12 @@ fieldset{
     /*text-align: center;*/
 }
 
-fieldsets#login{
+fieldsetss#login{
     width: 30em;
 }
 
 label {
-    width: 5em;
+    width: 10em;
     float: left;
     text-align: right;
     display: block;
@@ -57,7 +57,7 @@ legend {
 } 
 
 .submit input {
-    margin-left: 8em;
+    margin-left: 10em;
 }
 
 .textinput {
