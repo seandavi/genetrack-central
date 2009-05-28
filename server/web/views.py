@@ -10,8 +10,6 @@ if not settings.DEBUG:
 
 def index(request):
     "Main index page"
-
-    
     params = html.Params()
     return html.template( request, name='index.html', params=params )
 
