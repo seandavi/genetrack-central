@@ -12,7 +12,15 @@ urlpatterns = patterns('',
 
     # index page
     (r'^$', 'web.views.index'),
-    (r'^about/', 'web.views.about'),
+    
+    # login handlers
+    (r'^login/', 'web.login.index'),
+    (r'^logout/', 'web.login.logout'),
+
+    #(r'^about/', 'web.views.about'),
+
+    # password handling
+    #(r'^password/',  include('liondb.urlconf.passwords')),
 
     # (r'^server/', include('server.foo.urls')),
 
