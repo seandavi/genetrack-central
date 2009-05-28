@@ -2,15 +2,47 @@
 
 {% block title %}Login Page{% endblock %}
 
-{% block pageheader %}<a href="/">Home</a> &gt; Login{% endblock %}
+{% block header %}<h1 align="center">Genetrack Login</h1>{% endblock %}
 
-{% block pagetitle %}User Login{% endblock %}
+{% block mainbody %}
 
-{% block body %}
+<form action="/login/" method="POST">
 
-<form action="/accounts/login/" method="POST">
+{% if error_message %}
+    <div class="span-24 last">
+      <div class="span-2">&nbsp;</div>
+      <div class="span-20 error textcenter">{{ error_message }}</div>
+      <div class="span-2 last">&nbsp;</div>
+    </div>
+{% endif %}
 
+<!-- left sidebar -->
+<div class="span-8">&nbsp;</div>
 
+<div class="span-8 center">
+    <fieldset id="login">
+      <legend>Please Log in</legend>
+      <div><label for="name">Email</label> <input class="textinput" type="text" name="email" id="id_email"" /></div>
+      <p><label for="e-mail">Password</label> <input class="textinput" type="password" name="password" id="id_password" /></p>
+      <p class="submit"><input type="submit" value="Submit" /></p>
+      
+       <div class="textcenter"> 
+        <a href="/password/password_reset/">Forgot Password?</a> 
+        &bull; <a href="/">Back to Home</a>
+      </div>
+    </fieldset>
+</div>
+
+<!-- right sidebar -->
+<div class="span-8 last" >&nbsp;</div>
+
+<script type="text/javascript">
+  document.getElementById('id_email').focus()
+</script>
+
+</form> 
+
+<!-- 
 <table class="datatable" align="center">
     
     {% if error %}
@@ -39,6 +71,8 @@
         </td>
     </tr>
 </table>
+-->
+
 </form>
 
 {% endblock %}

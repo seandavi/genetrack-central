@@ -43,9 +43,14 @@ TIME_ZONE = 'America/Chicago'
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
 
-SITE_DOMAIN = '127.0.0.1:8000'
+SITE_DOMAIN = '127.0.0.1:8080'
 SITE_NAME = 'GeneTrack' 
 SITE_ID = 1
+
+EMAIL_HOST = "smtp.psu.edu"
+#EMAIL_HOST_USER = "foo"
+#EMAIL_HOST_PASSWORD = "bar"
+DEFAULT_FROM_EMAIL  = "iua1@psu.edu"
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -72,6 +77,8 @@ SECRET_KEY = '1'
 # this settings allows superusers to log in as other users
 # with the SECRET_KEY as password (used for debugging problems)
 SUPERUSER_PASSWORD_OVERRIDE = True
+
+AUTH_PROFILE_MODULE = "web.userprofile"
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (

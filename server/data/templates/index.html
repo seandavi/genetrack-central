@@ -17,7 +17,7 @@
     <p>
       Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?" 
 
-      <div> See all <a href="#">published datasets</a></div>
+      <div> See all <a href="/todo">published datasets</a></div>
     </p>
 
     <hr />
@@ -30,15 +30,16 @@
         based genomic data visualization framework. It aims to provide generic 
         building blocks for creating sophisticated web based genomic data 
         visualization sites.For more details about the system's capabilities and installation
-        see the <a href="http://genetrack.bx.psu.edu">main site</a>
+        see the <a href="http://genetrack.bx.psu.edu">development site</a>
       </p>. 
     </div>
 
     <div class="span-8 last">
       <h4 class="prepend-5">Get an account</h4>
         <p>
-          The current server is free for non-profit users. Please use the
-          <a href="request_account">request account</a> page. Commercial entities 
+          The current server is free for non-profit users. Use the
+          <a href="/todo">request account</a> page to obtain an account. 
+          Commercial entities 
           are welcome to run their own instances. Paid support is occasionally 
           available to interested parties. Contact the maintainers listed on the
           <a href="http://genetrack.bx.psu.edu/people.html">contact page</a>
@@ -56,7 +57,7 @@
       <div class="box">
         {%if user.is_authenticated %}
           <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
-          <div><a href="/project_list">Your Projects</a> &bull; 
+          <div><a href="/project/list">Your Projects</a> &bull; 
            <a href="/logout">Log Out</a>
           </div>
         {% else %}
@@ -69,7 +70,7 @@
     <div>
       <h3 class="caps">Administration</h3>
       <div class="box">
-        <div class="quiet">&bull; <a href="#" class="quiet">server status</a></div>
+        <div class="quiet">&bull; <a href="/todo" class="quiet">server status</a></div>
         <div class="quiet">&bull; <a href="/admin/" class="quiet">admin interface</a></div>
       </div>
     </div>
@@ -81,7 +82,7 @@
           operating systems. The software is released
           with a liberal <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a> 
           open source license.
-          Find out more on the <a href="http://genetrack.bx.psu.edu"">main site.</a>
+          Find out more on the <a href="http://genetrack.bx.psu.edu">development site.</a>
         </div>
       </div>
     </div>

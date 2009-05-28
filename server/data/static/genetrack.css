@@ -34,12 +34,15 @@ img {
 
 fieldset{
     border: 1px solid #F4C03E;
-    width: 20em;
-    text-align: center;
+    /*text-align: center;*/
+}
+
+fieldsets#login{
+    width: 30em;
 }
 
 label {
-    width: 4em;
+    width: 5em;
     float: left;
     text-align: right;
     display: block;
@@ -54,7 +57,7 @@ legend {
 } 
 
 .submit input {
-    margin-left: 4em;
+    margin-left: 8em;
 }
 
 .textinput {
@@ -63,3 +66,5 @@ legend {
     margin: 5px;
 }
 
+.errorlist {padding-left:2em;margin-bottom:1em;border:2px solid #ddd;}
+.errorlist {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}

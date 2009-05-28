@@ -13,10 +13,10 @@ def index(request):
     params = html.Params()
     return html.template( request, name='index.html', params=params )
 
-def about(request):
-    "About page"
+def todo(request):
+    "Todo page"
     params = html.Params()
-    return html.template( request, name='about.html', params=params )
+    return html.template( request, name='todo.html', params=params )
 
 def error500(request):
     "Server error page when debug flag is False"
