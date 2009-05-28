@@ -11,13 +11,13 @@ if not settings.DEBUG:
 urlpatterns = patterns('',
 
     # index page
-    (r'^$', 'web.views.index'),
+    (r'^$', 'web.views.main.index'),
     
     # login handlers
-    (r'^login/', 'web.login.index'),
-    (r'^logout/', 'web.login.logout'),
+    (r'^login/', 'web.views.login.index'),
+    (r'^logout/', 'web.views.login.logout'),
 
-    #(r'^about/', 'web.views.about'),
+    #(r'^about/', 'web.views.main.about'),
 
     # password handling
     #(r'^password/',  include('liondb.urlconf.passwords')),
