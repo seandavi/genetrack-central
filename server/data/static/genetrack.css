@@ -1,10 +1,4 @@
-body { 	
-	margin:0px;
-	padding:0px; 
-	border-top: 9px solid #F4C03E;
-	font: 0.9em Verdana, Arial, Helvetica, sans-serif;
-	line-height: 1.3em;  
-}
+
 
 img {
 	vertical-align: middle;
@@ -116,13 +110,18 @@ img {
 	background-color: #FAE3A8;
 }
 
-#pagefooter {
+#mainfooter {
 	font-size: smaller;
 	border-bottom: 1px solid #F4C03E;
 	background-color: #FAE3A8;
 	padding: 1px;
 	margin-top: 5px;
 	text-align: center;
+}
+
+#mainheader {
+	border-top: 10px solid #F4C03E;
+	margin-bottom: 5px;
 }
 
 .info {
