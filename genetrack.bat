@@ -47,7 +47,7 @@ set PYTHON_PATH_3=%DEFAULT_HOME%\..\bx-dev\bx-python-psu\lib
 rem
 rem Appends paths to the python import
 rem
-set PYTHONPATH=%PYTHONPATH%;%PYTHON_PATH_1%;%PYTHON_PATH_2%;%PYTHON_PATH_3%
+set PYTHONPATH=%PYTHON_PATH_1%;%PYTHON_PATH_2%;%PYTHON_PATH_3%
 
 if "%1"=="runserver" goto :runserver
 if "%1"=="init" goto :init
@@ -82,7 +82,6 @@ if "%2" == "reset" del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
 %PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
 %PYTHON_EXE% -m genetrack.scripts.initializer %GENETRACK_SERVER_HOME%\data\init\initial-users.csv
 goto :eof
-
 
 :runserver
 echo.

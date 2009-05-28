@@ -3,15 +3,45 @@
 
 {% block title %}GeneTrack Admin{% endblock %}
 
-{% block pageheader %}GeneTrack: Genomic Data Analysis and Visualization{% endblock %}
+{% block header %}<h1 align="center">GeneTrack Admin Login</h1>{% endblock %}
 
-{% block pagetitle %}Genetrack Administration{% endblock %}
+{% block mainbody %}
 
-
-{% block body %}
+{% if error_message %}
+    <div class="span-24 last">
+      <div class="span-2">&nbsp;</div>
+      <div class="span-20 error textcenter">{{ error_message }}</div>
+      <div class="span-2 last">&nbsp;</div>
+    </div>
+{% endif %}
 
 <form action="{{ app_path }}" method="post" id="login-form">
 
+<!-- left sidebar -->
+<div class="span-8">&nbsp;</div>
+
+<div class="span-8 center">
+    <fieldset id="login">
+      <legend>Please Log in</legend>
+      <div class="textcenter notice">Note: admin login requires username!</a></div>
+      <p><label for="name">Username</label> <input class="textinput" type="text" name="username" id="id_username"" /></p>
+      <p><label for="e-mail">Password</label> <input class="textinput" type="password" name="password" id="id_password" /></p>
+      <p class="submit"><input type="submit" value="Submit" /></p>
+      <div class="textcenter"><a href="/">&lt;&lt; back to home</a></div>
+    </fieldset>
+</div>
+
+<!-- right sidebar -->
+<div class="span-8 last" >&nbsp;</div>
+
+<input type="hidden" name="this_is_the_login_form" value="1" />
+
+<script type="text/javascript">
+  document.getElementById('id_username').focus()
+</script>
+
+</form> 
+<!-- 
 <table class="datatable" align="center">
     
     {% if error_message %}
@@ -41,4 +71,6 @@
 document.getElementById('id_username').focus()
 </script>
 </div>
+-->
+
 {% endblock %}

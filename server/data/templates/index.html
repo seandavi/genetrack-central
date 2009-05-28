@@ -2,44 +2,84 @@
 
 {% block title %}GeneTrack{% endblock %}
 
-{% block pageheader %}GeneTrack: Genomic Data Analysis and Visualization Framework{% endblock %}
+{% block header %}<h1>GeneTrack</h1>{% endblock %}
 
-{% block pagetitle %}Welcome to GeneTrack{% endblock %}
+{% block mainbody %}
+  <div id="subheader" class="span-24 last">
+    <h3 class="alt">a genomic data visualization framework</h3>
+  </div>
 
-{% block body %}
+  <hr />
 
-<table class="datatable"  align="center" cellpadding="10" cellspacing="0" width="80%">
-    <tr>
-        <td colspan="2" align="center">
-            Click here to <a href="/account/">access your account<a>
-        </td>
-    </tr>
+  <!-- main box left -->
+  <div class="span-17 colborder" id="content">
+    <h3 class="loud">Recent Published Datasets</h3>
+    <p>
+      Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?" 
 
-    <tr>
-        <td colspan="2">
-            <h3>Published Visualizations</h3>
-        </td>
-    </tr>
+      <div> See all <a href="#">published datasets</a></div>
+    </p>
 
-    <!--
-    <tr>
-        <td>
-            <a href="/mapping/">Visualizing sequence reads<a>
-        </td>
-         <td>
-            <img src="/static/icons/visual1.png"> 
-        </td>
-    </tr>
+    <hr />
+    
+    <!-- two bottom info boxes -->
+    <div class="span-8 colborder">
+      <h4 class="prepend-5">About Genetrack</h4>
+      <p>
+        <b>GeneTrack</b> is a <a href="http://www.python.org/">Python</a> 
+        based genomic data visualization framework. It aims to provide generic 
+        building blocks for creating sophisticated web based genomic data 
+        visualization sites.For more details about the system's capabilities and installation
+        see the <a href="http://genetrack.bx.psu.edu">main site</a>
+      </p>. 
+    </div>
 
-    <tr>
-        <td>
-            <a href="/coverage/">Visualizing genomic coverage<a>
-        </td>
-         <td>
-            <img src="/static/icons/coverage1.png"> 
-        </td>
-    </tr>
-    -->
+    <div class="span-8 last">
+      <h4 class="prepend-5">Get an account</h4>
+        <p>
+          The current server is free for non-profit users. Please use the
+          <a href="request_account">request account</a> page. Commercial entities 
+          are welcome to run their own instances. Paid support is occasionally 
+          available to interested parties. Contact the maintainers listed on the
+          <a href="http://genetrack.bx.psu.edu/people.html">contact page</a>
+        </p>      
+    </div>
 
-</table>
+  <!-- end main box left -->
+  </div>
+
+  <!-- left sidebar -->
+  <div class="span-6 last" id="sidebar">
+
+    <div>
+      <h3 class="caps">Your Account</h3>
+      <div class="box">
+        <div class="quiet">You are not logged in</div>
+        <a href="/login" class="quiet">Log in now</a>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="caps">Administration</h3>
+      <div class="box">
+        <div class="quiet">&bull; <a href="#" class="quiet">server status</a></div>
+        <div class="quiet">&bull; <a href="/admin/" class="quiet">admin interface</a></div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="caps">Get GeneTrack</h3>
+      <div class="box">
+        <div class="quiet">GeneTrack runs fast on any computer from a regular 
+          laptop to high performance server. It is released
+          with the <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a> 
+          open source license.
+          Find out more on the <a href="http://genetrack.bx.psu.edu"">main site.</a>
+        </div>
+      </div>
+    </div>
+
+  <!-- end left sidebar -->
+  </div>
+
 {% endblock %}

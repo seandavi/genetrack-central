@@ -69,7 +69,6 @@ ADMIN_MEDIA_PREFIX = '/media/'
 # This key below will raise an error
 SECRET_KEY = '1'
 
-
 # this settings allows superusers to log in as other users
 # with the SECRET_KEY as password (used for debugging problems)
 SUPERUSER_PASSWORD_OVERRIDE = True

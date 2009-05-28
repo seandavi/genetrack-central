@@ -1,44 +1,53 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>{% block title %}Title{% endblock %}</title>
-<link rel="stylesheet" href="/static/genetrack.css" type="text/css" media="screen">
-<link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
-{% block javascript %}
+  <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+  <title>{% block title %}Title{% endblock %}</title>
+
+  {% block frameworkcss %}
+    <!-- Framework CSS -->
+    <link rel="stylesheet" href="/static/blueprint/screen.css" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="/static/blueprint/print.css" type="text/css" media="print" />
+    <!--[if IE]><link rel="stylesheet" href="/static/blueprint/ie.css" type="text/css" media="screen, projection"/><![endif]-->
+
+	  <!-- Import fancy-type plugin. -->
+	  <link rel="stylesheet" href="/static/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" />
+  {% endblock %}
+
+  {% block customkcss %}
+    <!-- Custom css -->
+    <link rel="stylesheet" href="/static/genetrack.css" type="text/css" media="screen, projection" />
+  {% endblock %}
+
+  {% block frameworkjs %}
+    <!-- Framework javascript -->
     <script type="text/javascript" src="/static/js/jquery.js"></script>
     <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
-    <script type="text/javascript" src="/static/base.js"></script>
-{% endblock %}
-</head>
+  {% endblock %}
 
+  {% block customjs %}
+     <!-- Custom javascript -->
+  {% endblock %}
+
+</head>
 <body>
+  <div class="container">
     
-    <div id="pageheader">{% block pageheader %}PageHeader{% endblock %}</div>
+    <div id="baseheader" class="span-24 last">&nbsp;</div>
+
+    <div id="header" class="span-24 last">
+      {% block header %}<h1>Header</h1>{% endblock %}
+    </div>
+
+    <hr />
     
-    <div id="pagetitle">{% block pagetitle %}PageTitle{% endblock %}</div>
-    
-    {% block messages %}
-        {% if messages %}
-            <div class="messages" align="center">
-                {% for message in messages %}
-                    <div class="messageline" >&bull;&nbsp;{{ message|safe }} </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+    {% block mainbody %}
+      <div id="header" class="span-24 last">
+        Main body
+      </div>
     {% endblock %}
-    
-    <div id="pagebody">{% block body %}Body{% endblock %}</div>
-    
-    
-    <!-- footer -->
-    <div id="pagefooter">
-        {% block pagefooter %}
-            <a href="/">Server home<a/> | 
-            <a href="/admin">Admin login<a/> |
-            <a href="/about/">About GeneTrack<a/>
-        {% endblock %}
-    </div>      
-    
-</body>
+
+    <div id="basefooter" class="span-24 last">
+      Powered by <a href="http://genetrack.bx.psu.edu"><img src="/static/gt-antipixel.png"></a> 
+    </div>
+
 </html>
