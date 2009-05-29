@@ -34,6 +34,21 @@
           <div class="quiet"><input type="text" size="25"></div>
       </div>
     </div>
+
+    {% if user.is_superuser %}
+    <div>
+      <h3 class="caps">Admin Tools</h3>
+      <div class="box">
+          <div class="quiet">This account has administration privileges</div>
+          <div style="padding-left:20px">
+            <div class="quiet"> &bull <a href="#" class="quiet">access user list</a></div>
+            <div class="quiet"> &bull <a href="#" class="quiet">access job queue</a></div>
+            <div class="quiet"> &bull <a href="#" class="quiet">access server status</a></div>
+          </div>
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 
 {% endblock %}
