@@ -13,14 +13,6 @@ class LoginForm(forms.Form):
     email = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
 
-def check_profile(user):
-    "Creates a user profile if it did not exists"
-    try:
-        user.get_profile()
-    except ObjectDoesNotExist, exc:
-        logger.debug( 'Creating a user profile for %s' % user.username )
-        profile = models.UserProfile.objects.create( user=user )
-
 def logout(request):
     "Logout request"
     auth.logout(request)
@@ -42,7 +34,6 @@ def index(request):
             user = User.objects.get(id=uid)
             backend = auth.get_backends()[0]
             user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
-            check_profile(user)
             auth.login(request, user)            
             return html.redirect("/project/list/")  
         else:
@@ -60,7 +51,6 @@ def index(request):
                 first = userlist[0]
                 user = auth.authenticate(username=first.username, password=password)
                 if user and user.is_active:
-                    check_profile(user)
                     auth.login(request, user)                
                     return html.redirect("/project/list/")
                 else:
