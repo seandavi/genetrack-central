@@ -39,12 +39,11 @@ class ServerTest( unittest.TestCase ):
         tc.code(200)
         tc.find("GeneTrack") 
 
-    def test_about(self):
-        "About page"
+    def test_404(self):
+        "Missing page"
         tc.go( testlib.BASE_URL )
-        tc.go( 'about' )
-        tc.code(200)
-        tc.find("About") 
+        tc.go( 'whereto' )
+        tc.code(404)
 
 
 

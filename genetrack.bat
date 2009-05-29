@@ -78,7 +78,7 @@ goto :eof
 echo.
 echo *** Initializing the data ***
 echo.
-if "%2" == "reset" del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
+if "%2" == "delete" del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
 %PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
 %PYTHON_EXE% -m genetrack.scripts.initializer %GENETRACK_SERVER_HOME%\data\init\initial-users.csv
 goto :eof
@@ -93,9 +93,12 @@ goto :eof
 
 :test
 echo.
-echo *** running the tests
+echo *** running django tests
 echo.
-PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py test
+%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py test
+echo.
+echo *** running server tests
+echo.
 %PYTHON_EXE% %DEFAULT_HOME%\tests\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 

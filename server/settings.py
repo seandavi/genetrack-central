@@ -15,8 +15,10 @@ STATIC_DIR = path_join( DATA_DIR, 'static')
 STORAGE_DIR = path_join( DATA_DIR, 'storage')
 DATABASE_DIR = path_join(  DATA_DIR, 'db')
 
+
 # debug mode set to on if a sentinel file is present
 DEBUG = os.path.isfile(path_join(curr_dir, 'debug-mode'))
+
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -70,12 +72,19 @@ MEDIA_URL = ''
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
 
-# Make this long and unique, and don't share it with anybody.
-# This key below will raise an error
-SECRET_KEY = '1'
+# allows setting the secret key externally
+# make it long and unique, and don't share it with anybody.
+# it will be used as the default admin password
+secret_fname=path_join(curr_dir, 'secret-key')
+if os.path.isfile(secret_fname):
+    # file must have only one line
+    SECRET_KEY = file(secret_fname).read().strip()
+else:
+    # you can set the secret key directly
+    SECRET_KEY = '1' # this value is for debuggin only
 
-# this settings allows superusers to log in as other users
-# with the SECRET_KEY as password (used for debugging problems)
+# this settings allows adminstrators to log in as other users
+# with the SECRET_KEY as password 
 SUPERUSER_PASSWORD_OVERRIDE = True
 
 AUTH_PROFILE_MODULE = "web.userprofile"
