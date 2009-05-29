@@ -110,6 +110,9 @@ TEMPLATE_DIRS = (
     # custom pages for password recovery
     path_join(TEMPLATE_PATH, 'password'),
 
+    # pages for projects
+    path_join(TEMPLATE_PATH, 'project'),
+
     # custom pages for administration
     path_join(TEMPLATE_PATH, 'admin'),
 
@@ -122,5 +125,6 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'django.contrib.markup',
     'server.web',
 )

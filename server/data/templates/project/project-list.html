@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load markup %} 
+{% block title %}Project List{% endblock %}
+
+{% block header %}<h2>Project List</h2>{% endblock %}
+
+{% block mainbody %}
+
+  <!-- main box left -->
+  <div class="span-17 colborder" id="content">
+    {% for p in projects %}
+      <div class="{% cycle 'oddrow' 'evenrow' %}">
+        {{p.name}}
+      </div>
+    {% endfor %}
+  </div>
+
+  <!-- left sidebar -->
+  <div class="span-6 last" id="sidebar">
+    <div>
+      <h3 class="caps">Your Account</h3>
+      <div class="box">
+          <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
+          <div class="quiet">You have access to <b>X</b> projects</div>
+          <div><a href="/logout">Log out</a></div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="caps">Filter Projects</h3>
+      <div class="box">
+          <div class="quiet">Filter projects by showing only 
+          the names that match the text in the box below</div>
+          <div class="quiet"><input type="text" size="25"></div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block body %}
+
+    <table width="90%" border="0" align="center" cellpadding="8" cellspacing="0" class="datatable">
+
+    <tr class="evenrow">
+            <td align="center">
+                <img src="/static/icons/down.png"> <a class="toggle" href="javascript:void(0);" id='details'>Expand all</a> &nbsp;|&nbsp;
+
+                <img src="/static/icons/new-project.png">&nbsp;<a href="/project/edit/new/">Create a New Project</a>
+            </td>            
+    </tr>
+
+    {% for p in projects %}
+    <tr class="{% cycle 'oddrow' 'evenrow' %}">
+            <td>
+                <div class="project-name">
+                    Project: <a href="/project/view/{{p.id}}/">{{p.name}}</a> 
+                </div> 
+
+                    <div class="project-actions">
+                        Your role: {{ p.role }} &bull; {{p.count}} datasets 
+                        &bull; <a href="javascript:expand({{p.id}})">show info</a> 
+                    </div>
+
+                <div class="closed" id="{{p.id}}">
+                    <div class="project-info">
+                        {{p.info|markdown:"safe"}}
+                    </div>
+                </div>
+
+            </td>
+            <td align="center" valign="middle" width="48">
+                {% if p.is_manager %}
+                    <div><img src="/static/icons/delete-yes.png"></div>
+                    <div><a href="/project/delete/{{p.id}}/">delete</a></div>
+                {% else %}
+                    <!-- <div><img src="/static/icons/delete-no.png"></div>
+                    <div>delete</div> -->                
+                {% endif %}
+            </td>
+
+        <tr>
+    {% endfor %}
+    
+    </table>
+
+{% endblock %}

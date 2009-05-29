@@ -87,6 +87,9 @@ class Project( models.Model ):
     class Meta:
         ordering = [ 'name' ]
 
+    def __str__(self):
+        return "#Project: %s#" % self.name
+
 class Member( models.Model ):
     """
     Maintains membership information between a project and a user

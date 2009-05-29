@@ -80,7 +80,7 @@ echo *** Initializing the data ***
 echo.
 if "%2" == "delete" del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
 %PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
-%PYTHON_EXE% -m genetrack.scripts.initializer %GENETRACK_SERVER_HOME%\data\init\initial-users.csv
+%PYTHON_EXE% -m server.scripts.initializer %GENETRACK_SERVER_HOME%\data\init\initial-users.csv
 goto :eof
 
 :runserver
@@ -99,7 +99,7 @@ echo.
 echo.
 echo *** running server tests
 echo.
-rem %PYTHON_EXE% %DEFAULT_HOME%\tests\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
+%PYTHON_EXE% %DEFAULT_HOME%\tests\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 
 :editor

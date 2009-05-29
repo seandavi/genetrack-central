@@ -20,8 +20,12 @@ urlpatterns = patterns('',
     # placeholder for pages that are not yet completed
     (r'^todo/', 'web.views.main.todo'),
 
-    # password handling
-    (r'^password/',  include('urls.passwords')),
+    # project related urls
+    (r'^project/',  include('urls.project')),
+
+    # password reset related urls
+    (r'^password/',  include('urls.password')),
+    
 
     # (r'^server/', include('server.foo.urls')),
 
