@@ -36,8 +36,6 @@ def index(request):
             user.backend = "%s.%s" % (backend.__module__, backend.__class__.__name__)
             auth.login(request, user)            
             return html.redirect("/project/list/")  
-        else:
-            raise Exception('invalid login')
     #
     # normal login
     #

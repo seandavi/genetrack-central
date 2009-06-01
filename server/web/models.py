@@ -88,7 +88,7 @@ class Project( models.Model ):
         ordering = [ 'name' ]
 
     def __str__(self):
-        return "#Project: %s#" % self.name
+        return "Project: %s" % self.name
 
 class Member( models.Model ):
     """
@@ -105,7 +105,7 @@ class Member( models.Model ):
 
     user = models.ForeignKey(User)
     project = models.ForeignKey(Project)
-    role = models.CharField(max_length=100, choices=choices)
+    role = models.CharField(max_length=100, choices=choices, default=status.MEMBER)
     timestamp = models.DateField(auto_now_add=True)
 
     class Meta:
@@ -117,7 +117,13 @@ class Member( models.Model ):
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
 
+class MemberAdmin(admin.ModelAdmin):
+    list_display = [ 'user', 'project' ]
+
+
 admin.site.register( Project, ProjectAdmin )
+admin.site.register( Member, MemberAdmin )
+
 #admin.site.register( models.DataTree, DataTreeAdmin )
 
 

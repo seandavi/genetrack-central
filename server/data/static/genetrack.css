@@ -1,3 +1,26 @@
+body {
+    
+}
+
+.project.row{
+    padding: 5px;
+    padding-bottom:10px;
+    border-bottom: 1px solid #EEEEEE;
+}
+
+.project.name{
+    font: 1.4em Verdana, Arial, Helvetica, sans-serif;
+    padding-bottom:5px;
+}
+
+.project.status{
+    font: 1.0em Verdana, Arial, Helvetica, sans-serif;
+}
+
+.project.hover{
+    background-color: #E5ECF9;
+}
+
 img {
 	vertical-align: middle;
 }

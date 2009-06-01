@@ -10,15 +10,14 @@
     
     function display_projects(){
         // displays project based on the content of the filterbox
-        var text = $("#filterbox").val().toLowerCase().split(" ");
-        text = filter(text)
+        var text = $("#filter-input").val().toLowerCase();
         if (text.length == 0) {
             $(".row").show();
+            $('#filter-box').removeClass("notice")
         } else {
             $(".row").hide();
-            $.each(text, function() {
-                $(".row:contains('" + this +"')").show()
-            });
+            $('#filter-box').addClass("notice")
+            $(".row:contains('" + text +"')").show()
         }
     }
 
@@ -26,9 +25,22 @@
         // $("div:contains('John')").css("text-decoration", "underline");
         
         // filter the project rows based on the filter box
-        $("#filterbox").keyup( display_projects ); 
-
+        $("#filter-input").keyup( display_projects ); 
         display_projects()
+        $("#filter-input").focus()
+        
+        // light up background 
+        $(".row").hover( function() {
+                $(this).addClass("hover")
+            }, function() {
+                $(this).removeClass("hover")
+            }
+        )
+
+        $(".row").click(function(){
+            window.location=$(this).find("a").attr("href"); return false;
+        });
+
     });
 </script>
 
@@ -38,11 +50,16 @@
 
   <!-- main box left -->
   <div class="span-17 colborder" id="content">
+
       {% for p in projects %}
-          <div class="row">{{p.name}}</div> 
+          <div class="project row quiet">
+            <div class="project name">Project: <a href="/project/view/{{p.id}}">{{p.name}}</a></div>
+            <div class="project status">Your role {{p.role}} &bull; 0 {{p.size}} datasets.</div>
+          </div>
+          
       {% endfor %}
       <div>&nbsp;</div>
-      <div>John Resig</div>
+      
 
   </div>
 
@@ -62,12 +79,12 @@
 
     <div>
       <h3 class="caps">Filter Projects</h3>
-      <div class="box">
+      <div class="box" id="filter-box">
           <div class="quiet">Filter projects by showing only 
           the names that match the text in the box below</div>
           <div class="quiet" >
             <span class="search">
-              <input type="text" size="20" id="filterbox" style="margin-left:20px;">
+              <input type="text" size="20" id="filter-input" style="margin-left:20px;">
             </span>
           </div>
       </div>
