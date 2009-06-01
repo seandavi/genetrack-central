@@ -3,32 +3,36 @@
   <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
   <title>{% block title %}Title{% endblock %}</title>
 
-  {% block frameworkcss %}
-    <!-- Framework CSS -->
-    <link rel="stylesheet" href="/static/blueprint/screen.css" type="text/css" media="screen, projection" />
-    <link rel="stylesheet" href="/static/blueprint/print.css" type="text/css" media="print" />
-    <!--[if IE]><link rel="stylesheet" href="/static/blueprint/ie.css" type="text/css" media="screen, projection"/><![endif]-->
+  {% block framework-css %}
+        <!-- Framework CSS -->
+        <link rel="stylesheet" href="/static/blueprint/screen.css" type="text/css" media="screen, projection" />
+        <link rel="stylesheet" href="/static/blueprint/print.css" type="text/css" media="print" />
+        <!--[if IE]><link rel="stylesheet" href="/static/blueprint/ie.css" type="text/css" media="screen, projection"/><![endif]-->
 
-	  <!-- Import fancy-type plugin. -->
-	  <link rel="stylesheet" href="/static/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" />
-  {% endblock %}
+        <!-- Import fancy-type plugin. -->
+        <link rel="stylesheet" href="/static/blueprint/plugins/fancy-type/screen.css" type="text/css" media="screen, projection" />
+    {% endblock %}
 
-  {% block customkcss %}
-    <!-- Custom css -->
+    {% block genetrack-css %}
+    <!-- genetrack css -->
     <link rel="stylesheet" href="/static/genetrack.css" type="text/css" media="screen, projection" />
   {% endblock %}
 
-  {% block frameworkjs %}
+  <!-- Javascript loaders -->
+
+  {% block framework-js %}
     <!-- Framework javascript -->
-    <script type="text/javascript" src="/static/js/jquery.js"></script>
-    <script type="text/javascript" src="/static/js/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/static/js/jquery-1.3.2.min.js"></script>
+    <!-- <script type="text/javascript" src="/static/js/jquery.cookie.js"></script> -->
+    <script type="text/javascript" src="/static/genetrack-utils.js"></script>
   {% endblock %}
 
-  {% block customjs %}
-     <!-- Custom javascript -->
+  {% block local-headers %}
+    <!-- Page local header block-->
   {% endblock %}
 
 </head>
+
 <body>
   <div class="container">
     
