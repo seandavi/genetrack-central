@@ -19,10 +19,11 @@ body {
 
 .project.hover{
     background-color: #E5ECF9;
+    cursor:pointer;
 }
 
 img {
-	vertical-align: middle;
+    vertical-align: middle;
 }
 
 .right {

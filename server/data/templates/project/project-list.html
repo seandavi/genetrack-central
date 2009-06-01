@@ -8,6 +8,21 @@
 
 <script>
     
+    // Dialog			
+    $('#dialog').dialog({
+					autoOpen: false,
+					width: 600,
+					buttons: {
+						"Ok": function() { 
+							$(this).dialog("close"); 
+						}, 
+						"Cancel": function() { 
+							$(this).dialog("close"); 
+						} 
+					}
+    });
+
+
     function display_projects(){
         // displays project based on the content of the filterbox
         var text = $("#filter-input").val().toLowerCase();
@@ -20,6 +35,15 @@
             $(".row:contains('" + text +"')").show()
         }
     }
+
+// Dialog Link
+				$('##create-project').click(function(){
+					$('#dialog').dialog('open');
+					return false;
+				});
+
+
+    $.ui.dialog.defaults.bgiframe = true;
 
     $(document).ready(function(){
         // $("div:contains('John')").css("text-decoration", "underline");
@@ -41,6 +65,8 @@
             window.location=$(this).find("a").attr("href"); return false;
         });
 
+
+
     });
 </script>
 
@@ -60,6 +86,10 @@
       {% endfor %}
       <div>&nbsp;</div>
       
+    <!-- ui-dialog -->
+    <div id="dialog" title="Dialog Title">
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
 
   </div>
 
@@ -74,6 +104,15 @@
             <a href="/">Home page</a> &bull; 
             <a href="/logout">Log out</a>
           </div>
+      </div>
+    </div>
+
+<div>
+      <h3 class="caps">Create a Project</h3>
+      <div class="box">
+          <div class="quiet" align="center">
+          <img src="/static/icons/small/add.png">&nbsp;<a href="#" id="create-project">
+          Add a new project</a></div>
       </div>
     </div>
 
@@ -108,52 +147,3 @@
 
 {% endblock %}
 
-{% block body %}
-
-    <table width="90%" border="0" align="center" cellpadding="8" cellspacing="0" class="datatable">
-
-    <tr class="evenrow">
-            <td align="center">
-                <img src="/static/icons/down.png"> <a class="toggle" href="javascript:void(0);" id='details'>Expand all</a> &nbsp;|&nbsp;
-
-                <img src="/static/icons/new-project.png">&nbsp;<a href="/project/edit/new/">Create a New Project</a>
-            </td>            
-    </tr>
-
-    {% for p in projects %}
-    <tr class="{% cycle 'oddrow' 'evenrow' %}">
-            <td>
-                <div class="project-name">
-                    Project: <a href="/project/view/{{p.id}}/">{{p.name}}</a> 
-                </div> 
-
-                    <div class="project-actions">
-                        Your role: {{ p.role }} &bull; {{p.count}} datasets 
-                        &bull; <a href="javascript:expand({{p.id}})">show info</a> 
-                    </div>
-
-                <div class="closed" id="{{p.id}}">
-                    <div class="project-info">
-                        {{p.info|markdown:"safe"}}
-                    </div>
-                </div>
-
-            </td>
-            <td align="center" valign="middle" width="48">
-                {% if p.is_manager %}
-                    <div><img src="/static/icons/delete-yes.png"></div>
-                    <div><a href="/project/delete/{{p.id}}/">delete</a></div>
-                {% else %}
-                    <!-- <div><img src="/static/icons/delete-no.png"></div>
-                    <div>delete</div> -->                
-                {% endif %}
-            </td>
-
-        <tr>
-    {% endfor %}
-    
-    </table>
-
-
-
-{% endblock %}
