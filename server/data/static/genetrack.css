@@ -68,3 +68,9 @@ legend {
 
 .errorlist {padding-left:2em;margin-bottom:1em;border:2px solid #ddd;}
 .errorlist {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}
+
+span.search {
+    background: url("/static/icons/small/magnifier.png") no-repeat left center;
+    background-repeat: no-repeat;
+    display:inline;
+}

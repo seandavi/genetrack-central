@@ -22,7 +22,10 @@
       <div class="box">
           <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
           <div class="quiet">You have access to <b>X</b> projects</div>
-          <div><a href="/logout">Log out</a></div>
+          <div>
+            <a href="/">Home page</a> &bull; 
+            <a href="/logout">Log out</a>
+          </div>
       </div>
     </div>
 
@@ -31,7 +34,9 @@
       <div class="box">
           <div class="quiet">Filter projects by showing only 
           the names that match the text in the box below</div>
-          <div class="quiet"><input type="text" size="25"></div>
+          <div class="quiet" >
+            <span class="search">&nbsp;<input type="text" size="20" style="margin-left:15px;"></span>
+          </div>
       </div>
     </div>
 

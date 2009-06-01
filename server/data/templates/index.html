@@ -54,11 +54,11 @@
 
     <div>
       <h3 class="caps">Your Account</h3>
-      <div class="box">
+      <div class="box" >
         {%if user.is_authenticated %}
           <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
-          <div><a href="/project/list">Your Projects</a> &bull; 
-           <a href="/logout">Log Out</a>
+          <div><a href="/project/list">Project list</a> &bull; 
+           <a href="/logout">Log out</a>
           </div>
         {% else %}
           <div class="quiet">You are not logged in</div>
