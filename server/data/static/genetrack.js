@@ -1,9 +1,17 @@
 
-def filter(data, func=123):
-    var out = new Array()
-    for (entry in data){
-        if (entry.lenght>0){
-            out.push( entry )
-        }
+
+function filter_rows(){
+    // displays rows based on the content of the input
+    var text = $("#filter-input").val().toLowerCase();
+    if (text.length == 0) {
+        $(".row").show();
+        $('#filter-box').removeClass("notice")
+        $('#filter-info').html('')
+
+    } else {
+        $(".row").hide();
+        $('#filter-box').addClass("notice")
+        $('#filter-info').html('&bull; <span class="filter info">filtered with "' + text + '"</span>')
+        $(".row:contains('" + text +"')").show()
     }
-    return out
+}

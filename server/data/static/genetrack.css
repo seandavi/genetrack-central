@@ -39,6 +39,10 @@ img {
   text-align: center;
 }
 
+.filter.info {
+	color: #666666;
+    padding: 5px;
+}
 
 #baseheader {
 	border-top: 1em solid #F4C03E;

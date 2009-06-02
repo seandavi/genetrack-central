@@ -2,40 +2,23 @@
 
 {% block title %}Project List{% endblock %}
 
-{% block header %}<h2>Project list <span id="filter-text" /></h2>{% endblock %}
+{% block header %}<h2>Project list <span id="filter-info" /></h2>{% endblock %}
 
 {% block local-headers%}
 
 <script>
-
-    function filter_projects(){
-        // displays project based on the content of the filterbox
-        var text = $("#filter-input").val().toLowerCase();
-        if (text.length == 0) {
-            $(".row").show();
-            $('#filter-box').removeClass("notice")
-            $('#filter-text').html('')
-
-        } else {
-            $(".row").hide();
-            $('#filter-box').addClass("notice")
-            $('#filter-text').html(' &bull; filtered with "' + text + '"')
-            $(".row:contains('" + text +"')").show()
-        }
-    }
-
+    
     $(document).ready(function(){
-        // $("div:contains('John')").css("text-decoration", "underline");
-        
-        // filter the project rows based on the filter box
-        $("#filter-input").keyup( filter_projects ); 
+
+        // run the project filter on page load
+        filter_rows()
+
+        // assign the callback to filter input
+        $("#filter-input").keyup( filter_rows ); 
 
         // searchbox gets focus
         $("#filter-input").focus()
 
-        // run the project filter on page load
-
-        filter_projects()
         // highlits data rows on mouse hover
         $(".row").hover( function() {
                 $(this).addClass("hover")
@@ -48,8 +31,6 @@
         $(".row").click(function(){
             window.location=$(this).find("a").attr("href"); return false;
         });
-
-
 
     });
 </script>
