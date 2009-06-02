@@ -1,66 +1,50 @@
 {% extends "base.html" %}
-{% load markup %} 
+
 {% block title %}Project List{% endblock %}
 
-{% block header %}<h2>Project List</h2>{% endblock %}
+{% block header %}<h2>Project list <span id="filter-text" /></h2>{% endblock %}
 
 {% block local-headers%}
 
 <script>
-    
-    // Dialog			
-    $('#dialog').dialog({
-					autoOpen: false,
-					width: 600,
-					buttons: {
-						"Ok": function() { 
-							$(this).dialog("close"); 
-						}, 
-						"Cancel": function() { 
-							$(this).dialog("close"); 
-						} 
-					}
-    });
 
-
-    function display_projects(){
+    function filter_projects(){
         // displays project based on the content of the filterbox
         var text = $("#filter-input").val().toLowerCase();
         if (text.length == 0) {
             $(".row").show();
             $('#filter-box').removeClass("notice")
+            $('#filter-text').html('')
+
         } else {
             $(".row").hide();
             $('#filter-box').addClass("notice")
+            $('#filter-text').html(' &bull; filtered with "' + text + '"')
             $(".row:contains('" + text +"')").show()
         }
     }
-
-// Dialog Link
-				$('##create-project').click(function(){
-					$('#dialog').dialog('open');
-					return false;
-				});
-
-
-    $.ui.dialog.defaults.bgiframe = true;
 
     $(document).ready(function(){
         // $("div:contains('John')").css("text-decoration", "underline");
         
         // filter the project rows based on the filter box
-        $("#filter-input").keyup( display_projects ); 
-        display_projects()
+        $("#filter-input").keyup( filter_projects ); 
+
+        // searchbox gets focus
         $("#filter-input").focus()
-        
-        // light up background 
+
+        // run the project filter on page load
+
+        filter_projects()
+        // highlits data rows on mouse hover
         $(".row").hover( function() {
                 $(this).addClass("hover")
             }, function() {
                 $(this).removeClass("hover")
             }
         )
-
+    
+        // makes entire row clickable
         $(".row").click(function(){
             window.location=$(this).find("a").attr("href"); return false;
         });
@@ -86,11 +70,6 @@
       {% endfor %}
       <div>&nbsp;</div>
       
-    <!-- ui-dialog -->
-    <div id="dialog" title="Dialog Title">
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-
   </div>
 
   <!-- left sidebar -->
@@ -111,8 +90,8 @@
       <h3 class="caps">Create a Project</h3>
       <div class="box">
           <div class="quiet" align="center">
-          <img src="/static/icons/small/add.png">&nbsp;<a href="#" id="create-project">
-          Add a new project</a></div>
+          <img src="/static/icons/small/add.png">&nbsp;
+          <a href="/project/edit/new/" id="create-project">Create New Project</a></div>
       </div>
     </div>
 

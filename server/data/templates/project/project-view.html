@@ -1,0 +1,110 @@
+{% extends "auth.html" %}
+
+{% load tree %}
+{% load markup %} 
+
+{% block title %}Project View{% endblock %}
+
+{% block pagetitle %}Project: {{project.name}}{% endblock %}
+
+{% block body %}
+
+
+
+<table width="90%" border="0" align="center" cellpadding="3" cellspacing="0" class="datatable">
+
+    <tr>
+        <td>
+            <div align="center">
+                <form action="/project/view/{{project.id}}/" method="post">
+                    <img src="/static/icons/upload.png">
+                    <a href="/data/upload/{{project.id}}/">Upload Data</a>&nbsp;|&nbsp;
+                    {% if match %}
+                        <img src="/static/icons/about.png">Filtering is active (<a href="/project/view/{{project.id}}/?reset=yes" class="smaller">remove</a>)
+                    {% endif %}
+                   
+                    <input type="text" value="{{match}}" name="match">&nbsp;
+                    <input type="submit" value="Search!" >
+                </form>
+            </div>  
+            
+            <div class="project-actions toppad">
+                        Your role: {{ project.role }}
+                        {% if project.is_manager %}
+                            &bull;&nbsp;<a href="/project/share/{{project.id}}/">share project</a>
+                            &bull;&nbsp;<a href="/project/edit/{{project.id}}/">edit info</a>
+                        {% else %}
+                            &bull;&nbsp;<u>share project</u>&nbsp;&bull;&nbsp;<u>edit info</u>
+                        {% endif %}
+                        &bull;&nbsp;<a href="javascript:expand('p{{project.id}}')">show info</a>
+            </div>
+            
+            <div class="closed" id="p{{project.id}}">
+                
+                
+                <div class="project-info">
+                    {{project.info|markdown:"safe"}}
+                </div>
+            </div>
+
+        </td>
+    </tr> 
+
+    {% if not data %}
+    <tr>
+        <td align="center">
+            <p><b>There are no datasets in this project</b></p>
+        </td>
+    </tr>
+
+    {% else %}
+
+    <form action="/data/action/{{project.id}}/" method="post">
+    
+    <tr><td>
+        {{data|build|safe}}
+    </td></tr>
+
+    <tr>
+        <td align="center" colspan="2">
+                <input type="hidden" name="pid" value="{{project.id}}">With selected data: 
+                    <select name="action">
+                        <option value="" selected="yes">choose an action</option>    
+                        
+                        
+                        <!-- 
+                        <option value="build-visuals">Create a Visualization</option>
+                        <option value="">******************</option>
+                        <option value="changetags">Modify Tags</option>
+                        <option value="">******************</option> -->
+                        
+                        <option value="">******************</option>
+                        <option value="delete">Delete Selected Data</option>
+                        <option value="">******************</option>
+
+                    </select>
+                    <input type="submit" name="submit" value="Execute!">  
+        </td>
+    </tr>
+    
+    </form>
+
+    {% endif %}
+
+    <tr>
+        <td class="oddrow" colspan="2">
+            <div>Members: {{ project.member_names }}</div>
+            <div>Managers: {{ project.manager_names }}
+            {% if project.is_manager %}
+                    &bull;&nbsp;<a href="/project/share/{{project.id}}/">share</a>
+            {% endif %}  
+            </div>
+            
+        </td>
+    </tr>
+    
+   
+
+</table>
+
+{% endblock %}

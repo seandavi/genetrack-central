@@ -1,0 +1,91 @@
+{% extends "auth.html" %}
+
+{% block title %}Share Project{% endblock %}
+
+{% block pagetitle %}Sharing: <a href="/project/view/{{project.id}}/">{{project.name}}</a>{% endblock %}
+
+{% block body %}
+
+<form action="/project/share/{{project.id}}/" method="get">
+
+<table width="90%" border="0" align="center" cellpadding="8" cellspacing="0" class="datatable">
+
+    <tr>
+        <td align="center">
+            <h3>Add access to users</h3>
+                
+                {% if text %}
+                    {% if not search %}
+                        <h4> No results for {{word}}</h4>
+                    {% endif %}
+                {% endif %}
+
+                {% if search %}
+                    
+                    <table width="80%" cellpadding="5" cellspacing="0" class="datatable">
+                    <tr>
+                        <th>Name</th><th>Action</th>
+                    </tr>
+                    {% for user in search %}
+                    <tr class="{% cycle 'oddrow' 'evenrow'  %}" align="center">
+                        <td>
+                            {{user.get_full_name}}
+                        </td>
+                        <td>
+                            <a href="/project/share/{{project.id}}/?member={{user.id}}&text={{text}}">add as member</a> | 
+                            <a href="/project/share/{{project.id}}/?manager={{user.id}}&text={{text}}">add as manager</a> 
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                    </table>
+                 {% endif %}
+                 <br>
+                 Search user: 
+                 <input type="text" value="{{text}}" name="text"> 
+                 <input type="submit" name="submit" value="Search!"> 
+                 <div class="smaller">Use * to list all users</div>
+        </td>
+    </tr>   
+    
+    <tr>
+        <td align="center">
+            <h3>Current access</h3>
+            <table width="80%" cellpadding="5" cellspacing="0" class="datatable">
+                <tr>
+                    <th>Name</th><th>Role</th><th>Action</th>
+                </tr>
+                {% for m in project.members %}
+                <tr class="{% cycle  'oddrow' 'evenrow' %}" align="center">
+                    <td>
+                        {{m.user.get_full_name}}
+                    </td>
+                    <td>
+                        {{m.role}}
+                    </td>
+                    <td>
+                        <a href="/project/share/{{project.id}}/?remove={{m.user.id}}&text={{text}}">remove</a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+            </table>
+        </td>
+    </tr>   
+    </form>
+
+</table>
+
+<table width="60%" align="center" cellpadding="15">
+    <tr>
+
+        <td align="center">
+            <a href="/project/view/{{project.id}}/">Go to Project View</a>
+            &nbsp;|&nbsp;
+            <a href="/project/list/">Go to Project List</a>
+
+        </td>
+
+    </tr>
+</table>
+{% endblock %}

@@ -90,6 +90,12 @@ legend {
     margin: 5px;
 }
 
+.textarea {
+    background: #EFEFEF;
+    border: 1px solid #F4C03E;
+    margin: 5px;
+}
+
 .errorlist {padding-left:2em;margin-bottom:1em;border:2px solid #ddd;}
 .errorlist {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}
 

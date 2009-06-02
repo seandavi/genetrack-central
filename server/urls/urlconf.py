@@ -21,10 +21,10 @@ urlpatterns = patterns('',
     (r'^todo/', 'web.views.main.todo'),
 
     # project related urls
-    (r'^project/',  include('urls.project')),
+    (r'^project/',  include('urls.project_urls')),
 
     # password reset related urls
-    (r'^password/',  include('urls.password')),
+    (r'^password/',  include('urls.password_urls')),
     
 
     # (r'^server/', include('server.foo.urls')),

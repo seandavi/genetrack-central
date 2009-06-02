@@ -19,3 +19,32 @@ def project_list(user):
         projects.append( p )
     projects = sorted( projects, key=lambda elem: elem.id, reverse=True )
     return projects
+
+def get_project( user, pid, write=True ):
+    "Returns a project for a given user"
+    try:
+        member  = models.Member.objects.get( user=user, project__id=pid )
+        project = member.project
+        project.role = member.role
+        project.is_manager = (project.role == status.MANAGER)
+    except ObjectDoesNotExist, exc:
+        logger.debug( exc )
+        raise AccessError("You may not access this project")
+
+    # write access check on by default
+    if write and not project.is_manager:
+        liondb.debug( 'write access with invalid role' )
+        raise AccessError('You may not change this project')
+        
+    return member.project
+
+def create_project( user, name, info ):
+    """
+    Creates a project and sets the user from the profile as the manager
+    """
+    project = models.Project.objects.create(name=name, info=info)
+    member  = models.Member.objects.create(user=user, project=project, role=status.MANAGER)
+    return project
+
+if __name__ == '__main__':
+    pass
