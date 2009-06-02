@@ -1,110 +1,131 @@
-{% extends "auth.html" %}
+{% extends "base.html" %}
 
-{% load tree %}
-{% load markup %} 
+{% block title %}Project List{% endblock %}
 
-{% block title %}Project View{% endblock %}
+{% block header %}<h2>Project: {{project.name}}</h2>{% endblock %}
 
-{% block pagetitle %}Project: {{project.name}}{% endblock %}
+{% block local-headers%}
 
-{% block body %}
+<script>
 
+    function filter_projects(){
+        // displays project based on the content of the filterbox
+        var text = $("#filter-input").val().toLowerCase();
+        if (text.length == 0) {
+            $(".row").show();
+            $('#filter-box').removeClass("notice")
+            $('#filter-text').html('')
 
+        } else {
+            $(".row").hide();
+            $('#filter-box').addClass("notice")
+            $('#filter-text').html(' &bull; filtered with "' + text + '"')
+            $(".row:contains('" + text +"')").show()
+        }
+    }
 
-<table width="90%" border="0" align="center" cellpadding="3" cellspacing="0" class="datatable">
+    $(document).ready(function(){
+        // $("div:contains('John')").css("text-decoration", "underline");
+        
+        // filter the project rows based on the filter box
+        $("#filter-input").keyup( filter_projects ); 
 
-    <tr>
-        <td>
-            <div align="center">
-                <form action="/project/view/{{project.id}}/" method="post">
-                    <img src="/static/icons/upload.png">
-                    <a href="/data/upload/{{project.id}}/">Upload Data</a>&nbsp;|&nbsp;
-                    {% if match %}
-                        <img src="/static/icons/about.png">Filtering is active (<a href="/project/view/{{project.id}}/?reset=yes" class="smaller">remove</a>)
-                    {% endif %}
-                   
-                    <input type="text" value="{{match}}" name="match">&nbsp;
-                    <input type="submit" value="Search!" >
-                </form>
-            </div>  
-            
-            <div class="project-actions toppad">
-                        Your role: {{ project.role }}
-                        {% if project.is_manager %}
-                            &bull;&nbsp;<a href="/project/share/{{project.id}}/">share project</a>
-                            &bull;&nbsp;<a href="/project/edit/{{project.id}}/">edit info</a>
-                        {% else %}
-                            &bull;&nbsp;<u>share project</u>&nbsp;&bull;&nbsp;<u>edit info</u>
-                        {% endif %}
-                        &bull;&nbsp;<a href="javascript:expand('p{{project.id}}')">show info</a>
-            </div>
-            
-            <div class="closed" id="p{{project.id}}">
-                
-                
-                <div class="project-info">
-                    {{project.info|markdown:"safe"}}
-                </div>
-            </div>
+        // searchbox gets focus
+        $("#filter-input").focus()
 
-        </td>
-    </tr> 
+        // run the project filter on page load
 
-    {% if not data %}
-    <tr>
-        <td align="center">
-            <p><b>There are no datasets in this project</b></p>
-        </td>
-    </tr>
-
-    {% else %}
-
-    <form action="/data/action/{{project.id}}/" method="post">
+        filter_projects()
+        // highlits data rows on mouse hover
+        $(".row").hover( function() {
+                $(this).addClass("hover")
+            }, function() {
+                $(this).removeClass("hover")
+            }
+        )
     
-    <tr><td>
-        {{data|build|safe}}
-    </td></tr>
+        // makes entire row clickable
+        $(".row").click(function(){
+            window.location=$(this).find("a").attr("href"); return false;
+        });
 
-    <tr>
-        <td align="center" colspan="2">
-                <input type="hidden" name="pid" value="{{project.id}}">With selected data: 
-                    <select name="action">
-                        <option value="" selected="yes">choose an action</option>    
-                        
-                        
-                        <!-- 
-                        <option value="build-visuals">Create a Visualization</option>
-                        <option value="">******************</option>
-                        <option value="changetags">Modify Tags</option>
-                        <option value="">******************</option> -->
-                        
-                        <option value="">******************</option>
-                        <option value="delete">Delete Selected Data</option>
-                        <option value="">******************</option>
 
-                    </select>
-                    <input type="submit" name="submit" value="Execute!">  
-        </td>
-    </tr>
-    
-    </form>
 
-    {% endif %}
-
-    <tr>
-        <td class="oddrow" colspan="2">
-            <div>Members: {{ project.member_names }}</div>
-            <div>Managers: {{ project.manager_names }}
-            {% if project.is_manager %}
-                    &bull;&nbsp;<a href="/project/share/{{project.id}}/">share</a>
-            {% endif %}  
-            </div>
-            
-        </td>
-    </tr>
-    
-   
-
-</table>
+    });
+</script>
 
 {% endblock %}
+
+{% block mainbody %}
+
+  <!-- main box left -->
+  <div class="span-17 colborder" id="content">
+
+      {% for p in projects %}
+          <div class="project row quiet">
+            <div class="project name">Project: <a href="/project/view/{{p.id}}">{{p.name}}</a></div>
+            <div class="project status">Your role {{p.role}} &bull; 0 {{p.size}} datasets.</div>
+          </div>
+          
+      {% endfor %}
+      <div>&nbsp;</div>
+      
+  </div>
+
+  <!-- left sidebar -->
+  <div class="span-6 last" id="sidebar">
+    <div>
+      <h3 class="caps">Your Account</h3>
+      <div class="box">
+          <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
+          <div>
+            <a href="/project/list">Project list</a> &bull; 
+            <a href="/">Home page</a> &bull; 
+            <a href="/logout">Log out</a>
+          </div>
+      </div>
+    </div>
+
+    {% if project.is_manager %}
+    <div>
+      <h3 class="caps">Modify Project</h3>
+      <div class="box">
+          <div class="quiet" align="center">
+          <a href="/project/edit/{{project.id}}/">Modify Project</a>
+          &bull; 
+          <a href="/project/delete/{{project.id}}/">Delete Project</a></div>
+      </div>
+    </div>
+    {% endif %}
+
+    <div>
+      <h3 class="caps">Filter Data</h3>
+      <div class="box" id="filter-box">
+          <div class="quiet">Filter data by showing only 
+          the names that match the text in the box below</div>
+          <div class="quiet" >
+            <span class="search">
+              <input type="text" size="20" id="filter-input" style="margin-left:20px;">
+            </span>
+          </div>
+      </div>
+    </div>
+
+    {% if user.is_superuser %}
+    <div>
+      <h3 class="caps">Admin Tools</h3>
+      <div class="box">
+          <div class="quiet">This account has administration privileges</div>
+          <div style="padding-left:20px">
+            <div class="quiet"> &bull <a href="#" class="quiet">access user list</a></div>
+            <div class="quiet"> &bull <a href="#" class="quiet">access job queue</a></div>
+            <div class="quiet"> &bull <a href="#" class="quiet">access server status</a></div>
+          </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+
+{% endblock %}
+

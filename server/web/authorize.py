@@ -33,10 +33,19 @@ def get_project( user, pid, write=True ):
 
     # write access check on by default
     if write and not project.is_manager:
-        liondb.debug( 'write access with invalid role' )
+        logger.debug( 'write access with invalid role' )
         raise AccessError('You may not change this project')
         
     return member.project
+
+def project_count(user):
+    """
+    Returns the number of projects a user has
+    """
+    if user.is_authenticated():
+        return models.Member.objects.filter(user=user).count()
+    else:
+        return 0
 
 def create_project( user, name, info ):
     """
@@ -44,6 +53,14 @@ def create_project( user, name, info ):
     """
     project = models.Project.objects.create(name=name, info=info)
     member  = models.Member.objects.create(user=user, project=project, role=status.MANAGER)
+    return project
+
+def update_project( user, pid, name, info ):
+    """
+    Updates a project and sets the user from the profile as the manager
+    """
+    project = get_project(user=user, pid=pid, write=True) 
+    models.Project.objects.filter(id=project.id).update(name=name, info=info)
     return project
 
 if __name__ == '__main__':

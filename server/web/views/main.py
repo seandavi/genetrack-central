@@ -2,7 +2,7 @@
 import sys
 from django.conf import settings
 from genetrack import logger
-from server.web import html
+from server.web import html, authorize
 from django.template import RequestContext
 
 if not settings.DEBUG:
@@ -11,6 +11,7 @@ if not settings.DEBUG:
 def index(request):
     "Main index page"
     params = html.Params()
+    params.project_count = authorize.project_count(request.user)
     return html.template( request, name='index.html', params=params )
 
 def todo(request):

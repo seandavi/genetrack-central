@@ -5,12 +5,7 @@
 {% block header %}<h1>GeneTrack</h1>{% endblock %}
 
 {% block mainbody %}
-  <div id="subheader" class="span-24 last">
-    <h3 class="alt">a genomic data visualization framework</h3>
-  </div>
-
-  <hr />
-
+  
   <!-- main box left -->
   <div class="span-17 colborder" id="content">
     <h3 class="loud">Recent Published Datasets</h3>
@@ -57,6 +52,7 @@
       <div class="box" >
         {%if user.is_authenticated %}
           <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
+          <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
           <div><a href="/project/list">Project list</a> &bull; 
            <a href="/logout">Log out</a>
           </div>
@@ -67,13 +63,20 @@
       </div>
     </div>
 
+
+    {% if user.is_superuser %}
     <div>
-      <h3 class="caps">Administration</h3>
+      <h3 class="caps">Admin Tools</h3>
       <div class="box">
-        <div class="quiet">&bull; <a href="/todo" class="quiet">server status</a></div>
-        <div class="quiet">&bull; <a href="/admin/" class="quiet">admin interface</a></div>
+          <div class="quiet">This account has administration privileges</div>
+          <div style="padding-left:20px">
+            <div class="quiet"> &bull <a href="#" class="quiet">access user list</a></div>
+            <div class="quiet"> &bull <a href="#" class="quiet">access job queue</a></div>
+            <div class="quiet"> &bull <a href="#" class="quiet">access server status</a></div>
+          </div>
       </div>
     </div>
+    {% endif %}
 
     <div>
       <h3 class="caps">Get GeneTrack</h3>

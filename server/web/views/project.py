@@ -16,6 +16,21 @@ class ProjectForm(forms.Form):
 @login_required
 def listall(request):
     "Lists all projects"
+    params = html.Params()
+    projects = authorize.project_list(request.user)
+    params.project_count = authorize.project_count(request.user)
+    return html.template( request=request, name='project-list.html', projects=projects, params=params )
+
+@login_required
+def share(request, pid):
+    "Lists all projects"
+    user = request.user
+    projects = authorize.project_list(user)
+    return html.template( request=request, name='project-list.html', projects=projects )
+
+@login_required
+def delete(request, pid):
+    "Lists all projects"
     user = request.user
     projects = authorize.project_list(user)
     return html.template( request=request, name='project-list.html', projects=projects )
@@ -31,10 +46,11 @@ def edit(request, pid):
         # incoming data
         get = form.cleaned_data.get
         if pid == 'new':
-            authorize.create_project(user=user, name=get('name'), info=get('info') )
+            project = authorize.create_project(user=user, name=get('name'), info=get('info') )
+            pid = project.id
         else:
             authorize.update_project(user=user, pid=pid, name=get('name'), info=get('info') )
-        return html.redirect("/project/list/")
+        return html.redirect("/project/view/%s/" % pid)
     else:
         # no form data sent
         if pid == 'new':
@@ -46,5 +62,12 @@ def edit(request, pid):
             form = ProjectForm( dict(name=project.name, info=project.info) )        
         return html.template( request=request, name='project-edit.html', pid=pid, title=title, form=form )
  
+@login_required
+def view(request, pid):
+    "Lists all projects"
+    project = authorize.get_project(user=request.user, pid=pid, write=False)
+    return html.template( request=request, name='project-view.html', project=project)
+
+
 if __name__ == '__main__':
     pass    

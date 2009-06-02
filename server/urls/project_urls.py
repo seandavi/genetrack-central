@@ -7,8 +7,7 @@ urlpatterns = patterns('',
     #    
     (r'^list/', 'web.views.project.listall'),
     (r'^edit/(?P<pid>(.*))/$', 'web.views.project.edit'),
-
-    #(r'^delete/(?P<pid>(.*))/$', 'web.views.project.delete'),
-    #(r'^share/(?P<pid>(.*))/$', 'we.views.project.share'),
-    #(r'^view/(?P<pid>(.*))/$', 'web.views.project.view'),
+    (r'^delete/(?P<pid>(.*))/$', 'web.views.project.delete'),
+    (r'^share/(?P<pid>(.*))/$', 'web.views.project.share'),
+    (r'^view/(?P<pid>(.*))/$', 'web.views.project.view'),
 )
