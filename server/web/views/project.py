@@ -30,11 +30,18 @@ def share(request, pid):
 
 @login_required
 def delete(request, pid):
-    "Lists all projects"
+    "Deletes a project (with confirmation)"
     user = request.user
-    projects = authorize.project_list(user)
-    return html.template( request=request, name='project-list.html', projects=projects )
-
+    project = authorize.get_project(user=user, pid=pid, write=True)
+    
+    if 'delete' in request.POST:
+        project.delete()
+        return html.redirect("/project/list/") 
+    else:        
+        url   = "/project/delete/%s/" % pid   
+        info = "You are deleting project <b>%s</b> containing <b>%s</b> datasets" % (project.name, project.count )
+        return html.template( request=request, name='confirm.html', info=info, url=url)
+    
 @login_required
 def edit(request, pid):
     "Updates or creates a project"

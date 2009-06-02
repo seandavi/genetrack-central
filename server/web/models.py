@@ -12,9 +12,9 @@ from django.contrib.auth.models import User
 from django.contrib import admin
 from django.db.models import signals
 
-class JSONField(models.TextField):
+class JsonField(models.TextField):
     """
-    JSONField is a generic textfield that neatly 
+    JsonField is a generic textfield that neatly 
     serializes/unserializes JSON objects seamlessly
     from : http://www.djangosnippets.org/snippets/1478/
     """
@@ -47,7 +47,7 @@ class JSONField(models.TextField):
         elif value is not None:
             logger.warn('incorrect json value %s' % value)
 
-        return super(JSONField, self).get_db_prep_save(value)
+        return super(JsonField, self).get_db_prep_save(value)
 
 class UserProfile( models.Model ):
     """
@@ -64,7 +64,7 @@ class UserProfile( models.Model ):
     u'Hello world'
     """
     user = models.ForeignKey(User, unique=True)
-    json = JSONField(default="", null=True)
+    json = JsonField(default="", null=True)
 
 class Project( models.Model ):
     """
@@ -82,13 +82,16 @@ class Project( models.Model ):
     info = models.TextField( default='no information' )
     is_public = models.BooleanField( default=False )
     tstamp = models.DateField(auto_now_add=True)
-    json = JSONField(default="", null=True)
-
+    json = JsonField(default="", null=True)
+    data_count = models.IntegerField(default=0)
     class Meta:
         ordering = [ 'name' ]
 
     def __str__(self):
         return "Project: %s" % self.name
+    
+    def set_count(self):
+        self.count = Data.objects.filter(project=self).count()
 
 class Member( models.Model ):
     """
@@ -113,6 +116,25 @@ class Member( models.Model ):
 
     def __unicode__(self):
         return u'Member: %s, %s (%s)' % (self.user, self.project, self.role)
+
+class Data( models.Model ):
+    """
+    Data representation
+    """
+    name     = models.TextField()
+    uuid     = models.TextField()
+    info     = models.TextField( default='no information' )
+    status   = models.TextField( default=status.DATA_NEW )
+    errormsg = models.TextField( default='' )
+    tags     = JsonField()
+    json     = JsonField()
+    size     = models.IntegerField(default=0)
+    owner    = models.ForeignKey(User)
+    project  = models.ForeignKey(Project)
+    tstamp   = models.DateField(auto_now_add=True)
+  
+    class Meta:
+        ordering = [ 'id' ]
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
