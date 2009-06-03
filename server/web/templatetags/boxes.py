@@ -37,6 +37,12 @@ def project_actions_box(context):
         'project': context['project'],
     }
 
+@register.inclusion_tag('upload-box.html', takes_context=True)
+def upload_box(context):
+    return {
+        'user': context['user'],
+    }
+
 def test():
 
     print admin_box()

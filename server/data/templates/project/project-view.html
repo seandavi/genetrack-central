@@ -40,7 +40,8 @@
   <div class="span-17 colborder" id="content">
 
         <div id="project-info" class="box">{{ project.info|markdown }}</div>
-        AAAA &nbsp;
+        
+        &nbsp;
   </div>
 
   <!-- left sidebar -->
@@ -48,9 +49,11 @@
 
     {% account_box 'project-view' %}
 
-    {% project_actions_box %}
-   
     {% filter_box %}
+
+    {% upload_box %}
+
+    {% project_actions_box %}
 
     {% admin_box %}
 
