@@ -34,7 +34,7 @@
       {% for p in projects %}
           <div class="project row quiet">
             <div class="project name">Project: <a href="/project/view/{{p.id}}">{{p.name}}</a></div>
-            <div class="project status">Your role {{p.role}} &bull; {{p.data_count}} datasets.</div>
+            <div class="project status">Your role: {{p.role}} &bull; {{p.data_count}} datasets.</div>
           </div>
           
       {% endfor %}

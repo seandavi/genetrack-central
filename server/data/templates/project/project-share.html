@@ -1,91 +1,115 @@
-{% extends "auth.html" %}
+{% extends "base.html" %}
 
 {% block title %}Share Project{% endblock %}
 
-{% block pagetitle %}Sharing: <a href="/project/view/{{project.id}}/">{{project.name}}</a>{% endblock %}
+{% block header %}<h2 align="center">Project sharing status</h2>{% endblock %}
 
-{% block body %}
+{% block local-headers%}
+
+<script>
+    
+    $(document).ready(function(){
+
+        // highlits data rows on mouse hover
+        $(".row").hover( function() {
+            $(this).addClass("hover")
+        }, function() {
+            $(this).removeClass("hover")
+        })
+
+        // removes messages that may be present
+        remove_messages()
+    });
+</script>
+
+{% endblock %}
+
+{% block mainbody %}
 
 <form action="/project/share/{{project.id}}/" method="get">
+    
+    <!-- left sidebar -->
+    <div class="span-6">&nbsp;</div>
 
-<table width="90%" border="0" align="center" cellpadding="8" cellspacing="0" class="datatable">
-
-    <tr>
-        <td align="center">
-            <h3>Add access to users</h3>
+    <div class="span-12">
+        
+        <div>
+            <fieldset>
+                <legend>Current members</legend>
                 
-                {% if text %}
-                    {% if not search %}
-                        <h4> No results for {{word}}</h4>
+                <table>
+                    <tr>
+                        <th align="center">Name</th>
+                        <th align="center">Role</th>
+                        {% if project.is_manager %}<th align="center">Action</th>{% endif %}
+                    </tr>
+                    {% for member in params.members %}
+                        <tr class="row">
+                        <td>{{member.user.get_full_name}}</td>
+                        <td>{{member.role}}</td>
+                        {% if project.is_manager %}
+                        <td><a href="/project/share/{{project.id}}/?action=remove&uid={{member.user.id}}&text={{params.text}}">remove</a></td>
+                        {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
+                
+                <p align="center">
+                    <a href="/project/view/{{project.id}}">&lt;&lt; return to project</a>
+                </p>
+            </fieldset>
+        </div>
+    
+        {% if project.is_manager %}
+        <div>
+            <fieldset>
+                <legend>Add access to users</legend>
+                
+                {% if params.text %}
+                    {% if not params.results %}
+                        <h4 align="center" class="notice"> No results for {{params.text}}</h4>
                     {% endif %}
                 {% endif %}
-
-                {% if search %}
-                    
-                    <table width="80%" cellpadding="5" cellspacing="0" class="datatable">
+                
+                
+                {% if params.results %}
+                <div>
+                    <table border="1">
                     <tr>
-                        <th>Name</th><th>Action</th>
+                        <th align="center">Name</th>
+                        <th align="center">Action</th>
                     </tr>
-                    {% for user in search %}
-                    <tr class="{% cycle 'oddrow' 'evenrow'  %}" align="center">
-                        <td>
-                            {{user.get_full_name}}
-                        </td>
-                        <td>
-                            <a href="/project/share/{{project.id}}/?member={{user.id}}&text={{text}}">add as member</a> | 
-                            <a href="/project/share/{{project.id}}/?manager={{user.id}}&text={{text}}">add as manager</a> 
-                        </td>
-
-                    </tr>
+                    {% for user in params.results %}
+                        <tr class="row">
+                            <td>{{user.get_full_name}}</td>
+                            <td>
+                                <a href="/project/share/{{project.id}}/?action=addmember&uid={{user.id}}&text={{params.text}}">add as member</a> | 
+                                <a href="/project/share/{{project.id}}/?action=addmanager&uid={{user.id}}&text={{params.text}}">add as manager</a>
+                            </td>
+                        </tr>
                     {% endfor %}
                     </table>
-                 {% endif %}
-                 <br>
-                 Search user: 
-                 <input type="text" value="{{text}}" name="text"> 
-                 <input type="submit" name="submit" value="Search!"> 
-                 <div class="smaller">Use * to list all users</div>
-        </td>
-    </tr>   
-    
-    <tr>
-        <td align="center">
-            <h3>Current access</h3>
-            <table width="80%" cellpadding="5" cellspacing="0" class="datatable">
-                <tr>
-                    <th>Name</th><th>Role</th><th>Action</th>
-                </tr>
-                {% for m in project.members %}
-                <tr class="{% cycle  'oddrow' 'evenrow' %}" align="center">
-                    <td>
-                        {{m.user.get_full_name}}
-                    </td>
-                    <td>
-                        {{m.role}}
-                    </td>
-                    <td>
-                        <a href="/project/share/{{project.id}}/?remove={{m.user.id}}&text={{text}}">remove</a>
-                    </td>
+                </div>
+                {% endif %}
 
-                </tr>
-                {% endfor %}
-            </table>
-        </td>
-    </tr>   
-    </form>
+                <div align="center">
+                    Search user:
+                    <input type="text" value="{{params.text}}" name="text" class="textinput"> 
+                    <input type="submit" name="submit" value="Submit"/>
+                </div>
+               
+                <div class="quiet" align="center">
+                    use * to search for all users
+                </div>
+                
+            </fieldset>
+        </div>
+        {% endif %}
+        
 
-</table>
+    </div>
 
-<table width="60%" align="center" cellpadding="15">
-    <tr>
+    <div class="span-6 last">&nbsp;</div>
 
-        <td align="center">
-            <a href="/project/view/{{project.id}}/">Go to Project View</a>
-            &nbsp;|&nbsp;
-            <a href="/project/list/">Go to Project List</a>
-
-        </td>
-
-    </tr>
-</table>
+</form>
 {% endblock %}

@@ -23,10 +23,35 @@ def listall(request):
 
 @login_required
 def share(request, pid):
-    "Lists all projects"
+    "Manages sharing to a project"
     user = request.user
-    projects = authorize.project_list(user)
-    return html.template( request=request, name='project-list.html', projects=projects )
+    project = authorize.get_project(user=user, pid=pid, write=False)
+    members = models.Member.objects.filter(project=project)
+    
+    text = request.GET.get('text', '').strip()
+    results = []
+
+    # found incoming search parameters
+    if text:
+        text   = text.strip()
+        
+        if text != '*':
+            query = models.User.objects.filter
+            query = query(first_name__icontains=text) | query(last_name__icontains=text)
+        else:
+            query = models.User.objects
+        results = query.all().order_by('last_name')
+
+    uid = request.GET.get('uid')
+    action = request.GET.get('action')
+    
+    # update the roles according to the action parameter
+    if action and uid:
+        authorize.update_role(user=user, pid=pid, action=action, uid=uid)
+
+    params = html.Params(results=results, text=text, members=members)
+
+    return html.template( request=request, name='project-share.html', project=project, params=params)  
 
 @login_required
 def delete(request, pid):

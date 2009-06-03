@@ -63,5 +63,32 @@ def update_project( user, pid, name, info ):
     models.Project.objects.filter(id=project.id).update(name=name, info=info)
     return project
 
+def update_role(user, pid, action, uid):
+    "Updates the role of a user 'uid' for project 'pid'"
+    if not uid:
+        return
+
+    # fetch project and validate that is writable
+    project = get_project(user=user, pid=pid, write=True) 
+
+    # get the targeted user
+    target = User.objects.get(id=uid)
+    
+    # user may not alter their own status
+    if user.id == target.id:
+        user.message_set.create(message="May not alter your own role!")
+        return
+
+    # information message
+    user.message_set.create(message="Updated access for user %s" % target.get_full_name() ) 
+ 
+    # remove all prior memberships for this user (should be one really)
+    models.Member.objects.filter(user=target, project=project).all().delete()
+    
+    # find the roles
+    roles = dict(addmanager=status.MANAGER, addmember=status.MEMBER)
+    if action in roles:
+        models.Member.objects.create(user=target, project=project, role=roles[action])
+
 if __name__ == '__main__':
     pass

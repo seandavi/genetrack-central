@@ -5,7 +5,7 @@
         <div class="box" >
             <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
             {% ifequal navloc 'project-view' %}
-                <div class="quiet">Your role <b>{{project.role}}</b></div>
+                <div class="quiet">Your role: <b>{{project.role}}</b></div>
                 <div class="quiet">Project contains <b>{{project.data_count}}</b> datasets</div>
             {% else %}
                 <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
