@@ -13,20 +13,6 @@
         // run the project filter on page load
         filter_rows()
 
-        // assign the callback to filter input
-        $("#filter-input").keyup( filter_rows ); 
-
-        // searchbox gets focus
-        $("#filter-input").focus()
-
-        // highlits data rows on mouse hover
-        $(".row").hover( function() {
-                $(this).addClass("hover")
-            }, function() {
-                $(this).removeClass("hover")
-            }
-        )
-    
         // makes entire row clickable
         $(".row").click(function(){
             window.location=$(this).find("a").attr("href"); return false;
@@ -58,13 +44,13 @@
   <!-- left sidebar -->
   <div class="span-6 last" id="sidebar">
     <div>
-      <h3 class="caps">Your Account</h3>
+      <h3 class="caps">Your Account &bull; <a href="/logout">Log out</a></h3>
       <div class="box">
           <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
           <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
           <div>
-            <a href="/">Home page</a> &bull; 
-            <a href="/logout">Log out</a>
+            <a href="/">Home page</a> &bull;
+            Project list
           </div>
       </div>
     </div>

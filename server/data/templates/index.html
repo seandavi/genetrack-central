@@ -48,13 +48,14 @@
   <div class="span-6 last" id="sidebar">
 
     <div>
-      <h3 class="caps">Your Account</h3>
+      <h3 class="caps">Your Account &bull; <a href="/logout">Log out</a></h3>
       <div class="box" >
         {%if user.is_authenticated %}
           <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
           <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
-          <div><a href="/project/list">Project list</a> &bull; 
-           <a href="/logout">Log out</a>
+          <div>
+            Home page &bull; 
+            <a href="/project/list">Project list</a>
           </div>
         {% else %}
           <div class="quiet">You are not logged in</div>
@@ -83,8 +84,9 @@
       <div class="box">
         <div class="quiet">GeneTrack runs well on most computers and 
           operating systems. The software is released
-          with a liberal <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a> 
-          open source license.
+          with dual open source licenses of <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a> or 
+          <a href="http://www.opensource.org/licenses/gpl-3.0.html">GPL</a>. 
+          Contributions are welcome under either of these licenses.
           Find out more on the <a href="http://genetrack.bx.psu.edu">development site.</a>
         </div>
       </div>

@@ -52,9 +52,11 @@ def edit(request, pid):
         get = form.cleaned_data.get
         if pid == 'new':
             project = authorize.create_project(user=user, name=get('name'), info=get('info') )
+            user.message_set.create(message="Project created")
             return html.redirect("/project/list/")
         else:
             authorize.update_project(user=user, pid=pid, name=get('name'), info=get('info') )
+            user.message_set.create(message="Project updated")
             return html.redirect("/project/view/%s/" % pid)
     else:
         # no form data sent

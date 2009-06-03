@@ -53,7 +53,6 @@ def create_project( user, name, info ):
     """
     project = models.Project.objects.create(name=name, info=info)
     member  = models.Member.objects.create(user=user, project=project, role=status.MANAGER)
-    user.message_set.create(message="Created a new project")
     return project
 
 def update_project( user, pid, name, info ):

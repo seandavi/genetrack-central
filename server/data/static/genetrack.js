@@ -15,14 +15,27 @@ function filter_rows(){
         $('#filter-info').html('&bull; <span class="filter info">filtered with "' + text + '"</span>')
         $(".row:contains('" + text +"')").show()
     }
+
+    // assign the callback to filter input
+    $("#filter-input").keyup( filter_rows ); 
+
+    // searchbox gets focus
+    $("#filter-input").focus()
+
+    // highlits data rows on mouse hover
+    $(".row").hover( function() {
+        $(this).addClass("hover")
+    }, function() {
+        $(this).removeClass("hover")
+    })
 }
 
 function remove_messages(){
-    // removes messages after a 3 seconds
+    // removes messages after some time passes
     $("#messages")
-        .animate({opacity: 1}, 2000)
-        .animate({opacity: 0.0}, 1000)
-        .slideUp('slow', function() {
+        .animate({opacity: 1}, 3000)   // delay
+        .animate({opacity: 0.0}, 1000) // fadeout
+        .slideUp('slow', function() {  // remove
             $(this).remove();
         });
 }

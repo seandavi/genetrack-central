@@ -46,17 +46,20 @@
 
     <hr />
     
-    <div id="header" class="span-17 last">
+    
     {% block message %}
         {% if messages %}
-            <div class="notice" id="messages">
-                {% for message in messages %}
-                    <div>{{ message|safe }}</div>
-                {% endfor %}
+            <div class="span-24 last" id="messages">
+                <div class="notice" >
+                    {% for message in messages %}
+                        <div>{{ message|safe }}</div>
+                    {% endfor %}
+                </div>
+                <hr>
             </div>
         {% endif %}
     {% endblock %}
-    </div>
+
 
     {% block mainbody %}
       <div id="header" class="span-24 last">
