@@ -16,7 +16,7 @@ def index(request):
 
 def todo(request):
     "Todo page"
-    params = html.Params()
+    params = html.Params(info='**test**')
     return html.template( request, name='todo.html', params=params )
 
 def error500(request):

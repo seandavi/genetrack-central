@@ -1,9 +1,15 @@
 {% extends "base.html" %}
+{% load markup %}
+{% load boxes %}
+
 
 {% block title %}To Do{% endblock %}
 
 {% block header %}<h3>This page is not yet finished</h3>{% endblock %}
 
 {% block mainbody %}
+
+{{ params.info|markdown }}
+
  Work in progres. Please return to the <a href="/">home page</a>
 {% endblock %}

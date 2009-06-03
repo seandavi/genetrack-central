@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load markup %}
 {% load boxes %}
 
 {% block title %}Project View{% endblock %}
@@ -18,8 +19,15 @@
             window.location=$(this).find("a").attr("href"); return false;
         });
 
+        // expand info field
+        $("#project-info-link").click(function(){
+            $("#project-info").toggle('slow')
+        });
+
         // removes messages that may be present
         remove_messages()
+
+        $("#project-info").hide()
 
     });
 </script>
@@ -31,15 +39,8 @@
   <!-- main box left -->
   <div class="span-17 colborder" id="content">
 
-      {% for p in projects %}
-          <div class="project row quiet">
-            <div class="project name">Project: <a href="/project/view/{{p.id}}">{{p.name}}</a></div>
-            <div class="project status">Your role {{p.role}} &bull; 0 {{p.size}} datasets.</div>
-          </div>
-          
-      {% endfor %}
-      <div>&nbsp;</div>
-      
+        <div id="project-info" class="box">{{ project.info|markdown }}</div>
+        AAAA &nbsp;
   </div>
 
   <!-- left sidebar -->
