@@ -2,6 +2,15 @@ body {
     
 }
 
+.capsx {
+    font-size:1.2em;
+    font-variant:small-caps;
+    font-weight:bold;
+    letter-spacing:1px;
+    padding:0 2px;
+    text-transform:lowercase;
+}
+
 .project.row{
     padding: 5px;
     padding-bottom:10px;

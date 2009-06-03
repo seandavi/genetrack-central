@@ -1,7 +1,7 @@
 {% load boxes %}
 <div>
     {%if user.is_authenticated %}
-        <h3 class="caps">Your Account &bull; <a href="/logout">Log out</a></h3>
+        <h3 class="capsx">YOUR ACCOUNT &bull; <a href="/logout">LOG OUT</a></h3>
         <div class="box" >
             <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
             {% ifequal navloc 'project-view' %}

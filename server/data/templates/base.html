@@ -44,8 +44,7 @@
       {% block header %}<h1>Header</h1>{% endblock %}
     </div>
 
-    <hr />
-    
+    <div class="span-24 last"><hr /></div>
     
     {% block message %}
         {% if messages %}
@@ -60,16 +59,18 @@
         {% endif %}
     {% endblock %}
 
-
+    <div id="header" class="span-24 last">
     {% block mainbody %}
-      <div id="header" class="span-24 last">
         Main body
-      </div>
     {% endblock %}
+    </div>
 
     <div id="basefooter" class="span-24 last">
-      Powered by <a href="http://genetrack.bx.psu.edu"><img src="/static/gt-antipixel.png"></a> 
-      &bull; Copyright 2008, 2009 by <a href="http://genetrack.bx.psu.edu/people.html">GeneTrack team<a/>
+      Powered by <a href="http://genetrack.bx.psu.edu"><img src="/static/gt-antipixel.png" /></a> 
+      &bull; Copyright 2008, 2009 by <a href="http://genetrack.bx.psu.edu/people.html">GeneTrack team</a>
     </div>
+
+</div>
+</body>
 
 </html>
