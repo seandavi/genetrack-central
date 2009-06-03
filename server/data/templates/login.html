@@ -22,14 +22,32 @@
 <div class="span-10 center">
     <fieldset id="login">
       <legend>Please Log in</legend>
-      <div><label for="email">Email</label> <input class="textinput" type="text" name="email" id="id_email"" /></div>
-      <p><label for="password">Password</label> <input class="textinput" type="password" name="password" id="id_password" /></p>
-      <p class="submit"><input type="submit" value="Submit" /></p>
-      
-       <div class="textcenter"> 
-        <a href="/password/password_reset/">Forgot Password?</a> 
-        &bull; <a href="/">Back to Home</a>
-      </div>
+
+      <div>
+            <table>
+                <tr>
+                    <td class="right">Email</td>
+                    <td><input class="textinput" type="text" name="email" id="id_email" /></td>
+                </tr>
+                
+                <tr>
+                    <td class="right">Password</td>
+                    <td><input class="textinput" type="password" name="password" id="id_password" /></td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2" class="center"><input type="submit" value="Submit" /></td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2" class="textcenter">
+                        <a href="/password/password_reset/">Forgot Password?</a>
+                        &bull; <a href="/">Back to Home</a>
+                    </td>
+                </tr>
+
+            </table>
+        </div>
     </fieldset>
 </div>
 
