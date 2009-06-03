@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Project delete{% endblock %}
+
+{% block header %}<h2 align="center">Project Delete</h2>{% endblock %}
+
+{% block mainbody %}
+    <form method="post" action="/project/delete/{{project.id}}/">
+
+    <!-- left sidebar -->
+    <div class="span-7">&nbsp;</div>
+
+    <div class="span-10">
+        <fieldset id="confirm" class="notice">
+            <legend>Confirmation required</legend>
+            <div align="center">
+                You are removing project 
+                <p><h3>{{project.name}}</h3></p> 
+            </div>
+            <div align="center">
+                The project contains <b>{{project.data_count}}</b> datasets that will also be removed.
+            </div>
+
+            <div style="padding:10px;" align="center">
+                <input type="checkbox" name="delete"> Check this box to confirm!
+            </div>
+            <div align="center">
+                <input type="submit" value="Delete" name="submit"/>
+                &nbsp;&nbsp;|&nbsp;&nbsp; 
+                <input type="button" value="Go back" onclick="javascript:history.back(1)"/>
+            </div>
+        </fieldset>
+    </div>
+
+    <!-- right sidebar -->
+    <div class="span-7 last" >&nbsp;</div>
+
+</form>
+
+{% endblock %}
+
+<table border="0" width="90%" align="center" cellpadding="3" cellspacing="3" class="datatable">
+     
+            
+    <tr><td align="center" class="info">
+            <b>Note: </b>{{info|safe}}        
+    </td></tr>
+
+    <tr><td align="center">
+        <input type="checkbox" name="delete">Check this box to confirm
+    </td></tr>
+
+        <tr><td align="center">
+
+    </td></tr>
+</table>
+
