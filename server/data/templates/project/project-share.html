@@ -19,6 +19,9 @@
 
         // removes messages that may be present
         remove_messages()
+
+        // searchbox gets focus
+        $("#text-input").focus()
     });
 </script>
 
@@ -94,7 +97,7 @@
 
                 <div align="center">
                     Search user:
-                    <input type="text" value="{{params.text}}" name="text" class="textinput"> 
+                    <input type="text" value="{{params.text}}" name="text" class="textinput" id="text-input"> 
                     <input type="submit" name="submit" value="Submit"/>
                 </div>
                

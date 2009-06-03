@@ -22,6 +22,10 @@ body {
     cursor:pointer;
 }
 
+.row.hover{
+    background-color: #E5ECF9;
+}
+
 img {
     vertical-align: middle;
 }

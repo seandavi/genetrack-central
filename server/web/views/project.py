@@ -26,7 +26,7 @@ def share(request, pid):
     "Manages sharing to a project"
     user = request.user
     project = authorize.get_project(user=user, pid=pid, write=False)
-    members = models.Member.objects.filter(project=project)
+    members = models.Member.objects.filter(project=project).order_by('role')
     
     text = request.GET.get('text', '').strip()
     results = []
@@ -48,9 +48,9 @@ def share(request, pid):
     # update the roles according to the action parameter
     if action and uid:
         authorize.update_role(user=user, pid=pid, action=action, uid=uid)
+        return html.redirect('/project/share/%s/' % pid)
 
     params = html.Params(results=results, text=text, members=members)
-
     return html.template( request=request, name='project-share.html', project=project, params=params)  
 
 @login_required
