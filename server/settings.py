@@ -119,6 +119,9 @@ TEMPLATE_DIRS = (
     # custom pages for administration
     path_join(TEMPLATE_PATH, 'admin'),
 
+    # custom template tags
+    path_join(TEMPLATE_PATH, 'tags'),
+
 )
 
 INSTALLED_APPS = (

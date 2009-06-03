@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load boxes %}
 
 {% block title %}GeneTrack Home{% endblock %}
 
@@ -24,7 +25,7 @@
         <b>GeneTrack</b> is a <a href="http://www.python.org/">Python</a> 
         based genomic data visualization framework. It aims to provide generic 
         building blocks for creating sophisticated web based genomic data 
-        visualization sites.For more details about the system's capabilities and installation
+        visualization services. For more details about the system's capabilities and installation
         see the <a href="http://genetrack.bx.psu.edu">development site</a>
       </p>. 
     </div>
@@ -47,37 +48,9 @@
   <!-- left sidebar -->
   <div class="span-6 last" id="sidebar">
 
-    <div>
-      <h3 class="caps">Your Account &bull; <a href="/logout">Log out</a></h3>
-      <div class="box" >
-        {%if user.is_authenticated %}
-          <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
-          <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
-          <div>
-            Home page &bull; 
-            <a href="/project/list">Project list</a>
-          </div>
-        {% else %}
-          <div class="quiet">You are not logged in</div>
-          <div><a href="/login">Log in now</a></div>
-        {% endif %}
-      </div>
-    </div>
+    {% account_box 'home'%}
 
-
-    {% if user.is_superuser %}
-    <div>
-      <h3 class="caps">Admin Tools</h3>
-      <div class="box">
-          <div class="quiet">This account has administration privileges</div>
-          <div style="padding-left:20px">
-            <div class="quiet"> &bull <a href="#" class="quiet">access user list</a></div>
-            <div class="quiet"> &bull <a href="#" class="quiet">access job queue</a></div>
-            <div class="quiet"> &bull <a href="#" class="quiet">access server status</a></div>
-          </div>
-      </div>
-    </div>
-    {% endif %}
+    {% admin_box %}
 
     <div>
       <h3 class="caps">Get GeneTrack</h3>

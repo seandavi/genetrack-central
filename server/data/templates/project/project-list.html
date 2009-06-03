@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load boxes %}
 
 {% block title %}Project List{% endblock %}
 
@@ -43,19 +44,10 @@
 
   <!-- left sidebar -->
   <div class="span-6 last" id="sidebar">
-    <div>
-      <h3 class="caps">Your Account &bull; <a href="/logout">Log out</a></h3>
-      <div class="box">
-          <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
-          <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
-          <div>
-            <a href="/">Home page</a> &bull;
-            Project list
-          </div>
-      </div>
-    </div>
+    
+    {% account_box 'project-list' %}
 
-<div>
+    <div>
       <h3 class="caps">Create a Project</h3>
       <div class="box">
           <div class="quiet" align="center">
@@ -64,32 +56,9 @@
       </div>
     </div>
 
-    <div>
-      <h3 class="caps">Filter Projects</h3>
-      <div class="box" id="filter-box">
-          <div class="quiet">Filter projects by showing only 
-          the names that match the text in the box below</div>
-          <div class="quiet" >
-            <span class="search">
-              <input type="text" size="20" id="filter-input" style="margin-left:20px;">
-            </span>
-          </div>
-      </div>
-    </div>
+    {% filter_box %}
 
-    {% if user.is_superuser %}
-    <div>
-      <h3 class="caps">Admin Tools</h3>
-      <div class="box">
-          <div class="quiet">This account has administration privileges</div>
-          <div style="padding-left:20px">
-            <div class="quiet"> &bull <a href="#" class="quiet">access user list</a></div>
-            <div class="quiet"> &bull <a href="#" class="quiet">access job queue</a></div>
-            <div class="quiet"> &bull <a href="#" class="quiet">access server status</a></div>
-          </div>
-      </div>
-    </div>
-    {% endif %}
+    {% admin_box %}
 
   </div>
 
