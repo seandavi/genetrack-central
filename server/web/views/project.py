@@ -32,15 +32,13 @@ def share(request, pid):
 def delete(request, pid):
     "Deletes a project (with confirmation)"
     user = request.user
-    project = authorize.get_project(user=user, pid=pid, write=True)
-    
+    project = authorize.get_project(user=user, pid=pid, write=True)    
     if 'delete' in request.POST:
         project.delete()
+        user.message_set.create(message="Project deletion complete")
         return html.redirect("/project/list/") 
     else:        
-        url   = "/project/delete/%s/" % pid   
-        info = "You are deleting project <b>%s</b> containing <b>%s</b> datasets" % (project.name, project.count )
-        return html.template( request=request, name='confirm.html', info=info, url=url)
+        return html.template( request=request, name='project-delete.html', project=project)
     
 @login_required
 def edit(request, pid):
@@ -54,10 +52,10 @@ def edit(request, pid):
         get = form.cleaned_data.get
         if pid == 'new':
             project = authorize.create_project(user=user, name=get('name'), info=get('info') )
-            pid = project.id
+            return html.redirect("/project/list/")
         else:
             authorize.update_project(user=user, pid=pid, name=get('name'), info=get('info') )
-        return html.redirect("/project/view/%s/" % pid)
+            return html.redirect("/project/view/%s/" % pid)
     else:
         # no form data sent
         if pid == 'new':

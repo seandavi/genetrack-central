@@ -8,34 +8,14 @@
 
 <script>
 
-    function filter_projects(){
-        // displays project based on the content of the filterbox
-        var text = $("#filter-input").val().toLowerCase();
-        if (text.length == 0) {
-            $(".row").show();
-            $('#filter-box').removeClass("notice")
-            $('#filter-text').html('')
-
-        } else {
-            $(".row").hide();
-            $('#filter-box').addClass("notice")
-            $('#filter-text').html(' &bull; filtered with "' + text + '"')
-            $(".row:contains('" + text +"')").show()
-        }
-    }
 
     $(document).ready(function(){
         // $("div:contains('John')").css("text-decoration", "underline");
         
-        // filter the project rows based on the filter box
-        $("#filter-input").keyup( filter_projects ); 
+        
 
-        // searchbox gets focus
-        $("#filter-input").focus()
+        filter_rows()
 
-        // run the project filter on page load
-
-        filter_projects()
         // highlits data rows on mouse hover
         $(".row").hover( function() {
                 $(this).addClass("hover")
@@ -48,8 +28,6 @@
         $(".row").click(function(){
             window.location=$(this).find("a").attr("href"); return false;
         });
-
-
 
     });
 </script>
@@ -92,7 +70,7 @@
       <h3 class="caps">Modify Project</h3>
       <div class="box">
           <div class="quiet" align="center">
-          <a href="/project/edit/{{project.id}}/">Modify Project</a>
+          <a href="/project/edit/{{project.id}}/">Edit Project</a>
           &bull; 
           <a href="/project/delete/{{project.id}}/">Delete Project</a></div>
       </div>
