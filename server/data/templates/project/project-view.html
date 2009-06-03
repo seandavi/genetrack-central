@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load boxes %}
 
-{% block title %}Project List{% endblock %}
+{% block title %}Project View{% endblock %}
 
 {% block header %}<h2>Project: {{project.name}} <span id="filter-info" /></h2>{% endblock %}
 
@@ -47,20 +47,10 @@
 
     {% account_box 'project-view' %}
 
-    {% if project.is_manager %}
-    <div>
-      <h3 class="caps">Modify Project</h3>
-      <div class="box">
-          <div class="quiet" align="center">
-          <a href="/project/edit/{{project.id}}/">Edit Project</a>
-          &bull; 
-          <a href="/project/delete/{{project.id}}/">Delete Project</a></div>
-      </div>
-    </div>
-    {% endif %}
-
-    {% filter_box %}
+    {% project_actions_box %}
    
+    {% filter_box %}
+
     {% admin_box %}
 
   </div>

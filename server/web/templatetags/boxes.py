@@ -4,6 +4,11 @@ from server.web import html
 
 register = template.Library()
 
+@register.simple_tag
+def sep():
+    "Default separator"
+    return "&nbsp;&bull;&nbsp;"
+
 @register.inclusion_tag('admin-box.html', takes_context=True)
 def admin_box(context):
     return {
@@ -14,6 +19,8 @@ def admin_box(context):
 def account_box(context, navloc):
     return {
         'user': context['user'],
+        'params': context.get('params'),
+        'project': context.get('project'),
         'navloc': navloc,
     }
 
@@ -21,6 +28,13 @@ def account_box(context, navloc):
 def filter_box(context):
     return {
         'user': context['user'],
+    }
+
+@register.inclusion_tag('project-actions-box.html', takes_context=True)
+def project_actions_box(context):
+    return {
+        'user': context['user'],
+        'project': context['project'],
     }
 
 def test():
