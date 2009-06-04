@@ -1,0 +1,1256 @@
+[
+  {
+    "pk": 22, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_logentry", 
+      "name": "Can add log entry", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 23, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_logentry", 
+      "name": "Can change log entry", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 24, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_logentry", 
+      "name": "Can delete log entry", 
+      "content_type": 8
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_group", 
+      "name": "Can add group", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_message", 
+      "name": "Can add message", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_permission", 
+      "name": "Can add permission", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_user", 
+      "name": "Can add user", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_group", 
+      "name": "Can change group", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_message", 
+      "name": "Can change message", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_permission", 
+      "name": "Can change permission", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_user", 
+      "name": "Can change user", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_group", 
+      "name": "Can delete group", 
+      "content_type": 2
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_message", 
+      "name": "Can delete message", 
+      "content_type": 4
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_permission", 
+      "name": "Can delete permission", 
+      "content_type": 1
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_user", 
+      "name": "Can delete user", 
+      "content_type": 3
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_contenttype", 
+      "name": "Can add content type", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_contenttype", 
+      "name": "Can change content type", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_contenttype", 
+      "name": "Can delete content type", 
+      "content_type": 5
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_session", 
+      "name": "Can add session", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_session", 
+      "name": "Can change session", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_session", 
+      "name": "Can delete session", 
+      "content_type": 6
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_site", 
+      "name": "Can add site", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 20, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_site", 
+      "name": "Can change site", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 21, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_site", 
+      "name": "Can delete site", 
+      "content_type": 7
+    }
+  }, 
+  {
+    "pk": 34, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_data", 
+      "name": "Can add data", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 31, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_member", 
+      "name": "Can add member", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 28, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_project", 
+      "name": "Can add project", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 25, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "add_userprofile", 
+      "name": "Can add user profile", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 35, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_data", 
+      "name": "Can change data", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 32, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_member", 
+      "name": "Can change member", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 29, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_project", 
+      "name": "Can change project", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 26, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "change_userprofile", 
+      "name": "Can change user profile", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 36, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_data", 
+      "name": "Can delete data", 
+      "content_type": 12
+    }
+  }, 
+  {
+    "pk": 33, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_member", 
+      "name": "Can delete member", 
+      "content_type": 11
+    }
+  }, 
+  {
+    "pk": 30, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_project", 
+      "name": "Can delete project", 
+      "content_type": 10
+    }
+  }, 
+  {
+    "pk": 27, 
+    "model": "auth.permission", 
+    "fields": {
+      "codename": "delete_userprofile", 
+      "name": "Can delete user profile", 
+      "content_type": 9
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "admin", 
+      "first_name": "Admin", 
+      "last_name": "User", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2009-06-04 09:11:17", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$dc694$b2aa835dd4382fe27c944aab7a221a2cddb2656a", 
+      "email": "admin", 
+      "date_joined": "2009-06-02 15:54:18"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "demo", 
+      "first_name": "Demo", 
+      "last_name": "User", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:19", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "sha1$41a9d$ab1337bbee59d5a8c0fc481ca82a1a8f0daf8b1c", 
+      "email": "demo", 
+      "date_joined": "2009-06-02 15:54:19"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "public", 
+      "first_name": "Public", 
+      "last_name": "User", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:19", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "public", 
+      "date_joined": "2009-06-02 15:54:19"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "ialbert", 
+      "first_name": "Istvan", 
+      "last_name": "Albert", 
+      "is_active": true, 
+      "is_superuser": true, 
+      "is_staff": true, 
+      "last_login": "2009-06-02 15:54:20", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "iua1@psu.edu", 
+      "date_joined": "2009-06-02 15:54:20"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "bfp2", 
+      "first_name": "Frank", 
+      "last_name": "Pugh", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:20", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "bfp2@psu.edu", 
+      "date_joined": "2009-06-02 15:54:20"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "hx3149", 
+      "first_name": "Ho Sung", 
+      "last_name": "Rhee", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:20", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "hxr149@psu.edu", 
+      "date_joined": "2009-06-02 15:54:20"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "cuj5", 
+      "first_name": "Cizhong", 
+      "last_name": "Jiang", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:20", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "cuj5@psu.edu", 
+      "date_joined": "2009-06-02 15:54:20"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "zyz5012", 
+      "first_name": "Zhenhai", 
+      "last_name": "Zhang", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:21", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "zyz5012@psu.edu", 
+      "date_joined": "2009-06-02 15:54:21"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "jup139", 
+      "first_name": "Jihye", 
+      "last_name": "Park", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:21", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "jup139@psu.edu", 
+      "date_joined": "2009-06-02 15:54:21"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "shin", 
+      "first_name": "Shinichiro", 
+      "last_name": "Wachi", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:22", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "shinwachi@gmail.com", 
+      "date_joined": "2009-06-02 15:54:22"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "rtk138", 
+      "first_name": "Tom", 
+      "last_name": "Koerber", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:22", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "rtk138@psu.edu", 
+      "date_joined": "2009-06-02 15:54:22"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "csh12", 
+      "first_name": "Christine", 
+      "last_name": "Hemeryck", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:22", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "csh12@psu.edu", 
+      "date_joined": "2009-06-02 15:54:22"
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "bjv129", 
+      "first_name": "Bryan", 
+      "last_name": "Venters", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:23", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "bjv129@psu.edu", 
+      "date_joined": "2009-06-02 15:54:23"
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "auth.user", 
+    "fields": {
+      "username": "eus163", 
+      "first_name": "Eric", 
+      "last_name": "Samorodnitsky", 
+      "is_active": true, 
+      "is_superuser": false, 
+      "is_staff": false, 
+      "last_login": "2009-06-02 15:54:23", 
+      "groups": [], 
+      "user_permissions": [], 
+      "password": "!", 
+      "email": "eus163@psu.edu", 
+      "date_joined": "2009-06-02 15:54:23"
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "contenttype", 
+      "name": "content type", 
+      "app_label": "contenttypes"
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "data", 
+      "name": "data", 
+      "app_label": "web"
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "group", 
+      "name": "group", 
+      "app_label": "auth"
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "logentry", 
+      "name": "log entry", 
+      "app_label": "admin"
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "member", 
+      "name": "member", 
+      "app_label": "web"
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "message", 
+      "name": "message", 
+      "app_label": "auth"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "permission", 
+      "name": "permission", 
+      "app_label": "auth"
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "project", 
+      "name": "project", 
+      "app_label": "web"
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "session", 
+      "name": "session", 
+      "app_label": "sessions"
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "site", 
+      "name": "site", 
+      "app_label": "sites"
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "user", 
+      "name": "user", 
+      "app_label": "auth"
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "contenttypes.contenttype", 
+    "fields": {
+      "model": "userprofile", 
+      "name": "user profile", 
+      "app_label": "web"
+    }
+  }, 
+  {
+    "pk": "793e34eee763936df16ffcda7d920982", 
+    "model": "sessions.session", 
+    "fields": {
+      "expire_date": "2009-06-16 15:54:36", 
+      "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjAwZTc2YmVhOGVhZDQxNGZiZmI3\nNWM5ZGQ3ZDQxMjhl\n"
+    }
+  }, 
+  {
+    "pk": "d61b138318318ba6f5d8fc86f70809e3", 
+    "model": "sessions.session", 
+    "fields": {
+      "expire_date": "2009-06-17 15:59:10", 
+      "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjAwZTc2YmVhOGVhZDQxNGZiZmI3\nNWM5ZGQ3ZDQxMjhl\n"
+    }
+  }, 
+  {
+    "pk": "d1dbc989a717e71ac641d37cbecba01b", 
+    "model": "sessions.session", 
+    "fields": {
+      "expire_date": "2009-06-17 16:05:31", 
+      "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjAwZTc2YmVhOGVhZDQxNGZiZmI3\nNWM5ZGQ3ZDQxMjhl\n"
+    }
+  }, 
+  {
+    "pk": "51659503266c8021330b074d7f90bcd7", 
+    "model": "sessions.session", 
+    "fields": {
+      "expire_date": "2009-06-18 09:11:17", 
+      "session_data": "gAJ9cQEoVRJfYXV0aF91c2VyX2JhY2tlbmRxAlUpZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5k\ncy5Nb2RlbEJhY2tlbmRxA1UNX2F1dGhfdXNlcl9pZHEESwF1LjAwZTc2YmVhOGVhZDQxNGZiZmI3\nNWM5ZGQ3ZDQxMjhl\n"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "sites.site", 
+    "fields": {
+      "domain": "127.0.0.1:8080", 
+      "name": "GeneTrack"
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 2
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 3
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 4
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 5
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 6
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 7
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 8
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 9
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 10
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 11
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 12
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 13
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "web.userprofile", 
+    "fields": {
+      "json": null, 
+      "user": 14
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=13", 
+      "name": "Fly data 13", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=15", 
+      "name": "Fly data 15", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=18", 
+      "name": "Fly data 18", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=19", 
+      "name": "Fly data 19", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=4", 
+      "name": "Fly data 4", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=6", 
+      "name": "Fly data 6", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=7", 
+      "name": "Fly data 7", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=12", 
+      "name": "Human HELA 12", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=16", 
+      "name": "Human HELA 16", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=3", 
+      "name": "Human HELA 3", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=1", 
+      "name": "Mouse project HBB 1", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=10", 
+      "name": "Mouse project HBB 10", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=14", 
+      "name": "Mouse project HBB 14", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=5", 
+      "name": "Mouse project HBB 5", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=8", 
+      "name": "Mouse project HBB 8", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=11", 
+      "name": "Yeast mutant RAV 11", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=17", 
+      "name": "Yeast mutant RAV 17", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=2", 
+      "name": "Yeast mutant RAV 2", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "web.project", 
+    "fields": {
+      "info": "some info=9", 
+      "name": "Yeast mutant RAV 9", 
+      "data_count": 0, 
+      "tstamp": "2009-06-02", 
+      "json": null, 
+      "is_public": false
+    }
+  }, 
+  {
+    "pk": 1, 
+    "model": "web.member", 
+    "fields": {
+      "project": 1, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 2, 
+    "model": "web.member", 
+    "fields": {
+      "project": 2, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 3, 
+    "model": "web.member", 
+    "fields": {
+      "project": 3, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 4, 
+    "model": "web.member", 
+    "fields": {
+      "project": 4, 
+      "timestamp": "2009-06-02", 
+      "role": "manager", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 5, 
+    "model": "web.member", 
+    "fields": {
+      "project": 5, 
+      "timestamp": "2009-06-02", 
+      "role": "manager", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 6, 
+    "model": "web.member", 
+    "fields": {
+      "project": 6, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 7, 
+    "model": "web.member", 
+    "fields": {
+      "project": 7, 
+      "timestamp": "2009-06-02", 
+      "role": "manager", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 8, 
+    "model": "web.member", 
+    "fields": {
+      "project": 8, 
+      "timestamp": "2009-06-02", 
+      "role": "manager", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 9, 
+    "model": "web.member", 
+    "fields": {
+      "project": 9, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 10, 
+    "model": "web.member", 
+    "fields": {
+      "project": 10, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 11, 
+    "model": "web.member", 
+    "fields": {
+      "project": 11, 
+      "timestamp": "2009-06-02", 
+      "role": "manager", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 12, 
+    "model": "web.member", 
+    "fields": {
+      "project": 12, 
+      "timestamp": "2009-06-02", 
+      "role": "manager", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 13, 
+    "model": "web.member", 
+    "fields": {
+      "project": 13, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 14, 
+    "model": "web.member", 
+    "fields": {
+      "project": 14, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 15, 
+    "model": "web.member", 
+    "fields": {
+      "project": 15, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 16, 
+    "model": "web.member", 
+    "fields": {
+      "project": 16, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 17, 
+    "model": "web.member", 
+    "fields": {
+      "project": 17, 
+      "timestamp": "2009-06-02", 
+      "role": "manager", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 18, 
+    "model": "web.member", 
+    "fields": {
+      "project": 18, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }, 
+  {
+    "pk": 19, 
+    "model": "web.member", 
+    "fields": {
+      "project": 19, 
+      "timestamp": "2009-06-02", 
+      "role": "member", 
+      "user": 1
+    }
+  }
+]

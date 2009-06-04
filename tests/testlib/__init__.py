@@ -20,6 +20,8 @@ class SkipMessages(object):
 
 
 BASE_URL = 'http://127.0.0.1:8080'
+PROJECT_LIST_URL = '%s/project/list/' % BASE_URL
+
 TWILL_QUIET = True
 
 SKIP_MESSAGES = SkipMessages()

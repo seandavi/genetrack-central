@@ -13,26 +13,37 @@
 
     <div class="span-18 center">
         <fieldset id="login">
-            <legend>Project information</legend>
+            <legend>Project details</legend>
             
             <div>
-                <label for="name">Name</label> 
-                {{form.name}}
-            </div>
+            <table>
+                <tr>
+                    <td class="right">Project name:</td>
+                    <td>{{form.name}}</td>
+                </tr>
+                
+                <tr>
+                    <td class="right">Project info:</td>
+                    <td>{{form.info}}</td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2" class="center">
+                        <input type="submit" name="submit" value="Submit"/> &nbsp;&nbsp;|&nbsp;&nbsp;
+                        <input type="button" name="cancel" value="Cancel" onclick="javascript:history.back(1)"/>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td colspan="2" class="textcenter">
+                        <div align="center" class="smaller" style="padding-top:15px;">For advanced formatting use the 
+                        <a href="http://en.wikipedia.org/wiki/Markdown" target="new">Markdown</a> syntax.
+                        </div>
+                    </td>
+                </tr>
 
-            <div>
-                <label for="info">Info</label> 
-                {{form.info}}
-            </div>
-
-            <div align="center">
-                <input type="submit" name="submit" value="Submit"/> &nbsp;&nbsp;|&nbsp;&nbsp;
-                <input type="button" name="cancel" value="Cancel" onclick="javascript:history.back(1)"/>
-            </div>
-
-            <div align="center" class="smaller" style="padding-top:15px;">For advanced formatting use the 
-                <a href="http://en.wikipedia.org/wiki/Markdown" target="new">Markdown</a> syntax.
-            </div>
+            </table>
+        </div>
 
         </fieldset>
 

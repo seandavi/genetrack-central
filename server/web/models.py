@@ -42,7 +42,7 @@ class JsonField(models.TextField):
         if value == "":
             return None
 
-        if isinstance(value, dict):
+        if isinstance(value, dict) or isinstance(value, list):
             value = json.dumps(value, cls=DjangoJSONEncoder)
         elif value is not None:
             logger.warn('incorrect json value %s' % value)
