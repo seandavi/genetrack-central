@@ -96,8 +96,14 @@ echo.
 echo *** running django tests
 echo.
 %PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py test
+
 echo.
 echo *** running server tests
+echo.
+%PYTHON_EXE% %DEFAULT_HOME%\tests\functional.py %2 %3 %4 %5 %6 %7 %8 %9
+
+echo.
+echo *** running genetrack tests
 echo.
 %PYTHON_EXE% %DEFAULT_HOME%\tests\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof

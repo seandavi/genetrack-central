@@ -4,6 +4,8 @@ Functional tests via twill
 import os, unittest, random
 import testlib
 
+from genetrack import logger
+
 import twill
 from twill import commands as tc
 from StringIO import StringIO
@@ -80,12 +82,12 @@ class ServerTest( TwillTest ):
         
 
     def tearDown(self):
-        TwillTest.tearDown(self)
         tc.go( testlib.PROJECT_LIST_URL )
         tc.code(200)
         tc.go("/logout/")
         tc.code(200)
         tc.find("You are not logged in")
+        TwillTest.tearDown(self)
 
     def test_project_actions(self):
         
@@ -168,11 +170,9 @@ class ServerTest( TwillTest ):
         tc.go("/project/view/190/")
         tc.code(500)
 
-
 def get_suite():
     "Returns the testsuite"
-    tests  = [ ]
-    return testlib.make_suite( tests )
+    return testlib.make_suite( [] )
 
 def local_suite():
     "Returns the testsuite"
@@ -194,5 +194,6 @@ def test_runner( suite, verbosity=0 ):
     utils.teardown_test_environment()
     
 if __name__ == '__main__':
+    logger.info("executing functional tests")
     suite = local_suite()
     test_runner( suite, verbosity=0)
