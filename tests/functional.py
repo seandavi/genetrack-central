@@ -68,26 +68,33 @@ class ServerTest( TwillTest ):
     
     def setUp(self):
         TwillTest.setUp(self)
+        self.login()
+
+    def tearDown(self):
+        self.logout()
+        TwillTest.tearDown(self)
+
+    def login(self, name='admin', passwd='1'):
+        "Performs a login"
         tc.go( testlib.BASE_URL )
         tc.follow('Log in now')
         tc.find("Please log in") 
         tc.code(200)
         
         # logs in on every test
-        tc.fv("1", "email", "admin")
-        tc.fv("1", "password", "1")
+        tc.fv("1", "email", name)
+        tc.fv("1", "password", passwd)
         tc.submit('0')
         tc.code(200)
         tc.find("Logged in as") 
-        
 
-    def tearDown(self):
+    def logout(self):
+        "Performs a logout"
         tc.go( testlib.PROJECT_LIST_URL )
         tc.code(200)
         tc.go("/logout/")
         tc.code(200)
         tc.find("You are not logged in")
-        TwillTest.tearDown(self)
 
     def test_project_actions(self):
         
@@ -137,22 +144,52 @@ class ServerTest( TwillTest ):
         tc.notfind(name)
         tc.notfind(newname)
 
-    def test_project_sharing(self):
+    def test_project_member_sharing(self):
+
+        # tests sharing as a member
+        tc.go( testlib.PROJECT_LIST_URL )
+        tc.find("Logged in as") 
+        
+        # a project list with member access
+        tc.find("Fly data 19") 
+        tc.follow("Fly data 19")
+        tc.follow("Sharing")
+        tc.find("Current members")
+        
+        # members may not add access
+        tc.notfind("Add access")
+        tc.follow("<< return to project")
+        tc.find("Project: Fly data 19") 
+
+    def test_project_manager_sharing(self):
+        # test sharing as a manager
+
         # main page
         tc.go( testlib.PROJECT_LIST_URL )
         tc.find("Logged in as") 
         
         # default project list
-        tc.find("Fly data 19") 
-        tc.follow("Fly data 19")
+        tc.find("Yeast mutant RAV 17") 
+        tc.follow("Yeast mutant RAV 17")
         tc.follow("Sharing")
         tc.find("Current members")
-        tc.notfind("Add access")
+        tc.find("Add access")
 
+        # search for then add Demo User to this project
+        tc.fv("1", "text", "demo" )
+        tc.submit()
+        tc.code(200)
+        tc.find("Demo User")
+        tc.follow("add as member")
+        tc.find("Demo User")
+
+        # back to the project view
         tc.follow("<< return to project")
-        tc.find("Project: Fly data 19") 
-    
+        tc.find("Yeast mutant RAV 17") 
+
+
     def test_project_access(self):  
+        # verifies project access
 
         # may view this project
         tc.go("/project/view/19/")
