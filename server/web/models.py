@@ -1,7 +1,7 @@
 """
 List of GeneTrack models
 """
-from genetrack import logger
+from genetrack import logger, util
 from server.web import status
 from types import NoneType
 from django.db import models
@@ -136,27 +136,74 @@ class Data( models.Model ):
     class Meta:
         ordering = [ 'id' ]
 
+    def path(self):
+        return util.pathjoin(settings.FILE_DIR, '%s.dat' % self.uuid)
+
+    def index(self):
+        return util.pathjoin(settings.INDEX_DIR, '%s.idx' % self.uuid)
+
+    def get_size(self):
+        "Nicer, human readable size"
+        return util.nice_bytes(self.size)
+
+    def is_ready(self):
+        return self.status in status.DATA_READY
+ 
+    def has_errors(self):
+        return self.status == status.DATA_ERROR
+
+class DataTree( models.Model ):
+    "Represents a parent-child relationship between data"
+    parent = models.ForeignKey( Data, related_name='parents' )
+    child  = models.ForeignKey( Data, related_name='children' )
+
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
 
 class MemberAdmin(admin.ModelAdmin):
     list_display = [ 'user', 'project' ]
 
+class DataAdmin(admin.ModelAdmin):
+    list_display = [ 'name', 'project' ]
+
+class DataTreeAdmin(admin.ModelAdmin):
+    list_display = [ 'parent', 'child' ]
 
 admin.site.register( Project, ProjectAdmin )
 admin.site.register( Member, MemberAdmin )
-
-#admin.site.register( models.DataTree, DataTreeAdmin )
+admin.site.register( Data, DataAdmin )
+admin.site.register( DataTree, DataTreeAdmin )
 
 
 #
 # Signal setup
 #
-# here we set up signals, that get trigger when various 
-# database events take place
-#
+# here we set up signals, that get trigger when various database events take place
+def data_create_trigger(sender, instance, signal, *args, **kwargs):
+    """
+    Post save hook for data to create an index
+    """
+    
+    # populate the unique id if does not exist
+    if not instance.uuid:
+        instance.uuid = util.uuid()
+        instance.save()
 
-def user_profile_create(sender, instance, signal, *args, **kwargs):
+def data_delete_trigger(sender, instance, signal, *args, **kwargs):
+    """
+    Post delete hook to remove a files related to a data
+    """
+    try:
+        # remove data and index paths if exist
+        paths = [ instance.path(), instance.index() ]
+        for path in paths:
+            if os.path.isfile(path):
+                os.remove( path )
+        
+    except Exception, exc:
+        logger.error( '%s' % exc )
+
+def user_profile_trigger(sender, instance, signal, *args, **kwargs):
     """
     Post save hook for creating user profiles
     """
@@ -166,4 +213,6 @@ def user_profile_create(sender, instance, signal, *args, **kwargs):
         #logger.debug( 'creating a user profile for %s' % instance.username )
         UserProfile.objects.create( user=instance )
 
-signals.post_save.connect( user_profile_create, sender=User )
+signals.post_save.connect( data_create_trigger, sender=Data )
+signals.post_delete.connect( data_delete_trigger, sender=Data )
+signals.post_save.connect( user_profile_trigger, sender=User )

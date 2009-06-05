@@ -41,8 +41,6 @@ def uuid(KEY_SIZE=128):
     "Genenerates a unique id"
     id  = str( random.getrandbits( KEY_SIZE ) )
     return hashlib.md5(id).hexdigest()
-
-
     
 def make_stream(fname):
     """

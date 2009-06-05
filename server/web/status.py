@@ -8,17 +8,18 @@ MANAGER = 'manager'
 #
 # data constants
 #
-DATA_NEW      = 'data-new'
-DATA_RUNNING  = 'data-running'
-DATA_WAITING  = 'data-waiting'
-DATA_INDEXED  = 'data-indexed'
-DATA_INTERVAL = 'data-interval'
-DATA_ERROR    = 'data-error'
-DATA_UNSUPPORTED = 'data-unsupported'
+DATA_NEW        = 'new'
+DATA_RUNNING    = 'running'
+DATA_UPLOADING  = 'uploading'
+DATA_WAITING    = 'waiting'
+DATA_LINEAR     = 'linear'
+DATA_INTERVAL   = 'interval'
+DATA_ERROR      = 'error'
+DATA_UNSUPPORTED = 'unsupported'
 
 # data that can be marked as ready
-DATA_READY    = set( [ DATA_INDEXED, DATA_UNSUPPORTED, DATA_ERROR, DATA_INTERVAL] )
-DATA_VIEWABLE = set( [ DATA_INDEXED ]  )
+DATA_READY    = set( [ DATA_LINEAR, DATA_INTERVAL, DATA_UNSUPPORTED, DATA_ERROR, ] )
+DATA_VIEWABLE = set( [ DATA_LINEAR, DATA_INTERVAL ]  )
 
 #
 # job constants
