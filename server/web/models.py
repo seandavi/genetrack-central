@@ -104,6 +104,14 @@ class Project( models.Model ):
         "A list of all data in this project"
         return [ p.child for p in ProjectTree.objects.filter(project=self) ]
 
+    def data_tree(self):
+        "A tree of data"
+        tree = {}
+        pairs = [ (p.parent, p.child) for p in ProjectTree.objects.filter(project=self) ]
+       
+        return tree
+
+
 class Member( models.Model ):
     """
     Maintains membership information between a project and a user
@@ -198,16 +206,10 @@ class ProjectTree( models.Model ):
     >>>
     """
     project = models.ForeignKey( Project, related_name='tree' ) 
-
+    child = models.ForeignKey( Data, related_name='children')
     # parent is null for a root data
     parent = models.ForeignKey( Data, related_name='parent', null=True )
-    child  = models.ForeignKey( Data, related_name='children')
-
-    @classmethod
-    def tree(self, project):
-        tree = {}
-        Data.object.create(parent=self, child=other)
-
+ 
    
    
 class ProjectAdmin(admin.ModelAdmin):
