@@ -1,10 +1,11 @@
 """
 List of GeneTrack models
 """
+import os
 from genetrack import logger, util
 from server.web import status
-from types import NoneType
 from django.db import models
+from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.serializers.json import DjangoJSONEncoder
 from django.utils import simplejson as json
@@ -93,6 +94,16 @@ class Project( models.Model ):
     def set_count(self):
         self.count = Data.objects.filter(project=self).count()
 
+    def add_data(self, child, parent=None):
+        "Adds a data to a project tree"
+        tree, flag = ProjectTree.objects.get_or_create(project=self, child=child, parent=parent)
+        if not flag:
+            logger.warn('data %s is already in project %s' % (child, self))
+
+    def data_list(self):
+        "A list of all data in this project"
+        return [ p.child for p in ProjectTree.objects.filter(project=self) ]
+
 class Member( models.Model ):
     """
     Maintains membership information between a project and a user
@@ -120,14 +131,24 @@ class Member( models.Model ):
 class Data( models.Model ):
     """
     Data representation
+
+    >>> joe, flag = User.objects.get_or_create(username='joe')
+    >>> project, flag = Project.objects.get_or_create(name='Yeast Project')
+    >>>
+    >>> data1 = Data.objects.create(name="one", owner=joe, project=project)
+    >>> data2 = Data.objects.create(name="two", owner=joe, project=project)
+    >>> 
+    >>> data1.status
+    u'new'
+    >>> data1.delete()
     """
     name     = models.TextField()
     uuid     = models.TextField()
     info     = models.TextField( default='no information' )
     status   = models.TextField( default=status.DATA_NEW )
     errormsg = models.TextField( default='' )
-    tags     = JsonField()
-    json     = JsonField()
+    tags     = JsonField( default={}, null=True)
+    json     = JsonField( default={}, null=True)
     size     = models.IntegerField(default=0)
     owner    = models.ForeignKey(User)
     project  = models.ForeignKey(Project)
@@ -136,11 +157,14 @@ class Data( models.Model ):
     class Meta:
         ordering = [ 'id' ]
 
+    def __str__(self):
+        return 'Data %s' % self.name
+
     def path(self):
-        return util.pathjoin(settings.FILE_DIR, '%s.dat' % self.uuid)
+        return util.path_join(settings.FILE_DIR, '%s.dat' % self.uuid)
 
     def index(self):
-        return util.pathjoin(settings.INDEX_DIR, '%s.idx' % self.uuid)
+        return util.path_join(settings.INDEX_DIR, '%s.idx' % self.uuid)
 
     def get_size(self):
         "Nicer, human readable size"
@@ -151,12 +175,41 @@ class Data( models.Model ):
  
     def has_errors(self):
         return self.status == status.DATA_ERROR
+    
+class ProjectTree( models.Model ):
+    """
+    Represents a parent-child relationship between data.
 
-class DataTree( models.Model ):
-    "Represents a parent-child relationship between data"
-    parent = models.ForeignKey( Data, related_name='parents' )
-    child  = models.ForeignKey( Data, related_name='children' )
+    Parents with value null indicate tree roots within a project
 
+    >>> joe, flag = User.objects.get_or_create(username='joe')
+    >>> project, flag = Project.objects.get_or_create(name='Yeast Project')
+    >>>
+    >>> data1 = Data.objects.create(name="one", owner=joe, project=project)
+    >>> data2 = Data.objects.create(name="two", owner=joe, project=project)
+    >>> data3 = Data.objects.create(name="three", owner=joe, project=project)
+    >>> 
+    >>> project.add_data(child=data1)
+    >>> project.add_data(child=data2)
+    >>> project.add_data(child=data3, parent=data2)
+    >>>
+    >>> project.data_list()
+    [<Data: Data one>, <Data: Data two>, <Data: Data three>]
+    >>>
+    """
+    project = models.ForeignKey( Project, related_name='tree' ) 
+
+    # parent is null for a root data
+    parent = models.ForeignKey( Data, related_name='parent', null=True )
+    child  = models.ForeignKey( Data, related_name='children')
+
+    @classmethod
+    def tree(self, project):
+        tree = {}
+        Data.object.create(parent=self, child=other)
+
+   
+   
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
 
@@ -166,13 +219,13 @@ class MemberAdmin(admin.ModelAdmin):
 class DataAdmin(admin.ModelAdmin):
     list_display = [ 'name', 'project' ]
 
-class DataTreeAdmin(admin.ModelAdmin):
+class ProjectTreeAdmin(admin.ModelAdmin):
     list_display = [ 'parent', 'child' ]
 
 admin.site.register( Project, ProjectAdmin )
 admin.site.register( Member, MemberAdmin )
 admin.site.register( Data, DataAdmin )
-admin.site.register( DataTree, DataTreeAdmin )
+admin.site.register( ProjectTree, ProjectTreeAdmin )
 
 
 #
@@ -199,7 +252,7 @@ def data_delete_trigger(sender, instance, signal, *args, **kwargs):
         for path in paths:
             if os.path.isfile(path):
                 os.remove( path )
-        
+        #logger.info( 'removed %s' % instance )
     except Exception, exc:
         logger.error( '%s' % exc )
 

@@ -7,6 +7,10 @@ import logger, conf
 import os, sys, random, hashlib, re, string, csv, gc
 import tempfile, os, random, glob, time
 
+def path_join(*args):
+    "Builds absolute path"
+    return os.path.abspath(os.path.join(*args))
+
 class Params(object):
     """
     >>> p = Params(a=1, b=2, c=None, d=None)
