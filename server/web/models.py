@@ -184,6 +184,12 @@ class Data( models.Model ):
     def has_errors(self):
         return self.status == status.DATA_ERROR
     
+    def __hash__(self):
+        return hash(self.id)
+
+    def __cmp__(self, other):
+        return cmp(self.id, other.id)
+
 class ProjectTree( models.Model ):
     """
     Represents a parent-child relationship between data.
