@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Data{% endblock %}
+
+{% block header %}<h2 align="center">Uploading into: {{project.name}}</h2>{% endblock %}
+
+{% block mainbody %}
+<div id="content">
+
+<table width="60%" align="center" cellpadding="15" class="datatable">
+    <tr>
+        <td align="center">
+            <form name="tagsform">
+                <div>Specify the tags:</div>
+                <input type="textfield" value="Tag 1, Tag 2, Tag 3" name="tags" size="80">
+            </form>
+        </td>
+    </tr>
+    <tr>
+         <td align="center">
+             <applet name="JUpload" code="wjhk.jupload2.JUploadApplet"
+             archive="/static/jar/wjhk.jupload.jar" width="650" height="300" name="LionDB JUpload" alt="LionDB Upload" mayscript="True">
+
+                <param name="formdata" value="tagsform">
+                <param name="postURL" value="/data/handler/{{project.id}}/">
+                <param name="afterUploadURL" value="/project/view/{{project.id}}/">
+                <param name="showLogWindow" value="False">
+                <param name="debugLevel" value="0">
+                Your browser does not support applets. Or you have disabled applet in your options.
+                To use this applet, please install the newest version of Sun's java. You can get it from <a href="http://www.java.com/">java.com</a>
+
+            </applet>
+            
+        </td>
+    </tr>
+    <tr>
+        <td class="smaller" align="center">
+            Note: for large files (over 300Mb) the uploader 
+            may take a minute or so to start sending the data.
+        </td>
+    </tr>
+</table>
+
+<table align="center" cellpadding="5">
+    <tr><td align="center">         
+        <img src="/static/icons/goback.png">
+        <a href="/project/view/{{project.id}}/">Back to Project View</a>
+    </td></tr>
+</table>
+
+</div>
+
+{% endblock %}

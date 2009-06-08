@@ -8,7 +8,7 @@ from server.scripts import initializer
 from server.web import html
 from django.contrib.auth.models import User
 
-class ModelTest( unittest.TestCase ):
+class AuthorizeTest( unittest.TestCase ):
     """
     Tests the models
     """
@@ -27,7 +27,7 @@ class ModelTest( unittest.TestCase ):
         connection.creation.destroy_test_db(self.old_name, 0)
         utils.teardown_test_environment()
     
-    def test_one(self):
+    def test_data_creation(self):
         """
         Create datasets
         """
@@ -47,7 +47,7 @@ class ModelTest( unittest.TestCase ):
 def get_suite():
     "Returns the testsuite"
     tests  = [ 
-        ModelTest,
+        AuthorizeTest,
     ]
 
     return testlib.make_suite( tests )

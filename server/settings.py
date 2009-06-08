@@ -119,6 +119,9 @@ TEMPLATE_DIRS = (
 
     # pages for projects
     path_join(TEMPLATE_PATH, 'project'),
+    
+    # pages for projects
+    path_join(TEMPLATE_PATH, 'data'),
 
     # custom pages for administration
     path_join(TEMPLATE_PATH, 'admin'),

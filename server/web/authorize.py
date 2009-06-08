@@ -90,7 +90,7 @@ def update_role(user, pid, action, uid):
     if action in roles:
         models.Member.objects.create(user=target, project=project, role=roles[action])
 
-def create_data(user, pid, stream, name, info='no information'):
+def create_data(user, pid, stream, name, info='no information', parent=None):
     """
     Creates a data entry from a django style stream (uploaded data)
     """
@@ -103,6 +103,9 @@ def create_data(user, pid, stream, name, info='no information'):
     fp.close()
     data.set_size()
     data.save()
+
+    # adding parent-child relationship
+    proj.add_data(child=data, parent=parent)
     return data
 
 if __name__ == '__main__':

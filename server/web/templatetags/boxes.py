@@ -41,6 +41,7 @@ def project_actions_box(context):
 def upload_box(context):
     return {
         'user': context['user'],
+        'project': context['project'],
     }
 
 def test():

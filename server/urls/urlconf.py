@@ -23,6 +23,9 @@ urlpatterns = patterns('',
     # project related urls
     (r'^project/',  include('urls.project_urls')),
 
+    # data related urls
+    (r'^data/',  include('urls.data_urls')),
+
     # password reset related urls
     (r'^password/',  include('urls.password_urls')),
     
