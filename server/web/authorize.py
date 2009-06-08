@@ -104,8 +104,12 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     data.set_size()
     data.save()
 
+    # update counts on each upload
+    proj.set_count()
+
     # adding parent-child relationship
-    proj.add_data(child=data, parent=parent)
+    #if parent:
+    #    parent.add_child(data)
     return data
 
 if __name__ == '__main__':

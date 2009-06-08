@@ -42,6 +42,12 @@
         <div id="project-info" class="box">{{ project.info|markdown }}</div>
         
         &nbsp;
+
+        {% for data in project.data_list.all %}
+            <div class="project name row">
+                {{data.name}}
+            </div>
+        {% endfor %}
   </div>
 
   <!-- left sidebar -->

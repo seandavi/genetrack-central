@@ -92,7 +92,8 @@ class Project( models.Model ):
         return "Project: %s" % self.name
     
     def set_count(self):
-        self.count = Data.objects.filter(project=self).count()
+        self.data_count = Data.objects.filter(project=self).count()
+        self.save()
 
     def add_data(self, child, parent=None):
         "Adds a data to a project tree"
@@ -163,7 +164,7 @@ class Data( models.Model ):
     json     = JsonField( default={}, null=True)
     size     = models.IntegerField(default=0)
     owner    = models.ForeignKey(User)
-    project  = models.ForeignKey(Project)
+    project  = models.ForeignKey(Project, related_name='data_list')
     tstamp   = models.DateField(auto_now_add=True)
   
     class Meta:
@@ -205,25 +206,22 @@ class ProjectTree( models.Model ):
     There may be multiple tree roots for one project.
 
     >>> joe, flag = User.objects.get_or_create(username='joe')
-    >>> project, flag = Project.objects.get_or_create(name='Yeast Project')
+    >>> project, flag = Project.objects.get_or_create(name='Other Yeast Project')
     >>>
-    >>> data1 = Data.objects.create(name="one", owner=joe, project=project)
-    >>> data2 = Data.objects.create(name="two", owner=joe, project=project)
-    >>> data3 = Data.objects.create(name="three", owner=joe, project=project)
-    >>> 
-    >>> project.add_data(child=data1)
-    >>> project.add_data(child=data2)
-    >>> project.add_data(child=data3, parent=data2)
+    >>> data1 = Data.objects.create(name="one1", owner=joe, project=project)
+    >>> data2 = Data.objects.create(name="two2", owner=joe, project=project)
+    >>> data3 = Data.objects.create(name="three3", owner=joe, project=project)
     >>>
-    >>> project.data_list()
-    [<Data: Data one>, <Data: Data two>, <Data: Data three>]
+    >>> project.data_list.all()
+    [<Data: Data one1>, <Data: Data two2>, <Data: Data three3>]
     >>>
     """
+
+    # this is here only to speed up project access
     project = models.ForeignKey( Project, related_name='tree' ) 
-    # parent is null for a root data
+    parent = models.ForeignKey( Data, related_name='parent')
     child = models.ForeignKey( Data, related_name='children')
-    parent = models.ForeignKey( Data, related_name='parent', null=True )
-    
+
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
 
