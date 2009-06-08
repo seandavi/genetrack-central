@@ -4,7 +4,9 @@ import testlib
 from genetrack import conf, util, logger, scripts
 
 class ScriptTests( unittest.TestCase ):
-    'basic sequence class tests'
+    """
+    Testing scripts
+    """
     
     def test_bed2genetrack(self):
         "Testing bed2genetrack transformation"
@@ -24,7 +26,7 @@ def get_suite():
 
 if __name__ == '__main__':
     suite = get_suite()
-    logger.disable(None)
+    logger.disable('DEBUG')
     unittest.TextTestRunner(verbosity=2).run( suite )
 
     

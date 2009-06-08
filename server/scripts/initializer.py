@@ -72,7 +72,7 @@ def load_users(fname, options):
         is_superuser = (row['is_superuser'] == 'yes')
         user, flag = user_get(username=username, email=email, first_name=first_name, last_name=last_name, is_superuser=is_superuser, is_staff=is_superuser)
         if flag:
-            logger.info( 'created user: %s' % user.get_full_name() )
+            logger.debug( 'created user: %s' % user.get_full_name() )
             if username in ('admin', 'demo'):
                 # admin user will get the secret key as password
                 user.set_password(passwd)
@@ -85,7 +85,7 @@ def load_users(fname, options):
                     # all other users will need to reset their passwords 
                     user.set_unusable_password()
             user.save()
-            
+
 if __name__ == '__main__':
     import optparse
 
@@ -121,6 +121,7 @@ if __name__ == '__main__':
         help="turns on testmode for all users!",
     )
 
+    # parse the argument list
     options, args = parser.parse_args()
 
     # set verbosity

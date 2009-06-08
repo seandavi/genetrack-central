@@ -150,11 +150,15 @@ class Data( models.Model ):
     u'new'
     >>> data1.delete()
     """
+
+    # one of the acceptable states
+    choices = zip(status.DATA_ALL, status.DATA_ALL)
+
     name     = models.TextField()
     uuid     = models.TextField()
     info     = models.TextField( default='no information' )
-    status   = models.TextField( default=status.DATA_NEW )
-    errormsg = models.TextField( default='' )
+    status   = models.TextField( default=status.DATA_NEW, choices=choices)
+    error_msg = models.TextField( default='', null=True )
     tags     = JsonField( default={}, null=True)
     json     = JsonField( default={}, null=True)
     size     = models.IntegerField(default=0)
@@ -178,6 +182,9 @@ class Data( models.Model ):
         "Nicer, human readable size"
         return util.nice_bytes(self.size)
 
+    def set_size(self):
+        self.size = os.stat( self.path() )[6]
+
     def is_ready(self):
         return self.status in status.DATA_READY
  
@@ -194,7 +201,8 @@ class ProjectTree( models.Model ):
     """
     Represents a parent-child relationship between data.
 
-    Parents with value null indicate tree roots within a project
+    Parents with value null indicate tree roots within a project. 
+    There may be multiple tree roots for one project.
 
     >>> joe, flag = User.objects.get_or_create(username='joe')
     >>> project, flag = Project.objects.get_or_create(name='Yeast Project')
@@ -212,12 +220,10 @@ class ProjectTree( models.Model ):
     >>>
     """
     project = models.ForeignKey( Project, related_name='tree' ) 
-    child = models.ForeignKey( Data, related_name='children')
     # parent is null for a root data
+    child = models.ForeignKey( Data, related_name='children')
     parent = models.ForeignKey( Data, related_name='parent', null=True )
- 
-   
-   
+    
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
 

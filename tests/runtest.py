@@ -15,8 +15,8 @@ def all_tests():
     patt = re.compile("_tests.py$")
     mods = os.listdir(os.path.normpath(os.path.dirname(__file__)))
     mods = filter(patt.search, mods)
-    mods = [ m.rstrip(".py") for m in mods ]
-
+    mods = [ os.path.splitext(m)[0] for m in mods ]
+    
     # some predictable order...
     mods.sort() 
     return mods
@@ -88,12 +88,11 @@ if __name__ == '__main__':
     if options.exclude:
         targets = [ name for name in all_tests() if name not in targets ]
 
-    logger.disable('DEBUG')
-
-    # disables debug messages at < 2 verbosity
     if options.verbosity == 0:
         logger.disable('INFO')
-    elif options.verbosity > 2:
+    elif options.verbosity == 1:
+        logger.disable('DEBUG')
+    elif options.verbosity >= 2:
         logger.disable(None)
 
     # cleans full entire test directory

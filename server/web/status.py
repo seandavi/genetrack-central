@@ -17,9 +17,17 @@ DATA_INTERVAL   = 'interval'
 DATA_ERROR      = 'error'
 DATA_UNSUPPORTED = 'unsupported'
 
+#
 # data that can be marked as ready
-DATA_READY    = set( [ DATA_LINEAR, DATA_INTERVAL, DATA_UNSUPPORTED, DATA_ERROR, ] )
+#
+DATA_INPROGRESS = set( [DATA_NEW, DATA_RUNNING, DATA_UPLOADING, DATA_WAITING] )
+DATA_READY = set( [ DATA_LINEAR, DATA_INTERVAL, DATA_UNSUPPORTED, DATA_ERROR, ] )
 DATA_VIEWABLE = set( [ DATA_LINEAR, DATA_INTERVAL ]  )
+
+#
+# all possible states
+#
+DATA_ALL = DATA_INPROGRESS | DATA_READY
 
 #
 # job constants

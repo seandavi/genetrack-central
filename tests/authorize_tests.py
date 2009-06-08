@@ -4,7 +4,9 @@ from django.test import utils
 from django.db import connection
 from django.conf import settings
 from genetrack import conf, util, logger
-from genetrack.scripts import initializer
+from server.scripts import initializer
+from server.web import html
+from django.contrib.auth.models import User
 
 class ModelTest( unittest.TestCase ):
     """
@@ -17,9 +19,8 @@ class ModelTest( unittest.TestCase ):
         connection.creation.create_test_db(verbosity=0, autoclobber=True)
         options = util.Params(test_mode=True, delete_everything=False, flush=False, verbosity=0)
         fname = conf.testdata('test-users.csv')
-        logger.disable('INFO') # too many user created messages
         initializer.load_users(fname, options)
-        logger.disable(None)
+        
 
     def tearDown(self):
         "Tearing down the database after test"
@@ -27,7 +28,18 @@ class ModelTest( unittest.TestCase ):
         utils.teardown_test_environment()
     
     def test_one(self):
-        pass
+        """
+        Create datasets
+        """
+        
+        # it seems that importing it earlier messes up the test database setup
+        from server.web import authorize
+
+        john = User.objects.get(username='johndoe')
+        project = authorize.create_project(user=john, name="Test project")
+        stream = html.make_stream( conf.testdata('test-users.csv') )
+        data = authorize.create_data(user=john, pid=project.id, stream=stream, name="Test data")
+
 
     def test_two(self):
         pass
@@ -42,5 +54,5 @@ def get_suite():
 
 if __name__ == '__main__':
     suite = get_suite()
-    logger.disable(None)
+    logger.disable('DEBUG')
     unittest.TextTestRunner(verbosity=2).run( suite )

@@ -46,31 +46,6 @@ def uuid(KEY_SIZE=128):
     id  = str( random.getrandbits( KEY_SIZE ) )
     return hashlib.md5(id).hexdigest()
     
-def make_stream(fname):
-    """
-    Creates a django style chunked file stream (used in testing)
-
-    >>> stream = make_stream(__file__)
-    >>> for chunk in stream.chunks(size=10):
-    ...     pass
-    >>>
-    """
-   
-    class Chunks:
-        def __init__(self,fname):
-            self.fname = fname
-        
-        def chunks(self, size=2**10):
-            "Returns chunks of data"
-            fp = open(self.fname,'rb')
-            while 1:
-                data = fp.read(size)
-                if not data:
-                    raise StopIteration()
-                yield data
-
-    return Chunks(fname)
-
 def nice_bytes( value ):
     """
     Returns a size as human readable bytes

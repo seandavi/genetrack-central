@@ -1,5 +1,5 @@
 import os
-from genetrack import logger
+from genetrack import logger, util
 from server.web import models, status
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
@@ -47,7 +47,7 @@ def project_count(user):
     else:
         return 0
 
-def create_project( user, name, info ):
+def create_project( user, name, info='No info' ):
     """
     Creates a project and sets the user from the profile as the manager
     """
@@ -89,6 +89,21 @@ def update_role(user, pid, action, uid):
     roles = dict(addmanager=status.MANAGER, addmember=status.MEMBER)
     if action in roles:
         models.Member.objects.create(user=target, project=project, role=roles[action])
+
+def create_data(user, pid, stream, name, info='no information'):
+    """
+    Creates a data entry from a django style stream (uploaded data)
+    """
+    proj = get_project(user=user, pid=pid, write=False) 
+    data = models.Data( owner=user, project=proj, name=name, info=info, uuid=util.uuid() )
+    path = data.path()
+    fp = open(path, 'wb')
+    for chunk in stream.chunks():
+        fp.write( chunk )
+    fp.close()
+    data.set_size()
+    data.save()
+    return data
 
 if __name__ == '__main__':
     pass
