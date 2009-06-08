@@ -6,23 +6,18 @@
 
 {% block mainbody %}
 <div id="content">
+<div class="span-3">&nbsp;</div>
+<div class="span-18">
 
-<table width="60%" align="center" cellpadding="15" class="datatable">
-    <tr>
-        <td align="center">
-            <form name="tagsform">
-                <div>Specify the tags:</div>
-                <input type="textfield" value="Tag 1, Tag 2, Tag 3" name="tags" size="80">
-            </form>
-        </td>
-    </tr>
-    <tr>
-         <td align="center">
+         <div align="center">
+             
              <applet name="JUpload" code="wjhk.jupload2.JUploadApplet"
-             archive="/static/jar/wjhk.jupload.jar" width="650" height="300" name="LionDB JUpload" alt="LionDB Upload" mayscript="True">
+             archive="/static/jar/wjhk.jupload.jar" width="650" 
+             height="300" name="LionDB JUpload" alt="LionDB Upload" 
+             mayscript="True">
 
-                <param name="formdata" value="tagsform">
-                <param name="postURL" value="/data/handler/{{project.id}}/">
+                <param name="formdata" value="action">
+                <param name="postURL" value="/data/upload/process/{{project.id}}/">
                 <param name="afterUploadURL" value="/project/view/{{project.id}}/">
                 <param name="showLogWindow" value="False">
                 <param name="debugLevel" value="0">
@@ -31,22 +26,24 @@
 
             </applet>
             
-        </td>
-    </tr>
-    <tr>
-        <td class="smaller" align="center">
+            
+            <form name="action">
+                <!-- sentinel value to detect incoming upload-->
+                <input type="hidden" value="yes" name="upload">
+            </form>
+
+        </div>
+        <div class="smaller" align="center" style="padding:5px;">
             Note: for large files (over 300Mb) the uploader 
             may take a minute or so to start sending the data.
-        </td>
-    </tr>
-</table>
+        </div>
+        
+        <div align="center" cellpadding="5" style="padding:5px;">
+            <a href="/project/view/{{project.id}}/">&lt;&lt; back to project view</a>
+        </div>
 
-<table align="center" cellpadding="5">
-    <tr><td align="center">         
-        <img src="/static/icons/goback.png">
-        <a href="/project/view/{{project.id}}/">Back to Project View</a>
-    </td></tr>
-</table>
+</div>
+<div class="span-3 last">&nbsp;</div>
 
 </div>
 

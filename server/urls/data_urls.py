@@ -6,8 +6,8 @@ urlpatterns = patterns('',
     #    
     #(r'^edit/(?P<did>(.*))/$', 'liondb.server.views.data.edit'),
     #(r'^action/(?P<pid>(\d+))/$', 'liondb.server.views.data.action'),
-    #(r'^handler/(?P<pid>(\d+))/$', 'liondb.server.views.data.handler'),
-    (r'^upload/(?P<pid>(\d+))/$', 'web.views.data.upload'),
+    (r'^upload/process/(?P<pid>(\d+))/$', 'web.views.data.upload_processor'),
+    (r'^upload/start/(?P<pid>(\d+))/$', 'web.views.data.upload_start'),
     #(r'^download/(?P<did>(\d+))/$', 'liondb.server.views.data.download'),
     #(r'^summary/(?P<did>(\d+))/$', 'liondb.server.views.data.summary'),
     

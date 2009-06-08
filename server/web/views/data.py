@@ -1,6 +1,7 @@
 """
 Data related views
 """
+import os
 from django.conf import settings
 from django import forms
 from genetrack import logger
@@ -102,33 +103,31 @@ def summary(request, did):
     else:
         return html.redirect("/project/view/%s" % data.project.id)    
 
-
 def chop_dirname(name):
-    "Removes directory from the name"
-
+    "Removes directory from the name."
     # some browsers may send the full pathname
     name = name.replace("\\", "/")
     name = os.path.basename( name )
     return name
 
-def upload_handler(request, pid):
+def upload_processor(request, pid):
     "Handles the actual data upload"
     user = request.user
     if user.is_authenticated():
-        if 'tags' in request.POST:
-            tags = request.POST.get('tags', 'Tag1, Tag2, Tag3')
-            for i in range(25):
+        if 'upload' in request.POST:
+            # take at most 50 files
+            for i in range(50):
                 key = 'File%s' % i
                 if key in request.FILES:
                     stream = request.FILES[key]
-                    name  = chop_dirname( stream.name )
-                    liondb.info('processing uploaded file %s' % name)
-                    authorize.create_data(user=user, pid=pid, stream=stream, name=name, info='no information', tags=tags)
+                    name = chop_dirname( stream.name )
+                    logger.info('%s uploaded file %s' % (user.username, name) )
+                    authorize.create_data(user=user, pid=pid, stream=stream, name=name, info='no information')
     
     return html.response('SUCCESS\n')
 
 @login_required
-def upload(request, pid):
+def upload_start(request, pid):
     "Renders the upload page"
     user = request.user
     project = authorize.get_project(user=user, pid=pid, write=False)    
