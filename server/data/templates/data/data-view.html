@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load markup %}
+{% load boxes %}
+
+{% block title %}Data View{% endblock %}
+
+{% block header %}<h2>Data: {{data.name}}</h2>{% endblock %}
+
+{% block local-headers%}
+<link rel="stylesheet" type="text/css" href="/static/tabs/tabs.css" />
+
+<script>
+
+    $(document).ready(function(){
+        
+
+    });
+</script>
+
+{% endblock %}
+
+{% block mainbody %}
+
+  <!-- main box left -->
+  <div class="span-17 colborder" id="content">
+    
+       data view
+
+  </div>
+
+  <!-- left sidebar -->
+  <div class="span-6 last" id="sidebar">
+
+    {% account_box 'data-view' %}
+
+    {% admin_box %}
+
+  </div>
+
+{% endblock %}
+

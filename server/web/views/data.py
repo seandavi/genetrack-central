@@ -137,5 +137,13 @@ def upload_start(request, pid):
     project = authorize.get_project(user=user, pid=pid, write=False)    
     return html.template( request=request, name='data-upload.html', project=project)
 
+@login_required
+def view(request, did):
+    "Renders the data view page"
+    user = request.user
+    data = authorize.get_data(user=user, did=did)    
+    return html.template( request=request, name='data-view.html', data=data)
+
+
 if __name__ == '__main__':
     pass    

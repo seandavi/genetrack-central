@@ -38,6 +38,26 @@ def get_project( user, pid, write=True ):
         
     return member.project
 
+def get_data( user, did, write=True ):
+    "Returns a project for a given user"
+    try:
+        data = models.Data.objects.get(id=did)
+        member  = models.Member.objects.get( user=user, project=data.project )
+        project = member.project
+        project.role = member.role
+        project.is_manager = (project.role == status.MANAGER)
+    except ObjectDoesNotExist, exc:
+        logger.debug( exc )
+        raise AccessError("You may not access this project")
+
+    # write access check on by default
+    '''
+    if write and not project.is_manager:
+        logger.debug( 'write access with invalid role' )
+        raise AccessError('You may not change this project')
+    '''        
+    return data
+
 def project_count(user):
     """
     Returns the number of projects a user has
