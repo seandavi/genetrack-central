@@ -7,6 +7,7 @@
 {% block header %}<h2>Project: {{project.name}} <span id="filter-info">&nbsp;</span></h2>{% endblock %}
 
 {% block local-headers%}
+<link rel="stylesheet" type="text/css" href="/static/tabs/tabs.css" />
 
 <script>
 
@@ -29,6 +30,9 @@
 
         $("#project-info").hide()
 
+        $("#tabs").tabs();
+
+
     });
 </script>
 
@@ -40,14 +44,30 @@
   <div class="span-17 colborder" id="content">
 
         <div id="project-info" class="box">{{ project.info|markdown }}</div>
+
+        <div id="tabs"> 
+            <ul class="tabs">
+                <li><a href="#tabs-data">Data</a></li> 
+                <li><a href="#tabs-visuals">Visualizations</a></li> 
+            </ul>
+ 
+            <div id="tabs-data"> 
+                <!-- Data pane content -->
+
+                {% for data in project.data_list.all %}
+                <div class="project name row">
+                    {{data.name}}
+                </div>
+                {% endfor %}
+
+            </div>
+            <div id="tabs-visuals"> VISUALS </div>
+        </div>
+
         
+
         &nbsp;
 
-        {% for data in project.data_list.all %}
-            <div class="project name row">
-                {{data.name}}
-            </div>
-        {% endfor %}
   </div>
 
   <!-- left sidebar -->
