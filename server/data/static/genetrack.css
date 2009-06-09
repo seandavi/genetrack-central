@@ -14,10 +14,15 @@ body {
 .project.row{
     padding: 5px;
     padding-bottom:10px;
-    border-bottom: 1px solid #EEEEEE;
+    border-top: 1px solid #F4C03E;
 }
 
 .project.name{
+    font: 1.4em Verdana, Arial, Helvetica, sans-serif;
+    padding-bottom:5px;
+}
+
+.data.name{
     font: 1.4em Verdana, Arial, Helvetica, sans-serif;
     padding-bottom:5px;
 }
@@ -58,10 +63,7 @@ img {
 }
 
 #baseheader {
-	border-top: 1em solid #F4C03E;
-    background-color: #FAE3A8;
-    margin-bottom: 1em;
-    height: 1em;
+	
 }
 
 #basefooter {
@@ -123,3 +125,16 @@ span.search {
     background-repeat: no-repeat;
     display:inline;
 }
+
+h1 {
+    font-size: 3em;
+    margin-top: 0.35em;
+    margin-bottom: 0.35em;
+}
+
+h2 {
+    font-size: 2em;
+    margin-top: 0.35em;
+    margin-bottom: 0.35em;
+}
+

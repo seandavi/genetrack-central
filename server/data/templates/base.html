@@ -40,7 +40,7 @@
 <body>
   <div class="container">
     
-    <div id="baseheader" class="span-24 last">&nbsp;</div>
+    <div id="baseheader" class="span-24 last ui-widget-header">&nbsp;</div>
 
     <div id="header" class="span-24 last">
       {% block header %}<h1>Header</h1>{% endblock %}
@@ -51,12 +51,11 @@
     {% block message %}
         {% if messages %}
             <div class="span-24 last" id="messages">
-                <div class="notice" >
+                <div class="ui-state-highlight ui-corner-all" style="margin-top: 5px; padding: 1em;">
                     {% for message in messages %}
-                        <div>{{ message|safe }}</div>
+                        <div><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>{{ message|safe }}</div>
                     {% endfor %}
                 </div>
-                <hr>
             </div>
         {% endif %}
     {% endblock %}

@@ -116,14 +116,18 @@ def upload_processor(request, pid):
     if user.is_authenticated():
         if 'upload' in request.POST:
             # take at most 50 files
+            count = 0
             for i in range(50):
                 key = 'File%s' % i
                 if key in request.FILES:
+                    count += 1
                     stream = request.FILES[key]
                     name = chop_dirname( stream.name )
                     logger.info('%s uploaded file %s' % (user.username, name) )
                     authorize.create_data(user=user, pid=pid, stream=stream, name=name, info='no information')
-    
+
+            user.message_set.create(message="Uploaded %s files" % count)
+
     return html.response('SUCCESS\n')
 
 @login_required

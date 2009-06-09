@@ -46,22 +46,24 @@
         <div id="project-info" class="box">{{ project.info|markdown }}</div>
 
         <div id="tabs"> 
-            <ul class="tabs">
-                <li><a href="#tabs-data">Data</a></li> 
-                <li><a href="#tabs-visuals">Visualizations</a></li> 
+            <ul>
+                <li><a href="#tabs-data">Data listing</a></li> 
+                <li><a href="#tabs-show-visuals">Saved Visualizations</a></li> 
+                <li><a href="#tabs-create-visuals">Create Visualization</a></li> 
             </ul>
  
             <div id="tabs-data"> 
                 <!-- Data pane content -->
 
                 {% for data in project.data_list.all %}
-                <div class="project name row">
-                    {{data.name}}
-                </div>
+                    <div class="data name row">
+                        <a href="/data/view/{{data.id}}/">{{data.name}}</a>
+                    </div>
                 {% endfor %}
 
             </div>
-            <div id="tabs-visuals"> VISUALS </div>
+            <div id="tabs-show-visuals">Show visuals</div>
+            <div id="tabs-create-visuals">Create Visuals</div>
         </div>
 
         
