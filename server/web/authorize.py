@@ -46,16 +46,16 @@ def get_data( user, did, write=True ):
         project = member.project
         project.role = member.role
         project.is_manager = (project.role == status.MANAGER)
+        data.write_access = project.is_manager or (data.owner==user)
     except ObjectDoesNotExist, exc:
         logger.debug( exc )
         raise AccessError("You may not access this project")
 
     # write access check on by default
-    '''
-    if write and not project.is_manager:
+    if write and not data.write_access:
         logger.debug( 'write access with invalid role' )
-        raise AccessError('You may not change this project')
-    '''        
+        raise AccessError('You may not change this data')
+
     return data
 
 def project_count(user):

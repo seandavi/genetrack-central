@@ -103,7 +103,7 @@ class Project( models.Model ):
 
     def data_list(self):
         "A list of all data in this project"
-        return [ p.child for p in ProjectTree.objects.filter(project=self) ]
+        return [ d for d in Data.objects.all().order_by('id') ]
 
     def data_tree(self):
         "A tree of data"
@@ -164,7 +164,7 @@ class Data( models.Model ):
     json     = JsonField( default={}, null=True)
     size     = models.IntegerField(default=0)
     owner    = models.ForeignKey(User)
-    project  = models.ForeignKey(Project, related_name='data_list')
+    project  = models.ForeignKey(Project, related_name='data')
     tstamp   = models.DateField(auto_now_add=True)
   
     class Meta:

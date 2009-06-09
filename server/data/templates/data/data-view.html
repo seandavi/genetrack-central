@@ -12,8 +12,7 @@
 <script>
 
     $(document).ready(function(){
-        
-
+        //$("#data-info").hide()
     });
 </script>
 
@@ -24,7 +23,15 @@
   <!-- main box left -->
   <div class="span-17 colborder" id="content">
     
-       data view
+        <div id="data-info" class="box">{{data.info|markdown }}</div>
+
+        <div class="project name">
+            Status: {{data.status}} {% sep %} Size: {{data.get_size}} {% sep %} Download 
+        </div>
+
+        <div>
+            
+        </div>
 
   </div>
 

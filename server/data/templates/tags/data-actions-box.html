@@ -4,10 +4,8 @@
     <h3 class="caps">DATA ACTIONS</h3>
     <div class="box">
         <div class="quiet" align="center">
-            <a href="#" id="data-info-link">Info</a> {% sep %}
             {% if data.write_access %}
-                <a href="/data/edit/{{data.id}}/">Edit</a>{% sep %} 
-                <a href="#" id="data-delete">Delete</a>
+                <a href="/data/edit/{{data.id}}/">Edit</a> {% sep %} <a href="#" id="data-delete">Delete</a>
             {% else %}
                 Edit {% sep %} Delete
             {% endif %}

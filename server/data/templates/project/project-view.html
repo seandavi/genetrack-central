@@ -47,15 +47,16 @@
 
         <div id="tabs"> 
             <ul>
-                <li><a href="#tabs-data">Data listing</a></li> 
-                <li><a href="#tabs-show-visuals">Saved Visualizations</a></li> 
+                <li><a href="#tabs-data">Data listing ({{project.data_count}})</a></li> 
+                <li><a href="#tabs-show-visuals">Saved Visualizations (0)</a></li> 
                 <li><a href="#tabs-create-visuals">Create Visualization</a></li> 
+                <li><a href="#tabs-galaxy-tools">Galaxy Tools</a></li> 
             </ul>
  
             <div id="tabs-data"> 
                 <!-- Data pane content -->
 
-                {% for data in project.data_list.all %}
+                {% for data in project.data_list %}
                     <div class="data name row">
                         <a href="/data/view/{{data.id}}/">{{data.name}}</a>
                     </div>
@@ -64,6 +65,7 @@
             </div>
             <div id="tabs-show-visuals">Show visuals</div>
             <div id="tabs-create-visuals">Create Visuals</div>
+            <div id="tabs-galaxy-tools">Using Galaxy tools</div>
         </div>
 
         
