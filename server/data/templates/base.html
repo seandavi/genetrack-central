@@ -51,7 +51,7 @@
     {% block message %}
         {% if messages %}
             <div class="span-24 last" id="messages">
-                <div class="ui-state-highlight ui-corner-all" style="margin-top: 5px; padding: 1em;">
+                <div class="ui-state-highlight ui-corner-all" style="margin-bottom: 10px; padding: 1em;">
                     {% for message in messages %}
                         <div><span class="ui-icon ui-icon-info" style="float: left; margin-right: .3em;"></span>{{ message|safe }}</div>
                     {% endfor %}

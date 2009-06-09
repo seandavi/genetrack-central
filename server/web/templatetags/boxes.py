@@ -21,6 +21,7 @@ def account_box(context, navloc):
         'user': context['user'],
         'params': context.get('params'),
         'project': context.get('project'),
+        'data': context.get('data'),
         'navloc': navloc,
     }
 
@@ -36,6 +37,14 @@ def project_actions_box(context):
         'user': context['user'],
         'project': context['project'],
     }
+
+@register.inclusion_tag('data-actions-box.html', takes_context=True)
+def data_actions_box(context):
+    return {
+        'user': context['user'],
+        'data': context['data'],
+    }
+
 
 @register.inclusion_tag('upload-box.html', takes_context=True)
 def upload_box(context):

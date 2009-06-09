@@ -5,37 +5,40 @@
         <div class="box" >
             <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>
                 
-                {% ifequal navloc 'project-view' %}
-                    <div class="quiet">Your role: <b>{{project.role}}</b></div>
-                    <div class="quiet">Project contains <b>{{project.data_count}}</b> datasets</div>
+                {% ifequal navloc 'home-view' %}
+                    <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
                 {% endifequal %}
 
                 {% ifequal navloc 'project-list' %}
                     <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
                 {% endifequal %}
 
-                {% ifequal navloc 'home-view' %}
-                    <div class="quiet">You have access to <b>{{params.project_count}}</b> projects</div>
+                {% ifequal navloc 'project-view' %}
+                    <div class="quiet">Your role: <b>{{project.role}}</b></div>
+                    <div class="quiet">Project contains <b>{{project.data_count}}</b> datasets</div>
                 {% endifequal %}
 
+                               
                 {% ifequal navloc 'data-view' %}
                    <div></div>
                 {% endifequal %}
 
             <div align="center" style="padding-top:5px;">
 
-                {% ifequal navloc 'home' %}
-                    Home page
-                {% else %}
-                    <a href="/">Home page</a>
+                {% ifequal navloc 'home-view' %}
+                    Home page {% sep %} <a href="/project/list">Project list</a>
                 {% endifequal %} 
                 
-                {% sep %}
-
                 {% ifequal navloc 'project-list' %}
-                    Project list
-                {% else %}
-                    <a href="/project/list">Project list</a>
+                    <a href="/">Home page</a> {% sep %} Project list
+                {% endifequal %} 
+
+                {% ifequal navloc 'project-view' %}
+                    <a href="/">Home page</a> {% sep %} <a href="/project/list">Project list</a>
+                {% endifequal %} 
+
+                {% ifequal navloc 'data-view' %}
+                    <a href="/project/view/{{data.project.id}}/">Project view</a>
                 {% endifequal %} 
                 
             </div>
