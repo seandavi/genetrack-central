@@ -10,8 +10,8 @@ from django.contrib.auth.decorators import login_required
 
 class ProjectForm(forms.Form):
     "For project editing"    
-    name = forms.CharField( initial='New Project', widget=forms.TextInput(attrs={'size':'75', 'class':"textinput"}))
-    info = forms.CharField( initial=status.DEFAULT_PROJECT_INFO, widget=forms.Textarea(attrs={ 'cols':'80', 'rows':'15','class':"textinput" }))
+    name = forms.CharField( initial='New Project', widget=forms.TextInput(attrs={'size':'80'}))
+    info = forms.CharField( initial=status.DEFAULT_PROJECT_INFO, widget=forms.Textarea(attrs={ 'cols':'60', 'rows':'15'}))
 
 @login_required
 def listall(request):

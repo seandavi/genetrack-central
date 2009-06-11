@@ -2,44 +2,40 @@
 
 {% block title %}{{title}}{% endblock %}
 
-{% block header %}<h2 align="center">{{title}}</h2>{% endblock %}
+{% block header %}<h2 align="center">Edit data information</h2>{% endblock %}
 
 {% block mainbody %}
 
-<form method="post" action="/project/edit/{{pid}}/">
+<form method="post" action="/data/edit/{{data.id}}/">
 
     <!-- left sidebar -->
-    <div class="span-3">&nbsp;</div>
+    <div class="span-4">&nbsp;</div>
 
-    <div class="span-18 center">
+    <div class="span-16">
         <fieldset id="login" class="box">
-            <legend>Project details</legend>
+            <legend>Data details</legend>
             
             <div>
-                <div class="capsx" >NAME</div>
-                <div>{{form.name}}</div>
-                
-                <div class="capsx" style="padding-top:15px;">INFO</div>
-                <div>{{form.info}}</div>
+                <div class="capsx">NAME</div>
+                <div >{{form.name}}</div>
                     
+                <div class="capsx" style="padding-top:15px;">INFO</div>
+                <div >{{form.info}}</div>
+                
                 <div style="padding-top:15px;">
                     <input type="submit" name="submit" value="Submit"/> &nbsp;&nbsp;|&nbsp;&nbsp;
                     <input type="button" name="cancel" value="Cancel" onclick="javascript:history.back(1)"/>
-                </div>
+                    </div>
                 
-                <div align="center" class="smaller" style="padding-top:15px;">For advanced formatting use the 
+                <div align="center" class="smaller" style="padding-top:15px;">For advanced              formatting use the 
                         <a href="http://en.wikipedia.org/wiki/Markdown" target="new">Markdown</a> syntax.
                 </div>
-            
             </div>
 
         </fieldset>
-
-    
-
     </div>
 
-    <div class="span-3 last">&nbsp;</div>
+    <div class="span-4 last">&nbsp;</div>
 
 </form>
 
