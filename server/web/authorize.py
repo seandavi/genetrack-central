@@ -58,15 +58,6 @@ def get_data( user, did, write=True ):
 
     return data
 
-def project_count(user):
-    """
-    Returns the number of projects a user has
-    """
-    if user.is_authenticated():
-        return models.Member.objects.filter(user=user).count()
-    else:
-        return 0
-
 def create_project( user, name, info='No info' ):
     """
     Creates a project and sets the user from the profile as the manager
@@ -74,6 +65,17 @@ def create_project( user, name, info='No info' ):
     project = models.Project.objects.create(name=name, info=info)
     member  = models.Member.objects.create(user=user, project=project, role=status.MANAGER)
     return project
+
+def delete_data(user, pid, dids):
+    "Deletes data from a project"
+    project = get_project(user=user, pid=pid, write=False)  
+    for did in dids:
+        datum = models.Data.objects.get(id=did, project=project)
+        if project.is_manager or datum.owner == user:
+            datum.delete()
+            user.message_set.create(message="Deleted data %s" % datum.name)
+        else:
+           user.message_set.create(message="May not delete data %s" % datum.name) 
 
 def update_project( user, pid, name, info ):
     """

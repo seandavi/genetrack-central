@@ -16,28 +16,23 @@ class DataForm(forms.Form):
 
 @login_required
 def action(request, pid):
-    "Delete or other actions"
-    key  = 'delete-ids'
+    "Data related actions"
     user = request.user
     project = authorize.get_project(user=user, pid=pid, write=False)
 
-    if 'delete' in request.GET:
-        # instant deletes with GET
-        dids = request.GET.getlist('did')
-        authorize.delete_data(user=user, pid=pid, dids=dids)
-        return html.redirect( "/project/view/%s/" % pid )
+    action = request.REQUEST.get('action')
 
-    elif 'delete' in request.POST:
-        dids = request.session[key]
-        del request.session[key]                
+    if action == u'delete':
+        # delete request
+        dids = request.REQUEST.getlist('did')
         authorize.delete_data(user=user, pid=pid, dids=dids)
-        return html.redirect( "/project/view/%s/" % pid ) 
+        print dids
     else:
-        dids = request.POST.getlist('did')
-        url   = "/data/action/%s/" % pid 
-        info = 'deleting %s datasets' % len(dids)
-        request.session[ key ] = dids
-        return html.template( request=request, name='confirm.html', info=info, user=user )
+        user.message_set.create(message="no valid action was selected")
+
+    return html.redirect( "/project/view/%s/" % pid )
+
+  
 
 
 @login_required

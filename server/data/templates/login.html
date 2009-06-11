@@ -20,33 +20,19 @@
 <div class="span-7">&nbsp;</div>
 
 <div class="span-10 center">
-    <fieldset id="login">
+    <fieldset id="login" class="box">
       <legend>Please log in</legend>
 
-      <div>
-            <table>
-                <tr>
-                    <td class="right">Email</td>
-                    <td><input class="textinput" type="text" name="email" id="id_email" /></td>
-                </tr>
+        <div class="capsx">EMAIL</div>
+        <div><input type="text" name="email" id="id_email" size="30" /></div>
                 
-                <tr>
-                    <td class="right">Password</td>
-                    <td><input class="textinput" type="password" name="password" id="id_password" /></td>
-                </tr>
+        <div class="capsx" style="padding-top:15px;">PASSWORD</div>
+        <div><input type="password" name="password" id="id_password" size="30"/></div>
                 
-                <tr>
-                    <td colspan="2" class="center"><input type="submit" value="Submit" /></td>
-                </tr>
+        <div style="padding-top:15px;"><input type="submit" value="Submit" /></div>
                 
-                <tr>
-                    <td colspan="2" class="textcenter">
-                        <a href="/password/password_reset/">Forgot Password?</a>
-                        &bull; <a href="/">Back to Home</a>
-                    </td>
-                </tr>
-
-            </table>
+        <div align="center" style="padding-top:15px;">
+            <a href="/password/password_reset/">Forgot Password?</a> &bull; <a href="/">Back  home</a>
         </div>
     </fieldset>
 </div>

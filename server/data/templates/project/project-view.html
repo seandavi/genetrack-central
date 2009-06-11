@@ -51,7 +51,8 @@
  
             <div id="tabs-data"> 
                 <!-- Data pane content -->
-
+                <form action="/data/action/{{project.id}}/" method="POST">
+                
                 {% for data in project.data_list %}
                     <div class="data name row">
                         <input type="checkbox" name="did" value="{{data.id}}">
@@ -60,15 +61,18 @@
                 {% endfor %}
 
                 <div align="left" style="padding-top:10px;">
-                Action for the selected datasets:
-                <select name="actions">
-                    <option value="" selected="yes">------</option>
-                    <option value="galaxy">Send to Galaxy</option>
-                    <option value="none">------</option>
-                    <option value="delete">Delete datasets</option>
-                </select>
-                <input name="submit" type="submit" value="submit" />
+                   
+                    Action for the selected datasets:
+                    <select name="action">
+                        <option value="" selected="yes">------</option>
+                        <option value="galaxy">Send to Galaxy</option>
+                        <option value="">------</option>
+                        <option value="delete">Delete datasets</option>
+                    </select>
+                    <input name="submit" type="submit" value="submit" />
                 </div>
+
+                </form>
 
             </div>
             <div id="tabs-show-visuals">Show visuals</div>
