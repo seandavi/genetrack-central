@@ -93,6 +93,7 @@ class Project( models.Model ):
     
     def set_count(self):
         self.data_count = Data.objects.filter(project=self).count()
+        print '>>>>>>>>>>>', self.data_count
         self.save()
 
     def add_data(self, child, parent=None):

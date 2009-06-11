@@ -76,6 +76,17 @@ def delete_data(user, pid, dids):
             user.message_set.create(message="Deleted data %s" % datum.name)
         else:
            user.message_set.create(message="May not delete data %s" % datum.name) 
+    # update the data count    
+    project.set_count()
+
+def project_count(user):
+    """
+    Returns the number of projects a user has
+    """
+    if user.is_authenticated():
+        return models.Member.objects.filter(user=user).count()
+    else:
+        return 0
 
 def update_project( user, pid, name, info ):
     """

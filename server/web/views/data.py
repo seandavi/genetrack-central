@@ -26,14 +26,12 @@ def action(request, pid):
         # delete request
         dids = request.REQUEST.getlist('did')
         authorize.delete_data(user=user, pid=pid, dids=dids)
-        print dids
     else:
         user.message_set.create(message="no valid action was selected")
 
     return html.redirect( "/project/view/%s/" % pid )
 
-  
-
+ 
 
 @login_required
 def download(request, did):
