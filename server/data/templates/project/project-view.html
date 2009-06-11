@@ -15,10 +15,6 @@
         
         filter_rows()
 
-        // makes entire row clickable
-        $(".row").click(function(){
-            window.location=$(this).find("a").attr("href"); return false;
-        });
 
         // expand info field
         $("#project-info-link").click(function(){
@@ -58,9 +54,21 @@
 
                 {% for data in project.data_list %}
                     <div class="data name row">
+                        <input type="checkbox" name="did" value="{{data.id}}">
                         <a href="/data/view/{{data.id}}/">{{data.name}}</a>
                     </div>
                 {% endfor %}
+
+                <div align="left" style="padding-top:10px;">
+                Action for the selected datasets:
+                <select name="actions">
+                    <option value="" selected="yes">------</option>
+                    <option value="galaxy">Send to Galaxy</option>
+                    <option value="none">------</option>
+                    <option value="delete">Delete datasets</option>
+                </select>
+                <input name="submit" type="submit" value="submit" />
+                </div>
 
             </div>
             <div id="tabs-show-visuals">Show visuals</div>
@@ -69,8 +77,10 @@
         </div>
 
         
+        <div style="padding-top:10px;">Project managers: {{project.manager_names}}</div>
+        <div style="padding-top:10px;">Project members: {{project.member_names}}</div>
 
-        &nbsp;
+
 
   </div>
 

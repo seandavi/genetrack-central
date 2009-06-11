@@ -25,13 +25,14 @@
     
         <div id="data-info" class="box">{{data.info|markdown }}</div>
 
-        <div class="project name">
-            Status: {{data.status}} {% sep %} Size: {{data.get_size}} {% sep %} Download 
+        <div style="padding-bottom:10px;">
+            Status: {{data.status}} 
+            {% sep %} Size: {{data.get_size}} 
+            {% sep %}
+            Created by {{data.owner.get_full_name}} on {{ data.tstamp}}
         </div>
 
-        <div>
-            
-        </div>
+
 
   </div>
 

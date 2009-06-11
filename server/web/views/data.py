@@ -11,9 +11,8 @@ from django.contrib.auth.decorators import login_required
 
 class DataForm(forms.Form):
     "For project editing"    
-    name = forms.CharField( initial='New Project', widget=forms.TextInput(attrs=dict(size=80)))
-    tags = forms.CharField( initial='Tag1, Tag2, Tag3', widget=forms.TextInput(attrs=dict(size=80)))
-    info = forms.CharField( initial='Project Info', widget=forms.Textarea(attrs=dict(cols=60, rows=3)))
+    name = forms.CharField( initial='Data name', widget=forms.TextInput(attrs=dict(size=80)))
+    info = forms.CharField( initial='Data info', widget=forms.Textarea(attrs={'cols':60, 'rows':10, 'class':'text'}))
 
 @login_required
 def action(request, pid):
@@ -69,40 +68,20 @@ def edit(request, did):
 
     # no submission
     if 'submit' not in request.POST:
-        form = DataForm( dict(name=data.name, info=data.info, tags=data.text_tags() ) )        
-        return html.template( request=request, name='data-edit.html', did=did, user=user, form=form )
+        form = DataForm( dict(name=data.name, info=data.info) )        
+        return html.template( request=request, name='data-edit.html', data=data, form=form )
     
     # form submission
     form = DataForm( request.POST )  
     if form.is_valid():
         get  = form.cleaned_data.get      
-        tags = str( get('tags') )
-        tags = util.tagsplit( tags )
         data.name = get('name')
         data.info = get('info')
-        data.tags = tags
         data.save()
-        return html.redirect("/project/view/%s/" % data.project.id)
+        return html.redirect("/data/view/%s/" % data.id)
     else:    
-        return html.template( request=request, name='data-edit.html', did=did, user=user, form=form )
+        return html.template( request=request, name='data-edit.html', did=did, form=form )
         
-@login_required
-def summary(request, did):
-    "Redirects to the summary page"
-    user = request.user
-    data = authorize.get_data(user=user, did=did)
-    
-    template = request.POST.get('template')
-    
-    if template:
-        data.delete_summary()
-        jobutil.SummaryJob.create( data=data, models=models, template=template)
-
-    if data.has_summary():
-        return html.redirect("/static/summary/%s/index.html" % data.uuid)    
-    else:
-        return html.redirect("/project/view/%s" % data.project.id)    
-
 def chop_dirname(name):
     "Removes directory from the name."
     # some browsers may send the full pathname

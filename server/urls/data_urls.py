@@ -4,7 +4,7 @@ urlpatterns = patterns('',
     #
     # data related views
     #    
-    #(r'^edit/(?P<did>(.*))/$', 'liondb.server.views.data.edit'),
+    (r'^edit/(?P<did>(.*))/$', 'web.views.data.edit'),
     #(r'^action/(?P<pid>(\d+))/$', 'liondb.server.views.data.action'),
     (r'^view/(?P<did>(\d+))/$', 'web.views.data.view'),
     (r'^upload/process/(?P<pid>(\d+))/$', 'web.views.data.upload_processor'),

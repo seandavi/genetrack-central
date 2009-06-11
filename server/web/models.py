@@ -101,9 +101,25 @@ class Project( models.Model ):
         if not flag:
             logger.warn('data %s is already in project %s' % (child, self))
 
+    @property
+    def members(self):    
+        return Member.objects.filter(project=self).select_related().all()
+
+    def names_by_role(self, role):
+        text  = ", ".join( sorted( [ m.user.get_full_name() for m in self.members if m.role==role ]))
+        return text or 'None'
+
+    @property
+    def member_names(self):
+        return self.names_by_role(role=status.MEMBER)
+    
+    @property
+    def manager_names(self):
+        return self.names_by_role(role=status.MANAGER)
+
     def data_list(self):
         "A list of all data in this project"
-        return [ d for d in Data.objects.all().order_by('id') ]
+        return [ d for d in Data.objects.filter(project=self).order_by('-id') ]
 
     def data_tree(self):
         "A tree of data"
