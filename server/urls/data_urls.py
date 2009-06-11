@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     (r'^view/(?P<did>(\d+))/$', 'web.views.data.view'),
     (r'^upload/process/(?P<pid>(\d+))/$', 'web.views.data.upload_processor'),
     (r'^upload/start/(?P<pid>(\d+))/$', 'web.views.data.upload_start'),
-    #(r'^download/(?P<did>(\d+))/$', 'liondb.server.views.data.download'),
+    (r'^download/(?P<did>(\d+))/$', 'web.views.data.download'),
     #(r'^summary/(?P<did>(\d+))/$', 'liondb.server.views.data.summary'),
     
     # the browser

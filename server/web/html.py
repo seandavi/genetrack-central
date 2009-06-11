@@ -1,6 +1,7 @@
 """
 Html specific utility functions.
 """
+import string, mimetypes
 from django.template import Context, loader
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse, HttpResponseRedirect
@@ -41,6 +42,30 @@ def template(request, name, mimetype=None, **kwd):
     messages = user.get_and_delete_messages()
     page = render(name, messages=messages, user=user, **kwd)
     return response(page, mimetype=mimetype)
+
+
+def valid_ascii(text):
+    """
+    Translates text into onto a valid filename on all platforms
+    >>> valid_ascii("A@B#C%D(E)F G+H!I-J")
+    'A-B-C-D-E-F-G-H-I-J'
+    """
+    valid = set(string.digits + string.ascii_letters + ".-=")
+    def trans(letter):
+        if letter in valid:
+            return letter
+        else:
+            return '-'
+    return ''.join(map(trans, text))
+
+def download_response( data ):
+    "Returns a file download"
+    name = valid_ascii(data.name)
+    mimetype = mimetypes.guess_type(name)[0] or 'application/octet-stream'
+    stream = FileWrapper( open(data.path(), 'rb') )
+    resp = HttpResponse( stream,  mimetype=mimetype )
+    resp['Content-Disposition'] = 'attachment; filename=%s' % name
+    return resp
 
 def make_stream(fname):
     """

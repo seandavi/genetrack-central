@@ -31,7 +31,6 @@ def action(request, pid):
 
     return html.redirect( "/project/view/%s/" % pid )
 
- 
 
 @login_required
 def download(request, did):
@@ -41,9 +40,9 @@ def download(request, did):
         data = models.Data.objects.get(id=did)
         project = authorize.get_project(user=user, pid=data.project.id, write=False)
     except ObjectDoesNotExist, exc:
-        raise authorize.AccessError()
+        raise authorize.AccessError("may not access this data")
     
-    return html.download(data)
+    return html.download_response(data)
 
 
 @login_required
