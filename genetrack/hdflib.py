@@ -14,7 +14,7 @@ missing = lambda f: not os.path.isfile(f)
 # prints messages after processing chunk  number of lines
 CHUNK = 10**5 
 
-class TripletSchema( IsDescription ):
+class PositionalSchema( IsDescription ):
     """
     Stores a triplet of float values for each index. 
     """
@@ -24,11 +24,10 @@ class TripletSchema( IsDescription ):
     rev = FloatCol( pos=3 )  # value on the reverse strand
     val = FloatCol( pos=4 )  # weighted value on the combined strands
 
-class LinearData(object):
+class PositionalData(object):
     """
-    A linear data class instance is an HFD representation of millions of 
-    coordinates with one or more values associated with each of these 
-    coordinates. The class can store such data for various labels (chromosomes). 
+    An HFD representation of coordinates with one or more values associated with 
+    each of these coordinates. The class can store such data for various labels (chromosomes). 
     The default parser built into the class can process files in the following 
     format::
 
@@ -52,14 +51,14 @@ class LinearData(object):
     >>> from genetrack import conf
     >>>
     >>> fname = conf.testdata('test-hdflib-input.txt')
-    >>> index = LinearData(fname=fname, workdir=conf.TEMP_DATA_DIR)   
+    >>> index = PositionalData(fname=fname, workdir=conf.TEMP_DATA_DIR)   
     
     Upon the first instantiation the index will be created if it did
     not exist or if the `update=True` parameter was set.
 
     The `workdir` parameter is optional and if present must point 
     to the directory into which the resulting index file will be placed. 
-    The contents of the linear data object may be accessed as a list 
+    The contents of the Positional data object may be accessed as a list 
     but note that only the accessed slice is loaded into memory (lazy access).
 
     >>> index.labels
@@ -114,7 +113,7 @@ class LinearData(object):
 
     def __init__(self, fname, workdir=None, update=False ):
         """
-        Create the LinearData
+        Create the PositionalData
         """
         self.fname = fname
         
@@ -194,7 +193,7 @@ class LinearData(object):
                     flush( table, last_chrom )
 
                 # creates the new HDF table here
-                table = db.createTable(  "/", chrom, TripletSchema, 'no description' )
+                table = db.createTable(  "/", chrom, PositionalSchema, 'no description' )
                 logger.info("creating table:%s" % chrom)
                 last_chrom = chrom
 

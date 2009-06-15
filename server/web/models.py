@@ -93,7 +93,6 @@ class Project( models.Model ):
     
     def set_count(self):
         self.data_count = Data.objects.filter(project=self).count()
-        print '>>>>>>>>>>>', self.data_count
         self.save()
 
     def add_data(self, child, parent=None):
@@ -229,8 +228,8 @@ class ProjectTree( models.Model ):
     >>> data2 = Data.objects.create(name="two2", owner=joe, project=project)
     >>> data3 = Data.objects.create(name="three3", owner=joe, project=project)
     >>>
-    >>> project.data_list.all()
-    [<Data: Data one1>, <Data: Data two2>, <Data: Data three3>]
+    >>> project.data_list()
+    [<Data: Data three3>, <Data: Data two2>, <Data: Data one1>]
     >>>
     """
 
