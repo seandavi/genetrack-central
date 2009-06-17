@@ -53,9 +53,15 @@ def disable( level=0 ):
     >>> disable('INFO')
     >>> info( 'logtest, this message SHOULD NOT be visible' )
     """
-
     level = str(level)
-    value = dict( NOTSET=0, DEBUG=10, INFO=20, WARNING=30, ERROR=40).get( level.upper(), 0)
+    store = dict( NOTSET=0, DEBUG=10, INFO=20, WARNING=30, ERROR=40)
+    
+    # also take numerical values
+    store['0'] = 20
+    store['1'] = 10
+    store['2'] = 0
+
+    value = store.get( level.upper(), 0)
     logging.disable( value )
 
 # populate some loggers by default

@@ -116,6 +116,7 @@ class PositionalData(object):
         Create the PositionalData
         """
         self.fname = fname
+        self.db = None
         
         # split the incoming name to find the real name, and base directory
         basedir, basename = os.path.split(self.fname)
@@ -163,24 +164,30 @@ class PositionalData(object):
                 break
 
         # helper function that flushes a table
-        def flush( table, name ):
+        def flush( table, collect, name ):
             # commit the changes
-            table.flush() 
-            # nicer information
-            size = util.commify( len(table) )
-            logger.info('table=%s, contains %s rows' % (name, size) )
-        
+            if collect:
+                table.append(collect)
+                table.flush() 
+                # nicer information
+                size = util.commify( len(table) )
+                logger.info('table=%s, contains %s rows' % (name, size) )
+            return []
+            
         # print messages at every CHUNK line
         last_chrom = table = None
         db = openFile( self.index, mode='w', title='HDF index database')
 
         # continue on with reading, optimized for throughput
-        # with minimal function calls (expensive in python)
-        for index, row in izip(count(1), reader):
+        # with minimal function calls
+        collect = []
+        for linec, row in izip(count(1), reader):
 
             # prints progress on processing
-            if (index % CHUNK) == 0:
-               liondb.info("... processed %s lines" % util.commify(index))    
+            if (linec % CHUNK) == 0:
+               logger.info("... processed %s lines" % util.commify(linec))    
+               flush( table, collect, last_chrom )
+               collect = []
             
             # get the values from each row
             chrom, index, fwd, rev, value = row
@@ -190,20 +197,21 @@ class PositionalData(object):
             if chrom != last_chrom:
                 # table==None at the beginning
                 if table:
-                    flush( table, last_chrom )
+                    flush( table, collect, last_chrom )
+                    collect = []
 
                 # creates the new HDF table here
-                table = db.createTable(  "/", chrom, PositionalSchema, 'no description' )
+                table = db.createTable(  "/", chrom, PositionalSchema, 'label %s' % chrom )
                 logger.info("creating table:%s" % chrom)
                 last_chrom = chrom
 
-            table.append( [ (index, fwd, rev, value) ] )
-
+            collect.append( (index, fwd, rev, value) )
+                           
         # flush for last chromosome, report some timing information
-        flush(table, chrom)
-        lineno = util.commify(index)
+        flush(table, collect, chrom)
+        lineno = util.commify(linec)
         elapsed = timer.report()
-        logger.info("finished inserting %s lines in %s" % (index, elapsed) )
+        logger.info("finished inserting %s lines in %s" % (lineno, elapsed) )
 
         # close database
         db.close()
@@ -265,7 +273,8 @@ class PositionalData(object):
         return getattr( self.root, label )
 
     def close(self):
-        self.db.close()
+        if self.db is not None:
+            self.db.close()
     
     def __del__(self):
         self.close()
