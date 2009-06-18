@@ -112,7 +112,7 @@ def transform(inpname, outname, shift=0):
     logger.debug("unsorted flat file '%s'" % flat)
 
     fp = file(flat, 'wt')
-    for row in reader:
+    for linec, row in enumerate(reader):
         chrom, start, end, strand = row[0], row[1], row[2], row[5]
         if strand == '+':
             # on forward strand, 5' is at start
@@ -131,7 +131,8 @@ def transform(inpname, outname, shift=0):
         fp.write('%s\t%09d\t%s\t%s\t%s\n' % (chrom, idx, fwd, rev, val))
 
     fp.close()
-    logger.debug("parsing finished in %s" % timer.report() )
+    linet = util.commify(linec)
+    logger.debug("parsing %s lines finished in %s" % (linet, timer.report()))
 
     # now let the sorting commence
     cmd = "sort %s > %s" % (flat, sorted)
@@ -147,8 +148,8 @@ def transform(inpname, outname, shift=0):
 
     # attempting to cleanup the remaining files
     for name in (flat, sorted):
-        #os.remove(name)
-        pass
+        logger.debug("removing temporary file '%s'" % name )
+        os.remove(name)
 
 if __name__ == '__main__':
     import optparse

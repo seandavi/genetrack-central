@@ -45,7 +45,7 @@ def get_logger( name='yeti-logger', stream=sys.stdout, formatter=None):
         logp.setLevel(logging.DEBUG)
     return logp
 
-def disable( level=0 ):
+def disable( level=None ):
     """
     Disables logging levels
     Levels: DEBUG, INFO, WARNING, ERROR

@@ -172,7 +172,6 @@ class PositionalData(object):
                 # nicer information
                 size = util.commify( len(table) )
                 logger.info('table=%s, contains %s rows' % (name, size) )
-            return []
             
         # print messages at every CHUNK line
         last_chrom = table = None
@@ -186,7 +185,7 @@ class PositionalData(object):
             # prints progress on processing
             if (linec % CHUNK) == 0:
                logger.info("... processed %s lines" % util.commify(linec))    
-               flush( table, collect, last_chrom )
+               flush( table=table, collect=collect, name=last_chrom )
                collect = []
             
             # get the values from each row
@@ -196,8 +195,8 @@ class PositionalData(object):
             # flush when switching chromosomes
             if chrom != last_chrom:
                 # table==None at the beginning
-                if table:
-                    flush( table, collect, last_chrom )
+                if table is not None:
+                    flush( table=table, collect=collect, name=last_chrom )
                     collect = []
 
                 # creates the new HDF table here

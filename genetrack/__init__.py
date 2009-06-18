@@ -35,6 +35,7 @@ __version__ = '2.0.0b-%s' % tstamp
 if sys.version_info < (2, 5):
     error( 'genetrack requires python 2.5 or higher' )
 
+from hdflib import PositionalData
 
 
 
