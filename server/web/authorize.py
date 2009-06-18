@@ -133,5 +133,13 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     data.store(stream)    
     return data
 
+def create_result(user, data, stream, name, info='no info'):
+    data = get_data(user, did=data.id, write=False)
+    result = 123
+
+def create_image(user, data, stream, name, info='no info'):
+    data = get_data(user, did=data.id, write=False)
+    result = 123
+
 if __name__ == '__main__':
     pass
