@@ -3,6 +3,7 @@ from genetrack import logger, util
 from server.web import models, status
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
+from django.core.files import File
 
 class AccessError(Exception):
      def __init__(self, msg='Invalid access'):
@@ -128,21 +129,8 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     Creates a data entry from a django style stream (uploaded data)
     """
     proj = get_project(user=user, pid=pid, write=False) 
-    data = models.Data( owner=user, project=proj, name=name, info=info, uuid=util.uuid() )
-    path = data.path()
-    fp = open(path, 'wb')
-    for chunk in stream.chunks():
-        fp.write( chunk )
-    fp.close()
-    data.set_size()
-    data.save()
-
-    # update counts on each upload
-    proj.set_count()
-
-    # adding parent-child relationship
-    #if parent:
-    #    parent.add_child(data)
+    data = models.Data( owner=user, project=proj, name=name, info=info)
+    data.store(stream)    
     return data
 
 if __name__ == '__main__':

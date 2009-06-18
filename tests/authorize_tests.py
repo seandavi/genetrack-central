@@ -7,6 +7,7 @@ from genetrack import conf, util, logger
 from server.scripts import initializer
 from server.web import html
 from django.contrib.auth.models import User
+from django.core.files import File
 
 class AuthorizeTest( unittest.TestCase ):
     """
@@ -37,7 +38,7 @@ class AuthorizeTest( unittest.TestCase ):
 
         john = User.objects.get(username='johndoe')
         project = authorize.create_project(user=john, name="Test project")
-        stream = html.make_stream( conf.testdata('test-users.csv') )
+        stream = File( open(conf.testdata('test-users.csv')) )
         data = authorize.create_data(user=john, pid=project.id, stream=stream, name="Test data")
 
 

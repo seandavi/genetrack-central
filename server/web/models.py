@@ -92,7 +92,8 @@ class Project( models.Model ):
     def __str__(self):
         return "Project: %s" % self.name
     
-    def set_count(self):
+    def refresh(self):
+        "Refreshes statically maintained values"
         self.data_count = Data.objects.filter(project=self).count()
         self.save()
 
@@ -159,31 +160,37 @@ class Data( models.Model ):
     Data representation
 
     >>> joe, flag = User.objects.get_or_create(username='joe')
-    >>> project, flag = Project.objects.get_or_create(name='Yeast Project')
-    >>>
+    >>> project, flag = Project.objects.get_or_create(name='Yeast Project 9')
     >>> data1 = Data.objects.create(name="one", owner=joe, project=project)
-    >>> data2 = Data.objects.create(name="two", owner=joe, project=project)
     >>> 
+    >>> stream = File(open(conf.testdata('short-data.bed')))
+    >>> data1.store(stream)
+    >>> project.data_count
+    1
     >>> data1.status
     u'new'
     >>> data1.delete()
+    >>>
+    >>> # project datacounts refreshed
+    >>> project.data_count
+    0
     """
 
     # one of the acceptable states
     choices = zip(status.DATA_ALL, status.DATA_ALL)
 
-    name     = models.TextField()
-    uuid     = models.TextField()
-    info     = models.TextField( default='no information' )
-    status   = models.TextField( default=status.DATA_NEW, choices=choices)
-    error_msg = models.TextField( default='', null=True )
-    tags     = JsonField( default={}, null=True)
-    json     = JsonField( default={}, null=True)
-    size     = models.IntegerField(default=0)
-    owner    = models.ForeignKey(User)
-    project  = models.ForeignKey(Project, related_name='data')
-    tstamp   = models.DateField(auto_now_add=True)
-  
+    name      = models.TextField()
+    uuid      = models.TextField()
+    info      = models.TextField( default='no information', null=True)
+    status    = models.TextField( default=status.DATA_NEW, choices=choices)
+    errors    = models.TextField( default='', null=True )
+    tags      = JsonField( default={}, null=True)
+    json      = JsonField( default={}, null=True)
+    owner     = models.ForeignKey(User)
+    project   = models.ForeignKey(Project, related_name='data')
+    content   = models.FileField(upload_to='files/')
+    tstamp    = models.DateField(auto_now_add=True)
+
     class Meta:
         ordering = [ 'id' ]
 
@@ -191,21 +198,27 @@ class Data( models.Model ):
         return 'Data %s' % self.name
 
     def path(self):
-        return util.path_join(settings.FILE_DIR, '%s.dat' % self.uuid)
-
-    def index(self):
-        return util.path_join(settings.INDEX_DIR, '%s.idx' % self.uuid)
+        if self.content:
+            return self.content.path
+        else:
+            return None
 
     def get_size(self):
         "Nicer, human readable size"
-        return util.nice_bytes(self.size)
-
-    def set_size(self):
-        self.size = os.stat( self.path() )[6]
+        return util.nice_bytes(self.content.size)
 
     def is_ready(self):
         return self.status in status.DATA_READY
  
+    def store(self, stream):
+        """
+        Stores a stream as the data content. The uuid will be the name
+        of the file.
+        """
+        if not self.uuid:
+            self.uuid = util.uuid()
+        self.content.save(self.uuid, stream)
+
     def has_errors(self):
         return self.status == status.DATA_ERROR
     
@@ -226,14 +239,15 @@ class Result(models.Model):
     >>>
     >>> stream = File(open(conf.testdata('short-data.bed')))
     >>> result = Result(data=data1)
-    >>> result.content.save('model-result-test.txt', stream)
-    >>> result.save()        
+    
+    result.content.save('model-result-test.txt', stream)
+    result.save()    
     """
     title = models.TextField(default='Title', null=True)
     info  = models.TextField(default='info', null=True)
     data  = models.ForeignKey(Data, related_name='results')
-    content = models.FileField(upload_to='results/data/%Y/%m')
-    image   = models.ImageField(upload_to='results/images/%Y/%m')
+    content = models.FileField(upload_to='results')
+    image   = models.ImageField(upload_to='images')
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
@@ -253,15 +267,6 @@ admin.site.register( Data, DataAdmin )
 # Signal setup
 #
 # here we set up signals, that get trigger when various database events take place
-def data_create_trigger(sender, instance, signal, *args, **kwargs):
-    """
-    Post save hook for data to create an index
-    """
-    
-    # populate the unique id if does not exist
-    if not instance.uuid:
-        instance.uuid = util.uuid()
-        instance.save()
 
 def data_delete_trigger(sender, instance, signal, *args, **kwargs):
     """
@@ -269,13 +274,27 @@ def data_delete_trigger(sender, instance, signal, *args, **kwargs):
     """
     try:
         # remove data and index paths if exist
-        paths = [ instance.path(), instance.index() ]
+        paths = [ instance.index() ]
         for path in paths:
             if os.path.isfile(path):
                 os.remove( path )
         #logger.info( 'removed %s' % instance )
     except Exception, exc:
         logger.error( '%s' % exc )
+
+def data_save_trigger(sender, instance, signal, *args, **kwargs):
+    """
+    Post save hook for data
+    """
+    # update project datacounts
+    instance.project.refresh()
+
+def data_delete_trigger(sender, instance, signal, *args, **kwargs):
+    """
+    Post delete hook for data
+    """
+    # update project datacounts
+    instance.project.refresh()
 
 def user_profile_trigger(sender, instance, signal, *args, **kwargs):
     """
@@ -287,6 +306,8 @@ def user_profile_trigger(sender, instance, signal, *args, **kwargs):
         #logger.debug( 'creating a user profile for %s' % instance.username )
         UserProfile.objects.create( user=instance )
 
-signals.post_save.connect( data_create_trigger, sender=Data )
+#signals.post_delete.connect( data_delete_trigger, sender=Data )
+signals.post_save.connect( data_save_trigger, sender=Data )
 signals.post_delete.connect( data_delete_trigger, sender=Data )
+
 signals.post_save.connect( user_profile_trigger, sender=User )
