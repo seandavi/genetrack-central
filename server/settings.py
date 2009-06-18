@@ -63,8 +63,7 @@ DEFAULT_FROM_EMAIL  = "iua1@psu.edu"
 USE_I18N = True
 
 # Absolute path to the directory that holds media.
-# Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = STORAGE_DIR
 
 # redirects here for login
 LOGIN_URL = "/login"

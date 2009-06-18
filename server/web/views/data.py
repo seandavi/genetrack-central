@@ -86,9 +86,8 @@ def upload_processor(request, pid):
     user = request.user
     if user.is_authenticated():
         if 'upload' in request.POST:
-            # take at most 50 files
             count = 0
-            for i in range(50):
+            for i in range(50): # take at most 50 files
                 key = 'File%s' % i
                 if key in request.FILES:
                     count += 1

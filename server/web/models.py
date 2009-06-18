@@ -2,7 +2,7 @@
 List of GeneTrack models
 """
 import os
-from genetrack import logger, util
+from genetrack import logger, util, conf
 from server.web import status
 from django.db import models
 from django.conf import settings
@@ -12,6 +12,7 @@ from django.utils import simplejson as json
 from django.contrib.auth.models import User
 from django.contrib import admin
 from django.db.models import signals
+from django.core.files import File
 
 class JsonField(models.TextField):
     """
@@ -214,29 +215,25 @@ class Data( models.Model ):
     def __cmp__(self, other):
         return cmp(self.id, other.id)
 
-class ProjectTree( models.Model ):
+class Result(models.Model):
     """
-    Represents a parent-child relationship between data.
-
-    Parents with value null indicate tree roots within a project. 
-    There may be multiple tree roots for one project.
+    Datasets that are derived from an existing data
 
     >>> joe, flag = User.objects.get_or_create(username='joe')
-    >>> project, flag = Project.objects.get_or_create(name='Other Yeast Project')
+    >>> project, flag = Project.objects.get_or_create(name='Yeast Project')
     >>>
-    >>> data1 = Data.objects.create(name="one1", owner=joe, project=project)
-    >>> data2 = Data.objects.create(name="two2", owner=joe, project=project)
-    >>> data3 = Data.objects.create(name="three3", owner=joe, project=project)
+    >>> data1, flag = Data.objects.get_or_create(name="one", owner=joe, project=project)
     >>>
-    >>> project.data_list()
-    [<Data: Data three3>, <Data: Data two2>, <Data: Data one1>]
-    >>>
+    >>> stream = File(open(conf.testdata('short-data.bed')))
+    >>> result = Result(data=data1)
+    >>> result.content.save('model-result-test.txt', stream)
+    >>> result.save()        
     """
-
-    # this is here only to speed up project access
-    project = models.ForeignKey( Project, related_name='tree' ) 
-    parent = models.ForeignKey( Data, related_name='parent')
-    child = models.ForeignKey( Data, related_name='children')
+    title = models.TextField(default='Title', null=True)
+    info  = models.TextField(default='info', null=True)
+    data  = models.ForeignKey(Data, related_name='results')
+    content = models.FileField(upload_to='results/data/%Y/%m')
+    image   = models.ImageField(upload_to='results/images/%Y/%m')
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
@@ -247,13 +244,9 @@ class MemberAdmin(admin.ModelAdmin):
 class DataAdmin(admin.ModelAdmin):
     list_display = [ 'name', 'project' ]
 
-class ProjectTreeAdmin(admin.ModelAdmin):
-    list_display = [ 'parent', 'child' ]
-
 admin.site.register( Project, ProjectAdmin )
 admin.site.register( Member, MemberAdmin )
 admin.site.register( Data, DataAdmin )
-admin.site.register( ProjectTree, ProjectTreeAdmin )
 
 
 #
