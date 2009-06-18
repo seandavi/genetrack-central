@@ -239,15 +239,34 @@ class Result(models.Model):
     >>>
     >>> stream = File(open(conf.testdata('short-data.bed')))
     >>> result = Result(data=data1)
-    
-    result.content.save('model-result-test.txt', stream)
-    result.save()    
+    >>> result.store( stream )
+    >>> result.delete()
     """
-    title = models.TextField(default='Title', null=True)
+    name  = models.TextField(default='Title', null=True)
     info  = models.TextField(default='info', null=True)
+    uuid  = models.TextField()
     data  = models.ForeignKey(Data, related_name='results')
     content = models.FileField(upload_to='results')
     image   = models.ImageField(upload_to='images')
+
+    def store(self, stream1, stream2=None):
+        """
+        Stores a stream as the data content. The uuid will be the name
+        of the file.
+        """
+        if not self.uuid:
+            self.uuid = util.uuid()
+        if stream1:
+            self.content.save(self.uuid, stream1)
+        if stream2:
+            self.image.save(self.uuid, stream2)
+        self.save()
+        
+    def has_image(self):
+        return bool(self.image)
+
+    def has_content(self):
+        return bool(self.content)
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
