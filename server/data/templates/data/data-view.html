@@ -32,7 +32,49 @@
             Created by {{data.owner.get_full_name}} on {{ data.tstamp}}
         </div>
 
+        {% if param.flist1 %}
+        <div class="span-8 colborder">
+              <h3>Files</h3>
+              <div>
+                {% for result in param.flist1 %}
+                    <div>{{result.name}}</div>
+                {% endfor %}
+              </div>. 
+        </div>
 
+        
+        <div class="span-8 last">
+            <h4 class="prepend-5">&nbsp;</h4>
+            <div>
+                {% for result in param.flist2 %}
+                <div>{{result.name}}</div>
+                {% endfor %}
+            </div>.     
+        </div>
+        {% endif %}
+
+        <!-- Image results -->
+
+        {% if param.ilist1 %}
+        <div class="span-8 colborder">
+              <h3>Charts</h3>
+              <div>
+                {% for result in param.ilist1 %}
+                    <div>{{result.name}}</div>
+                {% endfor %}
+              </div>. 
+        </div>
+
+        
+        <div class="span-8 last">
+            <h4 class="prepend-5">&nbsp;</h4>
+            <div>
+                {% for result in param.ilist2 %}
+                <div>{{result.name}}</div>
+                {% endfor %}
+            </div>.     
+        </div>
+        {% endif %}
 
   </div>
 

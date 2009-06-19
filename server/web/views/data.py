@@ -112,7 +112,12 @@ def view(request, did):
     "Renders the data view page"
     user = request.user
     data = authorize.get_data(user=user, did=did)    
-    return html.template( request=request, name='data-view.html', data=data)
+    flist, ilist = data.file_list(), data.image_list()
+    flist1, flist2 = flist[0::2], flist[1::2]
+    ilist1, ilist2 = ilist[0::2], ilist[1::2]
+
+    param = html.Params(flist1=flist1, flist2=flist2, ilist1=ilist1, ilist2=ilist2)
+    return html.template( request=request, name='data-view.html', data=data, param=param)
 
 
 if __name__ == '__main__':

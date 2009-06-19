@@ -225,6 +225,12 @@ class Data( models.Model ):
     def result_list(self):
         return self.results.all().order_by('-id') 
 
+    def file_list(self):
+        return [ r for r in self.result_list() if r.has_content() and not r.has_image()]
+
+    def image_list(self):
+        return [ r for r in self.result_list() if r.has_image() ]
+
     def get_size(self):
         "Nicer, human readable size"
         return util.nice_bytes(self.content.size)

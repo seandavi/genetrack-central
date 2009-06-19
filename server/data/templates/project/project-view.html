@@ -58,12 +58,15 @@
                         <input type="checkbox" name="did" value="{{data.id}}">
                         <a href="/data/view/{{data.id}}/">{{data.name}}</a>
                         {% if data.result_count %}
-                            {% sep %} with {{data.result_count}} results
+                            {% sep %} {{data.result_count}} results
+                            <div class="result pane">
                             {% for res in data.short_result_list %}
                                 <div class="result name">{{res.display}}</div>
                             {% endfor %} 
-                            <div class="result last">
-                            <a href="/data/view/{{data.id}}/">... more ...</a></div>
+                                <div class="result last">
+                                    <a href="/data/view/{{data.id}}/">... more ...</a>
+                                </div>
+                            </div>
                         {% endif %}
                     </div>
                 {% endfor %}

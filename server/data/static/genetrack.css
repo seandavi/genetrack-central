@@ -2,6 +2,12 @@ body {
     
 }
 
+div.colborder {  
+    border-right:1px solid #DDDDDD;
+    margin-right:25px;
+    padding-right:24px;
+}
+
 .capsx {
     font-size:1.2em;
     font-variant:small-caps;
@@ -31,6 +37,11 @@ body {
     font: 0.9em Verdana, Arial, Helvetica, sans-serif;
     padding-left:50px;
 }
+
+.result.pane{
+    padding:5px;
+}
+
 
 .result.last{
     font: 0.7em Verdana, Arial, Helvetica, sans-serif;

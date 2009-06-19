@@ -48,7 +48,7 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # If it does not exists it generates a secret key on first run
 # Make it long and unique, and don't share it with anybody.
 # it will be used as the admin password
-secret_fname = path_join(curr_dir, 'SECRET_KEY')
+secret_fname = path_join(curr_dir, 'SECRET-KEY')
 if not os.path.isfile(secret_fname):
     value = str(random.getrandbits(128))
     value = hashlib.md5(value).hexdigest()
