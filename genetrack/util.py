@@ -176,7 +176,7 @@ def make_tempfile( fname=None, dir='', prefix='temp-', suffix='.png'):
         fpath = os.path.join( dir, fname )
 
     return fname, fpath
-
+   
 def test( verbose=0 ):
     "Performs module level testing"
     import doctest

@@ -14,6 +14,19 @@ from django.contrib import admin
 from django.db.models import signals
 from django.core.files import File
 
+def to_stream(stream):
+    """
+    Utility function that turns a file name, or file stream into a 
+    Django file stream
+    """
+    if isinstance(stream, File):
+        return stream
+    elif type(stream) == file:
+        return File(stream)
+    elif type(stream) in (str, unicode):
+        return File(open(stream, 'rb'))   
+    raise Exception('invalid stream type %s' % type(stream))
+
 class JsonField(models.TextField):
     """
     JsonField is a generic textfield that neatly 
@@ -163,7 +176,7 @@ class Data( models.Model ):
     >>> project, flag = Project.objects.get_or_create(name='Yeast Project 9')
     >>> data1 = Data.objects.create(name="one", owner=joe, project=project)
     >>> 
-    >>> stream = File(open(conf.testdata('short-data.bed')))
+    >>> stream = conf.testdata('short-data.bed')
     >>> data1.store(stream)
     >>> project.data_count
     1
@@ -203,6 +216,9 @@ class Data( models.Model ):
         else:
             return None
 
+    def result_count(self):
+        return len(self.results.all())
+
     def get_size(self):
         "Nicer, human readable size"
         return util.nice_bytes(self.content.size)
@@ -217,6 +233,7 @@ class Data( models.Model ):
         """
         if not self.uuid:
             self.uuid = util.uuid()
+        stream = to_stream(stream)
         self.content.save(self.uuid, stream)
 
     def has_errors(self):
@@ -230,16 +247,21 @@ class Data( models.Model ):
 
 class Result(models.Model):
     """
-    Datasets that are derived from an existing data
+    Datasets that are derived from an existing data. 
 
     >>> joe, flag = User.objects.get_or_create(username='joe')
     >>> project, flag = Project.objects.get_or_create(name='Yeast Project')
     >>>
-    >>> data1, flag = Data.objects.get_or_create(name="one", owner=joe, project=project)
+    >>> data1, flag = Data.objects.get_or_create(name="Data 123", owner=joe, project=project)
     >>>
-    >>> stream = File(open(conf.testdata('short-data.bed')))
-    >>> result = Result(data=data1)
-    >>> result.store( stream )
+    >>> # the stream may be filename or an open file stream
+    >>> stream = open(conf.testdata('short-data.bed'))
+    >>> result = Result(data=data1, name='Result 123')
+    >>> result.store( content=stream )
+    >>> result.data.name
+    'Data 123'
+    >>> data1.results.all()[0].name
+    u'Result 123'
     >>> result.delete()
     """
     name  = models.TextField(default='Title', null=True)
@@ -249,18 +271,20 @@ class Result(models.Model):
     content = models.FileField(upload_to='results')
     image   = models.ImageField(upload_to='images')
 
-    def store(self, stream1, stream2=None):
+    def store(self, content, image=None):
         """
         Stores a stream as the data content. The uuid will be the name
         of the file.
         """
         if not self.uuid:
             self.uuid = util.uuid()
-        if stream1:
-            self.content.save(self.uuid, stream1)
-        if stream2:
-            self.image.save(self.uuid, stream2)
-        self.save()
+            self.save()
+        if content:
+            content = to_stream(content)
+            self.content.save(self.uuid, content)
+        if image:
+            image = to_stream(image)
+            self.image.save(self.uuid, image)
         
     def has_image(self):
         return bool(self.image)

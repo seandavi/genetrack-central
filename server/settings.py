@@ -1,5 +1,5 @@
 # Django settings for server project.
-import sys, os
+import sys, os, random, hashlib
 
 def path_join(*args):
     "Builds absolute path"
@@ -7,6 +7,10 @@ def path_join(*args):
 
 # establish the current location
 curr_dir  = os.path.dirname( __file__ )
+
+# debug mode, set to False in production systems
+DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
 # set up the data specific directories relative to this file's location
 TEMPLATE_PATH = path_join( curr_dir, 'data', 'templates')
@@ -16,14 +20,16 @@ STORAGE_DIR = path_join( DATA_DIR, 'storage')
 
 FILE_DIR = path_join( STORAGE_DIR, 'files')
 INDEX_DIR = path_join( STORAGE_DIR, 'indices')
-
 DATABASE_DIR = path_join(  DATA_DIR, 'db')
 
+SITE_DOMAIN = '127.0.0.1:8080'
+SITE_NAME = 'GeneTrack' 
+SITE_ID = 1
 
-# debug mode set to on if a sentinel file is present
-DEBUG = os.path.isfile(path_join(curr_dir, 'debug-mode'))
-
-TEMPLATE_DEBUG = DEBUG
+EMAIL_HOST = "smtp.psu.edu"
+#EMAIL_HOST_USER = "foo"
+#EMAIL_HOST_PASSWORD = "bar"
+DEFAULT_FROM_EMAIL  = "iua1@psu.edu"
 
 ADMINS = (
     ('Istvan Albert', 'istvan.albert@gmail.com'),
@@ -38,6 +44,21 @@ DATABASE_PASSWORD = ''         # Not used with sqlite3.
 DATABASE_HOST = ''             # Set to empty string for localhost. Not used with sqlite3.
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
+# Allows setting the secret key externally
+# If it does not exists it generates a secret key on first run
+# Make it long and unique, and don't share it with anybody.
+# it will be used as the admin password
+secret_fname = path_join(curr_dir, 'SECRET_KEY')
+if not os.path.isfile(secret_fname):
+    value = str(random.getrandbits(128))
+    value = hashlib.md5(value).hexdigest()
+    fp = file(secret_fname, 'wt')
+    fp.write(value)
+    fp.close()
+
+# loads up the secret key
+SECRET_KEY = file(secret_fname).read().strip()
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -48,15 +69,6 @@ TIME_ZONE = 'America/Chicago'
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
 LANGUAGE_CODE = 'en-us'
-
-SITE_DOMAIN = '127.0.0.1:8080'
-SITE_NAME = 'GeneTrack' 
-SITE_ID = 1
-
-EMAIL_HOST = "smtp.psu.edu"
-#EMAIL_HOST_USER = "foo"
-#EMAIL_HOST_PASSWORD = "bar"
-DEFAULT_FROM_EMAIL  = "iua1@psu.edu"
 
 # If you set this to False, Django will make some optimizations so as not
 # to load the internationalization machinery.
@@ -77,17 +89,6 @@ MEDIA_URL = ''
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
 ADMIN_MEDIA_PREFIX = '/media/'
-
-# allows setting the secret key externally
-# make it long and unique, and don't share it with anybody.
-# it will be used as the default admin password
-secret_fname=path_join(curr_dir, 'secret-key')
-if os.path.isfile(secret_fname):
-    # file must have only one line
-    SECRET_KEY = file(secret_fname).read().strip()
-else:
-    # you can set the secret key directly
-    SECRET_KEY = '1' # this value is for debuggin only
 
 # this settings allows adminstrators to log in as other users
 # with the SECRET_KEY as password 

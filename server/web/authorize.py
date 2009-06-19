@@ -3,7 +3,6 @@ from genetrack import logger, util
 from server.web import models, status
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
-from django.core.files import File
 
 class AccessError(Exception):
      def __init__(self, msg='Invalid access'):
@@ -133,13 +132,11 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     data.store(stream)    
     return data
 
-def create_result(user, data, stream, name, info='no info'):
+def create_result(user, data, name, info='no info', content=None, image=None):
     data = get_data(user, did=data.id, write=False)
-    result = 123
-
-def create_image(user, data, stream, name, info='no info'):
-    data = get_data(user, did=data.id, write=False)
-    result = 123
+    result = models.Result(data=data, name=name, info=info)
+    result.store( content=content, image=image )
+    return result
 
 if __name__ == '__main__':
     pass
