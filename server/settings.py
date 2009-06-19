@@ -16,6 +16,7 @@ TEMPLATE_DEBUG = DEBUG
 TEMPLATE_PATH = path_join( curr_dir, 'data', 'templates')
 DATA_DIR = path_join( curr_dir, 'data')
 STATIC_DIR = path_join( DATA_DIR, 'static')
+CACHE_DIR = path_join(STATIC_DIR, 'cache')
 STORAGE_DIR = path_join( DATA_DIR, 'storage')
 
 FILE_DIR = path_join( STORAGE_DIR, 'files')
