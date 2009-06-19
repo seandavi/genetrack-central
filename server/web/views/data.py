@@ -7,14 +7,14 @@ from django import forms
 from genetrack import logger
 from server.web import html, status
 from server.web import models, authorize
-from django.contrib.auth.decorators import login_required
+from server.web import login_required, private_login_required
 
 class DataForm(forms.Form):
     "For project editing"    
     name = forms.CharField( initial='Data name', widget=forms.TextInput(attrs=dict(size=80)))
     info = forms.CharField( initial='Data info', widget=forms.Textarea(attrs={'cols':60, 'rows':10, 'class':'text'}))
 
-@login_required
+@private_login_required
 def action(request, pid):
     "Data related actions"
     user = request.user
@@ -45,7 +45,7 @@ def download(request, did):
     return html.download_response(data)
 
 
-@login_required
+@private_login_required
 def edit(request, did):
     "Updates or creates a project"
     user = request.user
@@ -84,7 +84,7 @@ def chop_dirname(name):
 def upload_processor(request, pid):
     "Handles the actual data upload"
     user = request.user
-    if user.is_authenticated():
+    if user.is_authenticated() and user.username!='public':
         if 'upload' in request.POST:
             count = 0
             for i in range(50): # take at most 50 files

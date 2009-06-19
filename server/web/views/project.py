@@ -6,7 +6,7 @@ from django import forms
 from genetrack import logger
 from server.web import html, status
 from server.web import models, authorize
-from django.contrib.auth.decorators import login_required
+from server.web import login_required, private_login_required
 
 class ProjectForm(forms.Form):
     "For project editing"    
@@ -21,7 +21,7 @@ def listall(request):
     params.project_count = authorize.project_count(request.user)
     return html.template( request=request, name='project-list.html', projects=projects, params=params )
 
-@login_required
+@private_login_required
 def share(request, pid):
     "Manages sharing to a project"
     user = request.user
@@ -53,7 +53,7 @@ def share(request, pid):
     params = html.Params(results=results, text=text, members=members)
     return html.template( request=request, name='project-share.html', project=project, params=params)  
 
-@login_required
+@private_login_required
 def delete(request, pid):
     "Deletes a project (with confirmation)"
     user = request.user
@@ -65,7 +65,7 @@ def delete(request, pid):
     else:        
         return html.template( request=request, name='project-delete.html', project=project)
     
-@login_required
+@private_login_required
 def edit(request, pid):
     "Updates or creates a project"
     user = request.user

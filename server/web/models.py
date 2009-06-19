@@ -219,6 +219,12 @@ class Data( models.Model ):
     def result_count(self):
         return len(self.results.all())
 
+    def short_result_list(self):
+        return self.results.all().order_by('-id')[:3]
+
+    def result_list(self):
+        return self.results.all().order_by('-id') 
+
     def get_size(self):
         "Nicer, human readable size"
         return util.nice_bytes(self.content.size)
@@ -291,6 +297,14 @@ class Result(models.Model):
 
     def has_content(self):
         return bool(self.content)
+
+    def display(self):
+        text = self.name
+        if self.has_content():
+            text = "%s - file" % text
+        if self.has_image():
+            text = "%s - image" % text
+        return text
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]

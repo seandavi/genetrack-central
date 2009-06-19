@@ -27,6 +27,16 @@ body {
     padding-bottom:5px;
 }
 
+.result.name{
+    font: 0.9em Verdana, Arial, Helvetica, sans-serif;
+    padding-left:50px;
+}
+
+.result.last{
+    font: 0.7em Verdana, Arial, Helvetica, sans-serif;
+    padding-left:75px;
+}
+
 .project.status{
     font: 1.0em Verdana, Arial, Helvetica, sans-serif;
 }
