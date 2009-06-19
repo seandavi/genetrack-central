@@ -3,17 +3,17 @@ Genetrack file transformer.
 
 The program may be invoked in multiple ways. As a standalone script::
 
-    python gt2hdf.py
+    python hdf_loader.py
 
 As a python module::
 
-    python -m genetrack.scripts.bed2genetrack
+    python -m genetrack.scripts.hdf_loader
 
 Or in other python scripts::
 
 >>>
->>> from genetrack.scripts import gt2hdf
->>> gt2hdf.transform(input_name, output_name)
+>>> from genetrack.scripts import hdf_loader
+>>> hdf_loader.transform(input_name, output_name)
 >>>
 
 Run the script with no parameters to see the options that it takes.
