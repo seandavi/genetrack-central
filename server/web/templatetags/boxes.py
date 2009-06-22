@@ -53,6 +53,21 @@ def upload_box(context):
         'project': context['project'],
     }
 
+@register.inclusion_tag('result-list.html', takes_context=True)
+def result_list(context, results, box):
+    "Slices the results to fill two separate boxes"
+    if box == 'box1':
+        results = results[::2]
+    else:
+        results = results[1::2]
+    return {
+        'user': context['user'],
+        'params': context.get('params'),
+        'data': context.get('data'),
+        'results': results,
+    }
+
+
 def test():
 
     print admin_box()

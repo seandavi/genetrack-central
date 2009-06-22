@@ -304,13 +304,28 @@ class Result(models.Model):
     def has_content(self):
         return bool(self.content)
 
-    def display(self):
-        text = self.name
-        if self.has_content():
-            text = "%s - file" % text
-        if self.has_image():
-            text = "%s - image" % text
-        return text
+    def thumb(self):
+        
+        if not self.has_image():
+            return None
+
+        # thumbnail size
+        size = 300, 300
+        
+        imgname = "%s.png" % self.uuid
+        thumbpath = conf.path_join(settings.CACHE_DIR, imgname)
+            
+        if not os.path.exists(thumbpath):
+            try:
+                # requires PIL
+                import Image  
+                img = Image.open(self.image.path)
+                img.thumbnail(size, Image.ANTIALIAS)
+                img.save(thumbpath)
+            except ImportError, exc:
+                logger.error(exc)
+        
+        return imgname
 
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]

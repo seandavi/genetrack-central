@@ -16,12 +16,14 @@ TEMPLATE_DEBUG = DEBUG
 TEMPLATE_PATH = path_join( curr_dir, 'data', 'templates')
 DATA_DIR = path_join( curr_dir, 'data')
 STATIC_DIR = path_join( DATA_DIR, 'static')
-CACHE_DIR = path_join(STATIC_DIR, 'cache')
 STORAGE_DIR = path_join( DATA_DIR, 'storage')
-
-FILE_DIR = path_join( STORAGE_DIR, 'files')
-INDEX_DIR = path_join( STORAGE_DIR, 'indices')
+CACHE_DIR = path_join(STATIC_DIR, 'cache')
 DATABASE_DIR = path_join(  DATA_DIR, 'db')
+
+# autocreate some directories
+for dirname in (STORAGE_DIR, CACHE_DIR, DATABASE_DIR):
+    if not os.path.isdir(dirname):
+        os.mkdir(dirname)        
 
 SITE_DOMAIN = '127.0.0.1:8080'
 SITE_NAME = 'GeneTrack' 
@@ -46,7 +48,7 @@ DATABASE_HOST = ''             # Set to empty string for localhost. Not used wit
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 # Allows setting the secret key externally
-# If it does not exists it generates a secret key on first run
+# generates a secret key on first run if is missing
 # Make it long and unique, and don't share it with anybody.
 # it will be used as the admin password
 secret_fname = path_join(curr_dir, 'SECRET-KEY')

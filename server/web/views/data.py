@@ -4,7 +4,7 @@ Data related views
 import os
 from django.conf import settings
 from django import forms
-from genetrack import logger
+from genetrack import logger, conf
 from server.web import html, status
 from server.web import models, authorize
 from server.web import login_required, private_login_required
@@ -42,7 +42,7 @@ def download(request, did):
     except ObjectDoesNotExist, exc:
         raise authorize.AccessError("may not access this data")
     
-    return html.download_response(data)
+    return html.download_data(data)
 
 
 @private_login_required
@@ -112,13 +112,20 @@ def view(request, did):
     "Renders the data view page"
     user = request.user
     data = authorize.get_data(user=user, did=did)    
-    flist, ilist = data.file_list(), data.image_list()
-    flist1, flist2 = flist[0::2], flist[1::2]
-    ilist1, ilist2 = ilist[0::2], ilist[1::2]
-
-    param = html.Params(flist1=flist1, flist2=flist2, ilist1=ilist1, ilist2=ilist2)
+    param = html.Params(file_list=data.file_list(), image_list= data.image_list())
     return html.template( request=request, name='data-view.html', data=data, param=param)
 
+@login_required
+def getresult(request, rid, target):
+    "Retreives a result"
+    user = request.user
+    result = authorize.get_result(user=user, rid=rid)
+    if target == 'content':
+        return html.download_stream(filename=result.content.path, name=result.name, asfile=True)
+    elif target == 'image':
+        return html.download_stream(filename=result.image.path, name=result.name, mimetype='image/png', asfile=False)
+    else:
+        raise Exception('unknown target=%s' % target)
 
 if __name__ == '__main__':
     pass    

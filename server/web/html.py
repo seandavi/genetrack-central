@@ -58,13 +58,20 @@ def valid_ascii(text):
             return '-'
     return ''.join(map(trans, text))
 
-def download_response( data ):
+def download_data( data ):
     "Returns a file download"
-    name = valid_ascii(data.name)
-    mimetype = mimetypes.guess_type(name)[0] or 'application/octet-stream'
-    stream = FileWrapper( open(data.path(), 'rb') )
+    resp = download_stream( filename=data.path(), name=data.name, asfile=True)
+    return resp
+
+def download_stream( filename, name, mimetype=None, asfile=False ):
+    "Returns a stream as a browser download"
+    
+    mimetype = mimetype or mimetypes.guess_type(name)[0] or 'application/octet-stream'
+    stream = FileWrapper( open(filename, 'rb') )
     resp = HttpResponse( stream,  mimetype=mimetype )
-    resp['Content-Disposition'] = 'attachment; filename=%s' % name
+    if asfile:
+        name = valid_ascii(name)
+        resp['Content-Disposition'] = 'attachment; filename=%s' % name
     return resp
 
 def test():

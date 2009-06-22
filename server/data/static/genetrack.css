@@ -42,6 +42,9 @@ div.colborder {
     padding:5px;
 }
 
+.pad10 {
+    padding-bottom: 10px;
+}
 
 .result.last{
     font: 0.7em Verdana, Arial, Helvetica, sans-serif;
@@ -124,6 +127,10 @@ legend {
 
 .submit input {
     margin-left: 10em;
+}
+
+.middle {
+    vertical-align: middle; 
 }
 
 .textinput {

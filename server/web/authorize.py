@@ -132,6 +132,20 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     data.store(stream)    
     return data
 
+def get_result(user, rid):
+    "Returns a result for a given user"
+
+    try:
+        # get the result
+        result = models.Result.objects.get(id=rid)
+        # verifies access rights
+        data = get_data(user, did=result.data.id, write=False)
+    except ObjectDoesNotExist, exc:
+        logger.debug( exc )
+        raise AccessError("You may not access this project")
+
+    return result
+
 def create_result(user, data, name, info='no info', content=None, image=None):
     data = get_data(user, did=data.id, write=False)
     result = models.Result(data=data, name=name, info=info)
