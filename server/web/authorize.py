@@ -1,6 +1,6 @@
-import os
+import os, mimetypes
 from genetrack import logger, util
-from server.web import models, status
+from server.web import models, status, html
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
@@ -127,8 +127,9 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     """
     Creates a data entry from a django style stream (uploaded data)
     """
+    mime = mimetypes.guess_type(name)[0]
     proj = get_project(user=user, pid=pid, write=False) 
-    data = models.Data( owner=user, project=proj, name=name, info=info)
+    data = models.Data( owner=user, project=proj, name=name, info=info, mime=mime)
     data.store(stream)    
     return data
 
@@ -146,9 +147,16 @@ def get_result(user, rid):
 
     return result
 
-def create_result(user, data, name, info='no info', content=None, image=None):
+def create_result(user, data, content=None, image=None):
+    assert content or image
     data = get_data(user, did=data.id, write=False)
-    result = models.Result(data=data, name=name, info=info)
+    if content:
+        name = content.name
+    else:
+        name = image.name
+    name = html.chop_dirname(name)
+    mime = mimetypes.guess_type(name)[0]
+    result = models.Result(data=data, name=name,  mime=mime)
     result.store( content=content, image=image )
     return result
 

@@ -1,7 +1,7 @@
 """
 Html specific utility functions.
 """
-import string, mimetypes
+import string, mimetypes, os
 from django.template import Context, loader
 from django.core.servers.basehttp import FileWrapper
 from django.http import HttpResponse, HttpResponseRedirect
@@ -50,7 +50,7 @@ def valid_ascii(text):
     >>> valid_ascii("A@B#C%D(E)F G+H!I-J")
     'A-B-C-D-E-F-G-H-I-J'
     """
-    valid = set(string.digits + string.ascii_letters + ".-=")
+    valid = set(string.digits + string.ascii_letters + ".-=_")
     def trans(letter):
         if letter in valid:
             return letter
@@ -58,9 +58,17 @@ def valid_ascii(text):
             return '-'
     return ''.join(map(trans, text))
 
+def chop_dirname(name):
+    "Removes directory from the name."
+    # some browsers may send the full pathname
+    name = name.replace("\\", "/")
+    name = os.path.basename( name )
+    name = valid_ascii(name)
+    return name
+
 def download_data( data ):
     "Returns a file download"
-    resp = download_stream( filename=data.path(), name=data.name, asfile=True)
+    resp = download_stream( filename=data.path(), name=data.name, asfile=True, mimetype=data.mime)
     return resp
 
 def download_stream( filename, name, mimetype=None, asfile=False ):

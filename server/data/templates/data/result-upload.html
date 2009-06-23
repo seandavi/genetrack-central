@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block header %}<h2 align="center">Uploading files</h2>{% endblock %}
+
+{% block mainbody %}
+
+<form enctype="multipart/form-data" method="post" action="/data/result/upload/{{data.id}}/">
+
+    <!-- left sidebar -->
+    <div class="span-4">&nbsp;</div>
+
+    <div class="span-16">
+        <fieldset id="login" class="box">
+            <legend>Upload Analysis</legend>
+            
+            <div>
+                
+                <div class="capsx" style="padding-top:15px;">FILE</div>
+                <div>{{form.content}}</div>
+
+                <div class="capsx" style="padding-top:15px;">IMAGE (PNG ONLY)</div>
+                <div>{{form.image}}</div>
+
+                <div style="padding-top:15px;">
+                    <input type="submit" name="submit" value="Submit"/> &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <input type="button" name="cancel" value="Cancel" onclick="javascript:history.back(1)"/>
+                    </div>
+                <div align="center" class="smaller" style="padding-top:15px;">
+                    At least one of FILE or IMAGE fields must be used.
+                </div>
+            </div>
+
+        </fieldset>
+    </div>
+
+    <div class="span-4 last">&nbsp;</div>
+
+</form>
+
+{% endblock %}

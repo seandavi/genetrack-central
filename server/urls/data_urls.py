@@ -10,7 +10,8 @@ urlpatterns = patterns('',
     (r'^upload/process/(?P<pid>(\d+))/$', 'web.views.data.upload_processor'),
     (r'^upload/start/(?P<pid>(\d+))/$', 'web.views.data.upload_start'),
     (r'^download/(?P<did>(\d+))/$', 'web.views.data.download'),
-    (r'^getresult/(?P<rid>(\d+))/(?P<target>(\w+))/$', 'web.views.data.getresult'),
+    (r'^result/get/(?P<rid>(\d+))/(?P<target>(\w+))/$', 'web.views.data.result_get'),
+    (r'^result/upload/(?P<did>(\d+))/$', 'web.views.data.result_upload'),
 
     # the browser
     #(r'^view/(?P<did>(\d+))/$', 'liondb.genetrack.browser.view'),

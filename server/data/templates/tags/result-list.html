@@ -2,21 +2,15 @@
 
 <div>
 {% for result in results %}                  
-    <div align="center" class="pad10">
-        {{result.name}}
-    </div>
-    <div align="center"><img src="/static/cache/{{result.thumb}}"/></div>
-    <div align="center" class="pad10">
+    <div class="pad10">
+        
         {% if result.has_content %}
-            <a href="/data/getresult/{{result.id}}/content">data</a>
-        {% else %}
-            data
+            <div class="pad10" align="center"><a href="/data/result/get/{{result.id}}/content">{{result.name}}</a></div> 
         {% endif %}
-        {% sep %}
+        
         {% if result.has_image %}
-            <a href="/data/getresult/{{result.id}}/image">image</a>
-        {% else %}
-            image
+            <div align="center">
+            <a href="/data/result/get/{{result.id}}/image" border="0"><img src="/static/cache/{{result.thumb}}"/></a></div>
         {% endif %}
     </div>
     <hr />

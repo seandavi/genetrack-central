@@ -23,15 +23,17 @@
   <!-- main box left -->
   <div class="span-17 colborder" id="content">
     
-        <div id="data-info" class="box">{{data.info|markdown }}</div>
+        <div id="data-info" class="pad10 box">
+            <div class="pad10">{{data.info|markdown }}</div>
 
-        <div class="pad10">
-            <a href="/data/download/{{data.id}}/">Download</a>
+        
+            <div><a href="/data/download/{{data.id}}/">Download</a>
             {% sep %}
             ID = {{data.id}} {% sep %} Status = {{data.status}} 
             {% sep %} Size = {{data.get_size}} 
             {% sep %}
             Created by {{data.owner.get_full_name}} on {{ data.tstamp}}
+            </div>
         </div>
 
         <!-- Datafile results -->            
@@ -59,8 +61,11 @@
             </div>
         {% endif %}
 
+    
+
   </div>
 
+  
   <!-- left sidebar -->
   <div class="span-6 last" id="sidebar">
 

@@ -192,11 +192,12 @@ class Data( models.Model ):
     # one of the acceptable states
     choices = zip(status.DATA_ALL, status.DATA_ALL)
 
-    name      = models.TextField()
     uuid      = models.TextField()
-    info      = models.TextField( default='no information', null=True)
-    status    = models.TextField( default=status.DATA_NEW, choices=choices)
-    errors    = models.TextField( default='', null=True )
+    name      = models.TextField()
+    mime      = models.TextField(default='application/octetstream', null=True)
+    info      = models.TextField(default='no information', null=True)
+    status    = models.TextField(default=status.DATA_NEW, choices=choices)
+    errors    = models.TextField(default='', null=True )
     tags      = JsonField( default={}, null=True)
     json      = JsonField( default={}, null=True)
     owner     = models.ForeignKey(User)
@@ -277,11 +278,12 @@ class Result(models.Model):
     >>> result.delete()
     """
     name  = models.TextField(default='Title', null=True)
+    mime  = models.TextField(default='application/octetstream', null=True)
     info  = models.TextField(default='info', null=True)
     uuid  = models.TextField()
     data  = models.ForeignKey(Data, related_name='results')
     content = models.FileField(upload_to='results')
-    image   = models.ImageField(upload_to='images')
+    image = models.ImageField(upload_to='images')
 
     def store(self, content, image=None):
         """
