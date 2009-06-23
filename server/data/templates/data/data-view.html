@@ -12,7 +12,9 @@
 <script>
 
     $(document).ready(function(){
-        //$("#data-info").hide()
+        // removes messages that may be present
+        remove_messages()
+
     });
 </script>
 
@@ -38,6 +40,7 @@
 
         <!-- Datafile results -->            
 
+        <div class="span-17 last">
         {% if param.file_list %}
             <!-- two boxes left and right -->
             <h3>Analysis Files</h3>
@@ -48,6 +51,9 @@
                 {% result_list param.file_list 'box2' %}
             </div>
         {% endif %}
+        </div>
+        
+        <div class="span-17 last">
 
         <!-- Image results -->
         {% if param.image_list %}
@@ -60,7 +66,7 @@
                 {% result_list param.image_list 'box2' %}                  
             </div>
         {% endif %}
-
+        </div>
     
 
   </div>

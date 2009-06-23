@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     (r'^download/(?P<did>(\d+))/$', 'web.views.data.download'),
     (r'^result/get/(?P<rid>(\d+))/(?P<target>(\w+))/$', 'web.views.data.result_get'),
     (r'^result/upload/(?P<did>(\d+))/$', 'web.views.data.result_upload'),
+    (r'^result/delete/(?P<rid>(\d+))/$', 'web.views.data.result_delete'),
 
     # the browser
     #(r'^view/(?P<did>(\d+))/$', 'liondb.genetrack.browser.view'),

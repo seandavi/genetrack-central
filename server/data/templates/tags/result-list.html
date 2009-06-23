@@ -4,14 +4,21 @@
 {% for result in results %}                  
     <div class="pad10">
         
+        <div class="pad10" align="center">
         {% if result.has_content %}
-            <div class="pad10" align="center"><a href="/data/result/get/{{result.id}}/content">{{result.name}}</a></div> 
+            <a href="/data/result/get/{{result.id}}/content">{{result.name}}</a>
+        {% else %}
+            <a href="/data/result/get/{{result.id}}/image">{{result.name}}</a>
         {% endif %}
-        
+        </div>
+
         {% if result.has_image %}
             <div align="center">
             <a href="/data/result/get/{{result.id}}/image" border="0"><img src="/static/cache/{{result.thumb}}"/></a></div>
         {% endif %}
+
+        <div width="20px" style="float:right"><a href="/data/result/delete/{{result.id}}/" border="0"><span class="ui-icon ui-icon-trash"></span></a></div>
+
     </div>
     <hr />
 {% endfor %}

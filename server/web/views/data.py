@@ -154,14 +154,24 @@ def result_upload(request, did):
     form = ResultForm( request.POST, request.FILES )  
     if form.is_valid():
         get = form.cleaned_data.get   
-        authorize.create_result(user=user, data=data, content=get('content'), image=get('image'))
+        authorize.create_result(user=user, data=data, content=get('content'), image=get('image'))        
         return html.redirect("/data/view/%s/" % data.id)
     else:    
         # error messages will be generated
         user.message_set.create(message="Some form fields could NOT be validated.")
         return html.template( request=request, name='result-upload.html', data=data, form=form )
         
-                
+
+@private_login_required
+def result_delete(request, rid):
+    "Uploads a result"
+    user = request.user
+    
+    result = authorize.get_result(user=user, rid=rid)
+    project = authorize.get_project(user=user, pid=result.data.project.id, write=True)
+    result.delete()
+    user.message_set.create(message="Result %s deleted" % result.name)
+    return html.redirect("/data/view/%s/" % result.data.id)
 
 if __name__ == '__main__':
     pass    

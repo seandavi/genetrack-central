@@ -324,7 +324,7 @@ class Result(models.Model):
                 img = Image.open(self.image.path)
                 img.thumbnail(size, Image.ANTIALIAS)
                 img.save(thumbpath)
-            except ImportError, exc:
+            except Exception, exc:
                 logger.error(exc)
         
         return imgname

@@ -154,6 +154,7 @@ def create_result(user, data, content=None, image=None):
         name = content.name
     else:
         name = image.name
+
     name = html.chop_dirname(name)
     mime = mimetypes.guess_type(name)[0]
     result = models.Result(data=data, name=name,  mime=mime)
