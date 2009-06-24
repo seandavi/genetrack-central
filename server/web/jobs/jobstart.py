@@ -8,7 +8,7 @@ def detect(data, ext, JobClass ):
         job  = JobClass(owner=data.owner, name=status.INDEXING_JOB, json=json, status=data.status)
         job.save()
     else:
-        data.status = status.DATA_UNSUPPORTED 
+        data.status = status.DATA_STORED
 
     data.save()
 

@@ -168,26 +168,28 @@ h2 {
 
 textarea, select {margin:0.0em 0;}
 
-.status.running{ 
-	display:inline-block;
+.status {
+    vertical-align: middle;
+    display:inline-block;
 	padding-right:20px;
+}
+
+.status.running{ 
 	background: transparent url(/static/icons/status/running.gif) no-repeat center right;   
 }
 
 .status.waiting{ 
-	display:inline-block;
-	padding-right:20px;
 	background: transparent url(/static/icons/status/waiting.png) no-repeat center right;   
 }
 
 .status.error{ 
-	display:inline-block;
-	padding-right:20px;
 	background: transparent url(/static/icons/status/joberror.png) no-repeat center right;   
 }
 
-.status.indexed{
-	display:inline-block;
-	padding-right:20px;
-	background: transparent url(/static/icons/status/indexed.png) no-repeat center right;
+.status.stored{
+	background: transparent url(/static/icons/status/stored.png) no-repeat center right;
+}
+
+.status.running{ 
+	background: transparent url(/static/icons/status/running.gif) no-repeat center right;   
 }

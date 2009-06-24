@@ -15,13 +15,13 @@ DATA_WAITING    = 'waiting'
 DATA_INDEXED    = 'indexed'
 DATA_INTERVAL   = 'interval'
 DATA_ERROR      = 'error'
-DATA_BULK       = 'bulk'
+DATA_STORED     = 'stored'
 
 #
 # data that can be marked as ready
 #
 DATA_INPROGRESS = set( [DATA_NEW, DATA_RUNNING, DATA_UPLOADING, DATA_WAITING] )
-DATA_READY = set( [ DATA_INDEXED, DATA_INTERVAL, DATA_BULK, DATA_ERROR, ] )
+DATA_READY = set( [ DATA_INDEXED, DATA_INTERVAL, DATA_STORED, DATA_ERROR, ] )
 DATA_VIEWABLE = set( [ DATA_INDEXED, DATA_INTERVAL ]  )
 
 #

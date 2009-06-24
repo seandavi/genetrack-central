@@ -54,9 +54,9 @@
                 <form action="/data/action/{{project.id}}/" method="POST">
                 
                 {% for data in project.data_list %}
-                    <div class="data name row">
-                        <input type="checkbox" name="did" value="{{data.id}}">
-                        <a href="/data/view/{{data.id}}/">{{data.name}}</a>
+                    <div class="data name row ">
+                        <input type="checkbox" name="did" value="{{data.id}}" class="middle">
+                        <a href="/data/view/{{data.id}}/" class="status {{data.status}}">{{data.name}}</a>
                         {% if data.result_count %}
                             {% sep %} {{data.result_count}} results
                         {% endif %}
