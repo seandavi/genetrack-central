@@ -55,7 +55,7 @@
                 
                 {% for data in project.data_list %}
                     <div class="data name row ">
-                        <input type="checkbox" name="did" value="{{data.id}}" class="middle">
+                        <input type="checkbox" name="did" value="{{data.id}}" class="middle">                       
                         <a href="/data/view/{{data.id}}/" class="status {{data.status}}">{{data.name}}</a>
                         {% if data.result_count %}
                             {% sep %} {{data.result_count}} results
