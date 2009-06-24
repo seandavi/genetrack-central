@@ -80,8 +80,8 @@ echo.
 echo *** Initializing the data ***
 echo.
 if "%2" == "delete" del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
-if "%2" == "delete" rmdir /Q %GENETRACK_SERVER_HOME%\data\storage
-if "%2" == "delete" rmdir /Q %GENETRACK_SERVER_HOME%\data\static\cache
+if "%2" == "delete" rmdir /Q /S %GENETRACK_SERVER_HOME%\data\storage
+if "%2" == "delete" rmdir /Q /S %GENETRACK_SERVER_HOME%\data\static\cache
 
 %PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
 %PYTHON_EXE% -m server.scripts.initializer %GENETRACK_SERVER_HOME%\data\init\initial-users.csv

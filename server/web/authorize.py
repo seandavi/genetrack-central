@@ -128,7 +128,7 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     Creates a data entry from a django style stream (uploaded data)
     """
     mime = mimetypes.guess_type(name)[0]
-    proj = get_project(user=user, pid=pid, write=False) 
+    proj = get_project(user=user, pid=pid, write=False)
     data = models.Data( owner=user, project=proj, name=name, info=info, mime=mime)
     data.store(stream)    
     return data

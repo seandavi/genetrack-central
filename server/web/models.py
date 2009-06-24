@@ -3,7 +3,7 @@ List of GeneTrack models
 """
 import os
 from genetrack import logger, util, conf
-from server.web import status
+from server.web import status, jobs
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -194,6 +194,7 @@ class Data( models.Model ):
 
     uuid      = models.TextField()
     name      = models.TextField()
+    ext       = models.TextField(default='', null=True) # extension
     mime      = models.TextField(default='application/octetstream', null=True)
     info      = models.TextField(default='no information', null=True)
     status    = models.TextField(default=status.DATA_NEW, choices=choices)
@@ -283,7 +284,7 @@ class Result(models.Model):
     uuid  = models.TextField()
     data  = models.ForeignKey(Data, related_name='results')
     content = models.FileField(upload_to='results')
-    image = models.ImageField(upload_to='images')
+    image = models.FileField(upload_to='images')
 
     def store(self, content, image=None):
         """
@@ -307,13 +308,14 @@ class Result(models.Model):
         return bool(self.content)
 
     def thumb(self):
-        
+        "Returns a thumbnail image"
         if not self.has_image():
             return None
 
         # thumbnail size
         size = 300, 300
         
+        # genereate the path to the thumbnail
         imgname = "%s.png" % self.uuid
         thumbpath = conf.path_join(settings.CACHE_DIR, imgname)
             
@@ -329,6 +331,24 @@ class Result(models.Model):
         
         return imgname
 
+class Job(models.Model):
+    """
+    Job representation 
+
+    >>> joe, flag = User.objects.get_or_create(username='joe')
+    """
+    choices = zip(status.DATA_ALL, status.DATA_ALL)
+
+    name   = models.TextField(default='Title', null=True)
+    info   = models.TextField(default='info', null=True)
+    errors = models.TextField(default='', null=True )
+    owner  = models.ForeignKey(User, unique=True)
+    json   = JsonField(default="", null=True)
+    status = models.TextField(default=status.DATA_NEW, choices=choices)
+
+#
+# Administration classes
+#
 class ProjectAdmin(admin.ModelAdmin):
     list_display = [ 'name' ]
 
@@ -338,10 +358,17 @@ class MemberAdmin(admin.ModelAdmin):
 class DataAdmin(admin.ModelAdmin):
     list_display = [ 'name', 'project' ]
 
+class ResultAdmin(admin.ModelAdmin):
+    list_display = [ 'name', 'data' ]
+
+class JobAdmin(admin.ModelAdmin):
+    list_display = [ 'name', 'owner' ]
+
 admin.site.register( Project, ProjectAdmin )
 admin.site.register( Member, MemberAdmin )
 admin.site.register( Data, DataAdmin )
-
+admin.site.register( Result, ResultAdmin )
+admin.site.register( Job, JobAdmin )
 
 #
 # Signal setup
@@ -368,6 +395,17 @@ def data_save_trigger(sender, instance, signal, *args, **kwargs):
     """
     # update project datacounts
     instance.project.refresh()
+
+    # detect extensions and trigger indexing jobs whenever necessary
+    ext = os.path.splitext(instance.name)[1].lstrip('.')
+    if ext != instance.ext:
+        print type(ext), ext
+        return
+
+        instance.ext = ext
+        jobs.detect(data=instance, ext=ext)
+        instance.save()
+
 
 def data_delete_trigger(sender, instance, signal, *args, **kwargs):
     """
