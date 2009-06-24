@@ -182,7 +182,7 @@ textarea, select {margin:0.0em 0;}
 	background: transparent url(/static/icons/status/waiting.png) no-repeat center right;   
 }
 
-.status.error{ 
+.status.joberror{ 
 	background: transparent url(/static/icons/status/joberror.png) no-repeat center right;   
 }
 

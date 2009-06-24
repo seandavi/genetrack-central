@@ -41,6 +41,14 @@ class AuthorizeTest( unittest.TestCase ):
         stream = File( open(conf.testdata('test-users.csv')) )
         data = authorize.create_data(user=john, pid=project.id, stream=stream, name="Test data")
 
+        # project counts update
+        project = authorize.get_project(user=john, pid=project.id)
+        self.assertEqual(project.data_count, 1)
+
+        # testing data deletion
+        authorize.delete_data(user=john, pid=project.id, dids=[data.id])
+        project = authorize.get_project(user=john, pid=project.id)
+        self.assertEqual(project.data_count, 0)
 
     def test_two(self):
         pass

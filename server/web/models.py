@@ -190,14 +190,14 @@ class Data( models.Model ):
     """
 
     # one of the acceptable states
-    choices = zip(status.DATA_ALL, status.DATA_ALL)
+    choices = zip(status.ALL, status.ALL)
 
     uuid      = models.TextField()
     name      = models.TextField()
     ext       = models.TextField(null=True) # extension
     mime      = models.TextField(default='application/octetstream', null=True)
     info      = models.TextField(default='no information', null=True)
-    status    = models.TextField(default=status.DATA_NEW, choices=choices)
+    status    = models.TextField(default=status.NEW, choices=choices)
     errors    = models.TextField(default='', null=True )
     tags      = JsonField( default={}, null=True)
     json      = JsonField( default={}, null=True)
@@ -238,7 +238,7 @@ class Data( models.Model ):
         return util.nice_bytes(self.content.size)
 
     def is_ready(self):
-        return self.status in status.DATA_READY
+        return self.status in status.READY
  
     def store(self, stream):
         """
@@ -251,7 +251,7 @@ class Data( models.Model ):
         self.content.save(self.uuid, stream)
 
     def has_errors(self):
-        return self.status == status.DATA_ERROR
+        return self.status == status.ERROR
     
     def __hash__(self):
         return hash(self.id)
@@ -337,14 +337,14 @@ class Job(models.Model):
 
     >>> joe, flag = User.objects.get_or_create(username='joe')
     """
-    choices = zip(status.DATA_ALL, status.DATA_ALL)
+    choices = zip(status.ALL, status.ALL)
 
     name   = models.TextField(default='Title', null=True)
     info   = models.TextField(default='info', null=True)
     errors = models.TextField(default='', null=True )
     owner  = models.ForeignKey(User)
     json   = JsonField(default="", null=True)
-    status = models.TextField(default=status.DATA_NEW, choices=choices)
+    status = models.TextField(default=status.NEW, choices=choices)
 
 #
 # Administration classes
@@ -375,24 +375,11 @@ admin.site.register( Job, JobAdmin )
 #
 # here we set up signals, that get trigger when various database events take place
 
-def data_delete_trigger(sender, instance, signal, *args, **kwargs):
-    """
-    Post delete hook to remove a files related to a data
-    """
-    try:
-        # remove data and index paths if exist
-        paths = [ instance.index() ]
-        for path in paths:
-            if os.path.isfile(path):
-                os.remove( path )
-        #logger.info( 'removed %s' % instance )
-    except Exception, exc:
-        logger.error( '%s' % exc )
-
 def data_save_trigger(sender, instance, signal, *args, **kwargs):
     """
     Post save hook for data
     """
+
     # update project datacounts
     instance.project.refresh()
 
@@ -402,8 +389,7 @@ def data_save_trigger(sender, instance, signal, *args, **kwargs):
         instance.ext = ext
         jobs.detect(data=instance, ext=ext, JobClass=Job)
         instance.save()
-
-
+    
 def data_delete_trigger(sender, instance, signal, *args, **kwargs):
     """
     Post delete hook for data

@@ -8,26 +8,26 @@ MANAGER = 'manager'
 #
 # data constants
 #
-DATA_NEW        = 'new'
-DATA_RUNNING    = 'running'
-DATA_UPLOADING  = 'uploading'
-DATA_WAITING    = 'waiting'
-DATA_INDEXED    = 'indexed'
-DATA_INTERVAL   = 'interval'
-DATA_ERROR      = 'error'
-DATA_STORED     = 'stored'
+NEW        = 'new'
+RUNNING    = 'running'
+UPLOADING  = 'uploading'
+WAITING    = 'waiting'
+INDEXED    = 'indexed'
+INTERVAL   = 'interval'
+ERROR      = 'joberror'
+STORED     = 'stored'
 
 #
 # data that can be marked as ready
 #
-DATA_INPROGRESS = set( [DATA_NEW, DATA_RUNNING, DATA_UPLOADING, DATA_WAITING] )
-DATA_READY = set( [ DATA_INDEXED, DATA_INTERVAL, DATA_STORED, DATA_ERROR, ] )
-DATA_VIEWABLE = set( [ DATA_INDEXED, DATA_INTERVAL ]  )
+INPROGRESS = set( [NEW, RUNNING, UPLOADING, WAITING] )
+READY = set( [ INDEXED, INTERVAL, STORED, ERROR, ] )
+VIEWABLE = set( [ INDEXED, INTERVAL ]  )
 
 #
 # all possible states
 #
-DATA_ALL = DATA_INPROGRESS | DATA_READY
+ALL = INPROGRESS | READY
 
 #
 # job constants

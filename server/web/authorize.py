@@ -76,8 +76,6 @@ def delete_data(user, pid, dids):
             user.message_set.create(message="Deleted data %s" % datum.name)
         else:
            user.message_set.create(message="May not delete data %s" % datum.name) 
-    # update the data count    
-    project.set_count()
 
 def project_count(user):
     """
@@ -131,6 +129,7 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     proj = get_project(user=user, pid=pid, write=False)
     data = models.Data( owner=user, project=proj, name=name, info=info, mime=mime)
     data.store(stream)    
+    proj.refresh()
     return data
 
 def get_result(user, rid):

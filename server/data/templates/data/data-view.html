@@ -36,6 +36,9 @@
             {% sep %}
             Created by {{data.owner.get_full_name}} on {{ data.tstamp}}
             </div>
+            {% if data.errors %}
+                <div class="error" style="margin:20px"><pre>{{data.errors}}</pre></div>
+            {% endif %}
         </div>
 
         <!-- Datafile results -->            
