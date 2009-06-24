@@ -194,7 +194,7 @@ class Data( models.Model ):
 
     uuid      = models.TextField()
     name      = models.TextField()
-    ext       = models.TextField(default='', null=True) # extension
+    ext       = models.TextField(null=True) # extension
     mime      = models.TextField(default='application/octetstream', null=True)
     info      = models.TextField(default='no information', null=True)
     status    = models.TextField(default=status.DATA_NEW, choices=choices)
@@ -342,7 +342,7 @@ class Job(models.Model):
     name   = models.TextField(default='Title', null=True)
     info   = models.TextField(default='info', null=True)
     errors = models.TextField(default='', null=True )
-    owner  = models.ForeignKey(User, unique=True)
+    owner  = models.ForeignKey(User)
     json   = JsonField(default="", null=True)
     status = models.TextField(default=status.DATA_NEW, choices=choices)
 
@@ -399,11 +399,8 @@ def data_save_trigger(sender, instance, signal, *args, **kwargs):
     # detect extensions and trigger indexing jobs whenever necessary
     ext = os.path.splitext(instance.name)[1].lstrip('.')
     if ext != instance.ext:
-        print type(ext), ext
-        return
-
         instance.ext = ext
-        jobs.detect(data=instance, ext=ext)
+        jobs.detect(data=instance, ext=ext, JobClass=Job)
         instance.save()
 
 

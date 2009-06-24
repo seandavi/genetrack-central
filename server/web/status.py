@@ -12,17 +12,17 @@ DATA_NEW        = 'new'
 DATA_RUNNING    = 'running'
 DATA_UPLOADING  = 'uploading'
 DATA_WAITING    = 'waiting'
-DATA_LINEAR     = 'linear'
+DATA_INDEXED    = 'indexed'
 DATA_INTERVAL   = 'interval'
 DATA_ERROR      = 'error'
-DATA_UNSUPPORTED = 'unsupported'
+DATA_BULK       = 'bulk'
 
 #
 # data that can be marked as ready
 #
 DATA_INPROGRESS = set( [DATA_NEW, DATA_RUNNING, DATA_UPLOADING, DATA_WAITING] )
-DATA_READY = set( [ DATA_LINEAR, DATA_INTERVAL, DATA_UNSUPPORTED, DATA_ERROR, ] )
-DATA_VIEWABLE = set( [ DATA_LINEAR, DATA_INTERVAL ]  )
+DATA_READY = set( [ DATA_INDEXED, DATA_INTERVAL, DATA_BULK, DATA_ERROR, ] )
+DATA_VIEWABLE = set( [ DATA_INDEXED, DATA_INTERVAL ]  )
 
 #
 # all possible states
