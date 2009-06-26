@@ -3,7 +3,7 @@
     <h3 class="caps">ADD DATA</h3>
     <div class="box" id="filter-box">
         <div align="center">
-            <a href="/data/upload/start/{{project.id}}/">Upload data</a> 
+            <a href="{% url web.views.data.upload_start project.id %}">Upload data</a> 
         </div>
     </div>
 </div>

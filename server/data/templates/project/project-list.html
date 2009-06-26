@@ -30,14 +30,18 @@
 
   <!-- main box left -->
   <div class="span-17 colborder" id="content">
-
-      {% for p in projects %}
-          <div class="project row quiet">
-            <div class="project name">Project: <a href="/project/view/{{p.id}}">{{p.name}}</a></div>
-            <div class="project status">Your role: {{p.role}} &bull; {{p.data_count}} datasets.</div>
-          </div>
-          
-      {% endfor %}
+    
+        {% if projects %}
+            {% for p in projects %}
+                  <div class="project row quiet">
+                    <div class="project name">Project: <a href="/project/view/{{p.id}}">{{p.name}}</a></div>
+                    <div class="project status">Your role: {{p.role}} &bull; {{p.data_count}} datasets.</div>
+                  </div>                  
+            {% endfor %}
+        {% else %}
+            <div class="notice">You have no projects! {% sep %} <a href="/project/edit/new/" id="create-project">Create New Project</a> 
+            </div>
+        {% endif %}
       <div>&nbsp;</div>
       
   </div>

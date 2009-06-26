@@ -106,6 +106,7 @@ def upload_processor(request, pid):
                     authorize.create_data(user=user, pid=pid, stream=stream, name=name, info='no information')
 
             user.message_set.create(message="Uploaded %s files" % count)
+        if 'simple' in request.POST:
             return html.redirect("/project/view/%s/" % pid)
 
     # this is needed only because the JUPload applet makes a HEAD request        
