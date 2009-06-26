@@ -268,13 +268,15 @@ class ServerTest( TwillTest ):
         tc.formfile("1", "content", conf.testdata('short-data.bed') )
         tc.formfile("1", "image", conf.testdata('readcounts.png') )
         tc.submit()
-        tc.find("short-data.bed")
-        
+        tc.follow("short-data.bed")
+        tc.back()
+
         # upload one image
         tc.follow("Add Analysis")
         tc.formfile("1", "image", conf.testdata('shift.png') )
         tc.submit()
-        tc.find("shift.png")
+        tc.follow("shift.png")
+        tc.back()
 
         # back to project view
         tc.follow("Project view")
