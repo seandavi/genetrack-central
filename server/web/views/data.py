@@ -106,7 +106,9 @@ def upload_processor(request, pid):
                     authorize.create_data(user=user, pid=pid, stream=stream, name=name, info='no information')
 
             user.message_set.create(message="Uploaded %s files" % count)
+            return html.redirect("/project/view/%s/" % pid)
 
+    # this is needed only because the JUPload applet makes a HEAD request        
     return html.response('SUCCESS\n')
 
 @login_required
@@ -115,6 +117,13 @@ def upload_start(request, pid):
     user = request.user
     project = authorize.get_project(user=user, pid=pid, write=False)    
     return html.template( request=request, name='data-upload.html', project=project)
+
+@login_required
+def upload_simple(request, pid):
+    "Renders the upload page"
+    user = request.user
+    project = authorize.get_project(user=user, pid=pid, write=False)    
+    return html.template( request=request, name='data-upload-simple.html', project=project)
 
 @login_required
 def view(request, did):

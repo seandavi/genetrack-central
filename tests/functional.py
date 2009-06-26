@@ -96,6 +96,33 @@ class ServerTest( TwillTest ):
         tc.code(200)
         tc.find("You are not logged in")
 
+    def create_project(self, name, info='no info'):
+        """
+        Creates a new project
+        """
+        tc.go( testlib.PROJECT_LIST_URL )
+        tc.find("Logged in as") 
+        tc.follow('New Project')
+        tc.code(200)
+        tc.find("Create New Project")
+        tc.fv("1", "name", name )
+        tc.fv("1", "info", info)
+        tc.submit()
+        tc.code(200)
+        tc.find(name)
+
+    def delete_project(self, name):
+        """
+        Deletes a project
+        """
+        tc.follow("Delete")
+        tc.find("You are removing")
+        tc.fv("1", "delete", True)
+        tc.submit()
+        tc.code(200)
+        tc.find("Project deletion complete")
+        tc.notfind(name)
+
     def test_project_actions(self):
         
         # main page
@@ -107,16 +134,10 @@ class ServerTest( TwillTest ):
         tc.find("Human HELA 16") 
         tc.find("Mouse project HBB 1") 
 
+
         # create a new project
         name = "Rainbow Connection - New Project"
-        tc.follow('New Project')
-        tc.code(200)
-        tc.find("Create New Project")
-        tc.fv("1", "name", name )
-        tc.fv("1", "info", "Some *markup* goes here")
-        tc.submit()
-        tc.code(200)
-        tc.find(name)
+        self.create_project(name=name)
 
         # visit this new project
         tc.follow(name)
@@ -134,15 +155,7 @@ class ServerTest( TwillTest ):
         tc.notfind(name)
         tc.find(newname)
 
-        # delete the project
-        tc.follow("Delete")
-        tc.find("You are removing")
-        tc.fv("1", "delete", True)
-        tc.submit()
-        tc.code(200)
-        tc.find("Project deletion complete")
-        tc.notfind(name)
-        tc.notfind(newname)
+        self.delete_project(name=newname)
 
     def test_project_member_sharing(self):
 
@@ -187,6 +200,15 @@ class ServerTest( TwillTest ):
         tc.follow("<< return to project")
         tc.find("Yeast mutant RAV 17") 
 
+    def test_project_stress(self):
+        names = [ 'STRESS-NAME-%010d' % step for step in range(11) ]
+        for name in names:
+            self.create_project(name)
+        
+        for name in names:
+            tc.go( testlib.PROJECT_LIST_URL )
+            tc.follow(name)
+            self.delete_project(name)
 
     def test_project_access(self):  
         # verifies project access
@@ -206,6 +228,14 @@ class ServerTest( TwillTest ):
         # project does not exist (will return no access)
         tc.go("/project/view/190/")
         tc.code(500)
+
+    def test_data_upload(self):  
+        # data upload test
+        name = 'Upload-test-name'
+        self.create_project(name)
+        
+        tc.follow(name)
+        self.delete_project(name)
 
 def get_suite():
     "Returns the testsuite"

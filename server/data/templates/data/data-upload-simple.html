@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Data{% endblock %}
+
+{% block header %}<h2 align="center">Uploading into: {{project.name}}</h2>{% endblock %}
+
+{% block mainbody %}
+<div id="content">
+
+    <!-- left sidebar -->
+    <div class="span-7">&nbsp;</div>
+
+    <div class="span-10 center">
+        <form enctype="multipart/form-data" method="post" action="/data/upload/process/{{project.id}}/">
+
+
+        <fieldset id="login" class="box">
+          <legend>Select up to 4 files</legend>
+
+            <div class="capsx">DATA1</div>
+            <div><input type="file" name="File1" size="30" /></div>
+            
+            <div class="capsx">DATA2</div>
+            <div><input type="file" name="File2" size="30" /></div>
+            
+            <div class="capsx">DATA3</div>
+            <div><input type="file" name="File3" size="30" /></div>
+            
+            <div class="capsx">DATA4</div>
+            <div><input type="file" name="File4" size="30" /></div>
+
+            <div style="padding-top:15px;"><input type="submit" name="upload" value="Submit" /></div>
+                    
+        </fieldset>
+        </form>
+
+    </div>
+
+    <!-- right sidebar -->
+    <div class="span-7 last" >&nbsp;</div>
+
+</div>
+
+
+{% endblock %}

@@ -9,6 +9,7 @@ import os, sys, re, unittest, shutil, re, shutil
 from testlib import testutil, testoptions
 from testlib.unittest_extensions import TestRunner
 from genetrack import logger, conf
+import functional
 
 def all_tests():
     "Returns all file names that end in _test.py"
@@ -110,5 +111,5 @@ if __name__ == '__main__':
 
     if bad:
         sys.exit(-1)
-        
+
     sys.exit(0)
