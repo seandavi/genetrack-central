@@ -102,7 +102,7 @@ def upload_processor(request, pid):
                     count += 1
                     stream = request.FILES[key]
                     name = html.chop_dirname( stream.name )
-                    logger.info('%s uploaded file %s' % (user.username, name) )
+                    logger.debug('%s uploaded file %s' % (user.username, name) )
                     authorize.create_data(user=user, pid=pid, stream=stream, name=name, info='no information')
 
             user.message_set.create(message="Uploaded %s files" % count)

@@ -4,7 +4,7 @@ Functional tests via twill
 import os, unittest, random
 import testlib
 
-from genetrack import logger
+from genetrack import logger, conf
 
 import twill
 from twill import commands as tc
@@ -229,12 +229,55 @@ class ServerTest( TwillTest ):
         tc.go("/project/view/190/")
         tc.code(500)
 
-    def test_data_upload(self):  
+    def test_data_uploads(self):  
         # data upload test
         name = 'Upload-test-name'
         self.create_project(name)
         
         tc.follow(name)
+
+        # find the project id
+        url = tc.follow('Edit')
+        pid = url.split("/")[-2]
+        tc.go("/data/upload/simple/%s/" % pid)
+        
+        # search for then add Demo User to this project
+        tc.formfile("1", "File1", conf.testdata('short-data.bed') )
+        tc.formfile("1", "File2", conf.testdata('short-good-input.gtrack') )
+        tc.formfile("1", "File3", conf.testdata('readcounts.png') )
+        tc.submit()
+
+        # verify uploads
+        tc.find("short-data.bed")
+        tc.find("short-good-input.gtrack")
+        tc.find("readcounts.png")
+
+        # visit the dataset            
+        tc.follow("short-good-input.gtrack")
+        tc.find("waiting")
+
+        # edit the dataset
+        tc.follow("Edit")
+        tc.fv("1", "name", "short-good-input.gtrack" )
+        tc.fv("1", "info","extra-info" )
+        tc.submit()
+        tc.find("extra-info")
+
+        # upload two results for it
+        tc.follow("Add Analysis")
+        tc.formfile("1", "content", conf.testdata('short-data.bed') )
+        tc.formfile("1", "image", conf.testdata('readcounts.png') )
+        tc.submit()
+        tc.find("short-data.bed")
+        
+        # upload one image
+        tc.follow("Add Analysis")
+        tc.formfile("1", "image", conf.testdata('shift.png') )
+        tc.submit()
+        tc.find("shift.png")
+
+        # back to project view
+        tc.follow("Project view")
         self.delete_project(name)
 
 def get_suite():
