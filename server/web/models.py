@@ -181,7 +181,7 @@ class Data( models.Model ):
     >>> project.data_count
     1
     >>> data1.status
-    u'new'
+    'stored'
     >>> data1.delete()
     >>>
     >>> # project datacounts refreshed
