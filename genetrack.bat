@@ -2,10 +2,11 @@
 
 echo.
 echo *********************
-echo GeneTrack run manager
+echo GeneTrack Run Manager
 echo *********************
 echo.
-
+echo Environment variables:
+echo.
 rem
 rem set the python executable
 rem
@@ -24,7 +25,7 @@ set DEFAULT_HOME=%~dp0
 rem
 rem The default server home directory
 rem
-set GENETRACK_SERVER_HOME=%DEFAULT_HOME%\server
+set GENETRACK_SERVER_HOME=%DEFAULT_HOME%server
 echo GENETRACK_SERVER_HOME=%GENETRACK_SERVER_HOME%
 
 rem
@@ -33,6 +34,9 @@ rem
 set DJANGO_SETTINGS_MODULE=server.settings
 echo DJANGO_SETTINGS_MODULE=%DJANGO_SETTINGS_MODULE%
 
+echo.
+echo *********************
+echo.
 
 rem Adding genetrack and the server apps to the python path
 set PYTHON_PATH_1=%DEFAULT_HOME%;%GENETRACK_SERVER_HOME%
@@ -54,14 +58,12 @@ if "%1"=="init" goto :init
 if "%1"=="test" goto :test
 if "%1"=="editor" goto :editor
 if "%1"=="docs" goto :docs
-if "%1"=="apidoc" goto :docs
+if "%1"=="apidocs" goto :docs
 if "%1"=="jobrunner" goto :jobrunner
-
 
 rem  internal use, pushes the docs to the public server
 if "%1" == "pushdoc" goto :pushdoc
 
-echo.
 echo USAGE:
 echo.
 echo     genetrack.bat init       (initializes the database)
@@ -69,11 +71,10 @@ echo     genetrack.bat runserver  (runs server)
 echo     genetrack.bat test       (runs all tests)
 echo     genetrack.bat docs       (generates documentation)
 echo     genetrack.bat apidoc     (generates API html via epydoc)
-echo     genetrack.bat editor     (starts the editor in environment)
 echo     genetrack.bat jobrunner  (executes the jobrunner)
+echo     genetrack.bat editor     (load the editor in the environment, win32)
 
 goto :eof
-
 
 :init
 echo.
@@ -131,7 +132,7 @@ set DOC_DIR=%DEFAULT_HOME%\docs\rest
 set BUILD_DIR=%DEFAULT_HOME%\docs\html
 set EPYDOC_DIR=%BUILD_DIR%\epydoc
 sphinx-build -b html %DOC_DIR% %BUILD_DIR%
-if "%1"=="apidoc" epydoc %2 %3 %4 %5 %6 %7 %8 %9 --docformat restructuredtext genetrack -o %EPYDOC_DIR% 
+if "%1"=="apidocs" epydoc %2 %3 %4 %5 %6 %7 %8 %9 --docformat restructuredtext genetrack -o %EPYDOC_DIR% 
 goto :eof
 
 :jobrunner
