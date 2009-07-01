@@ -138,7 +138,8 @@ def create_track(user, pid, name, json={}):
     Creates a data entry from a django style stream (uploaded data)
     """
     proj = get_project(user=user, pid=pid, write=False)
-    track = models.Track( owner=user, project=proj, name=name, json=json)
+    uuid = util.uuid()
+    track = models.Track( owner=user, project=proj, name=name, json=json, uuid=uuid)
     track.save()
     return track
 

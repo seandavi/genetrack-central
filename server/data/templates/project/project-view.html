@@ -82,13 +82,13 @@
             
             <!-- TRACKS tab -->
             <div id="tabs-show-tracks">
-                Show tracks
-                {% for track in project.all_tracks %}
+                {% for track in project.tracks.all %}
                     <div class="data name row ">
-                        <input type="checkbox" name="did" value="{{data.id}}" class="middle">                       
-                        <a href="{% url web.views.data.view data.id %}" class="status {{data.status}}">{{track.name}}</a>
+                        {% sep %} <a href="{% url web.views.data.view track.id %}">
+                            {{track.name}}</a>
                     </div>
                 {% endfor %}
+                &nbsp;
             </div>
 
             <div id="tabs-create-tracks">

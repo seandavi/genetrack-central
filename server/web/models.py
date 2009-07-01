@@ -108,11 +108,6 @@ class Project( models.Model ):
     def track_count(self):
         return Track.objects.filter(project=self).count()
 
-    def all_tracks(self):
-        
-        return []
-
-
     def refresh(self):
         "Refreshes statically maintained values"
         self.data_count = Data.objects.filter(project=self).count()
