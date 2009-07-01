@@ -105,6 +105,14 @@ class Project( models.Model ):
     def __str__(self):
         return "Project: %s" % self.name
     
+    def track_count(self):
+        return Track.objects.filter(project=self).count()
+
+    def all_tracks(self):
+        
+        return []
+
+
     def refresh(self):
         "Refreshes statically maintained values"
         self.data_count = Data.objects.filter(project=self).count()
@@ -331,7 +339,7 @@ class Job(models.Model):
     json   = JsonField(default="", null=True)
     status = models.TextField(default=status.NEW, choices=choices)
 
-class Tracks(models.Model):
+class Track(models.Model):
     """
     Represents a set of tracks
     """

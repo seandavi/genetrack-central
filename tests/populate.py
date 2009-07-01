@@ -33,16 +33,28 @@ def generate(n=5):
         projects.append(project)
         logger.info('creating %s' % name)
 
-    # valid data names
+    # data names
     data_names = ( 'short-good-input.gtrack', 'short-data.bed')
     
+    # visualization names
+    track_names = ( 'differential expression', 'HELA subtract', 'Default track')
+    
 
-    # a subset of projects get data and results added to them
+    # a subset of projects get data, visualization and results added to them
     subset = projects[-1:]
     for project in subset:
-        logger.info('uploading into %s' % project.name)
+        
+        # create some tracks for this project
+        for tname in track_names:
+            json = dict()
+            track = authorize.create_track(user=user, pid=project.id, name=tname, json=json )
+            logger.info('creating track %s' % track.name)
+        
+        assert (project.track_count(), len(track_names))
+
+        # upload some data names        
         for name in data_names:
-            logger.info('adding data %s' % name)
+            logger.info('uploading data %s' % name)
             stream = File( open(conf.testdata(name)) )
             data = authorize.create_data(user=user, pid=project.id, stream=stream, name=name, info='test data')
             
@@ -52,12 +64,9 @@ def generate(n=5):
             image1  = File( open(conf.testdata('readcounts.png'),'rb') )
             result1 = authorize.create_result( user=user, data=data, content=stream1, image=image1)
 
-            stream2 = File( open(conf.testdata('short-results.txt')) )
             image2  = File( open(conf.testdata('shift.png'), 'rb') )
             result2 = authorize.create_result( user=user, data=data, content=None, image=image2)
-            
-
-    
+                
 if __name__ == '__main__':
     generate()
 

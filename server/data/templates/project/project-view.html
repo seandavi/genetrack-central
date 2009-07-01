@@ -44,11 +44,12 @@
         <div id="tabs"> 
             <ul>
                 <li><a href="#tabs-data">Data listing ({{project.data_count}})</a></li> 
-                <li><a href="#tabs-show-visuals">Saved Visualizations (0)</a></li> 
-                <li><a href="#tabs-create-visuals">Create Visualization</a></li> 
+                <li><a href="#tabs-show-tracks">Saved Tracks ({{project.track_count}})</a></li> 
+                <li><a href="#tabs-create-tracks">Create Tracks</a></li> 
                 <li><a href="#tabs-galaxy-tools">Galaxy Tools</a></li> 
             </ul>
  
+            <!-- DATA tab -->
             <div id="tabs-data"> 
 
                 <form action="/data/action/{{project.id}}/" method="POST">
@@ -78,9 +79,24 @@
                 </form>
 
             </div>
-            <div id="tabs-show-visuals">Show visuals</div>
-            <div id="tabs-create-visuals">Create Visuals</div>
+            
+            <!-- TRACKS tab -->
+            <div id="tabs-show-tracks">
+                Show tracks
+                {% for track in project.all_tracks %}
+                    <div class="data name row ">
+                        <input type="checkbox" name="did" value="{{data.id}}" class="middle">                       
+                        <a href="{% url web.views.data.view data.id %}" class="status {{data.status}}">{{track.name}}</a>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div id="tabs-create-tracks">
+                Create Tracks
+            </div>
+
             <div id="tabs-galaxy-tools">Using Galaxy tools</div>
+
         </div>
 
         <div style="padding-top:10px;">

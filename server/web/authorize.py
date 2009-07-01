@@ -66,16 +66,6 @@ def create_project( user, name, info='No info' ):
     member  = models.Member.objects.create(user=user, project=project, role=status.MANAGER)
     return project
 
-def delete_data(user, pid, dids):
-    "Deletes data from a project"
-    project = get_project(user=user, pid=pid, write=False)  
-    for did in dids:
-        datum = models.Data.objects.get(id=did, project=project)
-        if project.is_manager or datum.owner == user:
-            datum.delete()
-            user.message_set.create(message="Deleted data %s" % datum.name)
-        else:
-           user.message_set.create(message="May not delete data %s" % datum.name) 
 
 def project_count(user):
     """
@@ -131,6 +121,37 @@ def create_data(user, pid, stream, name, info='no information', parent=None):
     data.store(stream)    
     proj.refresh()
     return data
+
+def delete_data(user, pid, dids):
+    "Deletes data from a project"
+    project = get_project(user=user, pid=pid, write=False)  
+    for did in dids:
+        datum = models.Data.objects.get(id=did, project=project)
+        if project.is_manager or datum.owner == user:
+            datum.delete()
+            user.message_set.create(message="Deleted data %s" % datum.name)
+        else:
+           user.message_set.create(message="May not delete data %s" % datum.name) 
+
+def create_track(user, pid, name, json={}):
+    """
+    Creates a data entry from a django style stream (uploaded data)
+    """
+    proj = get_project(user=user, pid=pid, write=False)
+    track = models.Track( owner=user, project=proj, name=name, json=json)
+    track.save()
+    return track
+
+def delete_track(user, pid, tid):
+    "Deletes data from a project"
+    project = get_project(user=user, pid=pid, write=False)  
+    track = models.Track.objects.get(id=tid, project=project)
+    if project.is_manager or track.owner == user:
+        track.delete()
+        message = "Deleted track %s" % track.name
+    else:
+        message="May not delete track %s" % track.name
+    user.message_set.create(message=message)
 
 def get_result(user, rid):
     "Returns a result for a given user"
