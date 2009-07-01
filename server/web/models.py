@@ -143,8 +143,7 @@ class Project( models.Model ):
        
         return tree
 
-
-class Member( models.Model ):
+class Member(models.Model):
     """
     Maintains membership information between a project and a user
 
@@ -307,29 +306,15 @@ class Result(models.Model):
     def has_content(self):
         return bool(self.content)
 
-    def thumb(self):
-        "Returns a thumbnail image"
-        if not self.has_image():
-            return None
-
-        # thumbnail size
-        size = 300, 300
-        
-        # genereate the path to the thumbnail
-        imgname = "%s.png" % self.uuid
-        thumbpath = conf.path_join(settings.CACHE_DIR, imgname)
-            
-        if not os.path.exists(thumbpath):
-            try:
-                # requires PIL
-                import Image  
-                img = Image.open(self.image.path)
-                img.thumbnail(size, Image.ANTIALIAS)
-                img.save(thumbpath)
-            except Exception, exc:
-                logger.error(exc)
-        
-        return imgname
+    @property
+    def thumbname(self):
+        "Thumbnail image name"
+        return "t-%s.png" % self.uuid
+    
+    @property
+    def thumbpath(self):
+        "Thumbnail image path"
+        return conf.path_join(settings.CACHE_DIR, self.thumbname)
 
 class Job(models.Model):
     """
@@ -346,6 +331,19 @@ class Job(models.Model):
     json   = JsonField(default="", null=True)
     status = models.TextField(default=status.NEW, choices=choices)
 
+class Tracks(models.Model):
+    """
+    Represents a set of tracks
+    """
+    
+    uuid = models.TextField()
+    name = models.TextField()
+   
+    json = JsonField(default="", null=True)
+    owner = models.ForeignKey(User)
+    project = models.ForeignKey(Project, related_name='tracks')    
+    tstamp = models.DateField(auto_now_add=True)
+    
 #
 # Administration classes
 #
@@ -389,7 +387,22 @@ def data_save_trigger(sender, instance, signal, *args, **kwargs):
         instance.ext = ext
         jobs.detect(data=instance, ext=ext, JobClass=Job)
         instance.save()
-    
+
+def result_save_trigger(sender, instance, signal, *args, **kwargs):
+    """
+    Post save hook for results, creates the thumbnails
+    """
+    if instance.image:
+        try:
+            # requires PIL
+            size = 300, 300
+            import Image  
+            img = Image.open(instance.image.path)
+            img.thumbnail(size, Image.ANTIALIAS)
+            img.save(instance.thumbpath)
+        except Exception, exc:
+            logger.error(exc)
+
 def data_delete_trigger(sender, instance, signal, *args, **kwargs):
     """
     Post delete hook for data
@@ -409,6 +422,9 @@ def user_profile_trigger(sender, instance, signal, *args, **kwargs):
 
 #signals.post_delete.connect( data_delete_trigger, sender=Data )
 signals.post_save.connect( data_save_trigger, sender=Data )
+
+signals.post_save.connect( result_save_trigger, sender=Result )
+
 signals.post_delete.connect( data_delete_trigger, sender=Data )
 
 signals.post_save.connect( user_profile_trigger, sender=User )

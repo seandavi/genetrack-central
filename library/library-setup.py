@@ -20,7 +20,7 @@ def execute():
     except ImportError, exc:
         pass
 
-    print platform.plaform
+    print platform.release()
 
 if __name__ == '__main__':
     execute()
