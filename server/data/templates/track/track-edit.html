@@ -2,11 +2,11 @@
 
 {% block title %}{{title}}{% endblock %}
 
-{% block header %}<h2 align="center">Edit track information</h2>{% endblock %}
+{% block header %}<h2 align="center">{{param.title}}</h2>{% endblock %}
 
 {% block mainbody %}
 
-<form method="post" action="/track/edit/{{tid}}/">
+<form method="post" action="/track/edit/{{param.pid}}/{{param.tid}}/">
 
     <!-- left sidebar -->
     <div class="span-4">&nbsp;</div>
@@ -23,7 +23,6 @@
                     <input type="submit" name="submit" value="Submit"/> &nbsp;&nbsp;|&nbsp;&nbsp;
                     <input type="button" name="cancel" value="Cancel" onclick="javascript:history.back(1)"/>
                 </div>
-                
             </div>
 
         </fieldset>

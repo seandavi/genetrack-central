@@ -85,13 +85,11 @@
                 {% for track in project.tracks.all %}
                     <div class="data name row ">
                         
-                        
-                        
                         <div width="20px" style="float:right;margin-left:20px;"><a href="{% url web.views.track.delete_track track.id %}" border="0"><span class="ui-icon ui-icon-trash">&nbsp;</a>
                             </span>
                         </div>
                         
-                        <div width="20px" style="float:right"><a href="{% url web.views.track.edit_track track.id %}" border="0"><span class="ui-icon ui-icon-folder-open">&nbsp;</a>
+                        <div width="20px" style="float:right"><a href="{% url web.views.track.edit_track project.id track.id %}" border="0"><span class="ui-icon ui-icon-folder-open">&nbsp;</a>
                             </span>
                         </div>
 
@@ -109,7 +107,7 @@
             <div id="tabs-create-tracks">
                 
                 <div>
-                    To create new tracks please <a href="/track/edit/new">click here</a>
+                    To create new tracks please <a href="{% url web.views.track.edit_track project.id 0 %}">click here</a>
                 </div>
 
                 <ul style="padding-top:10px;">

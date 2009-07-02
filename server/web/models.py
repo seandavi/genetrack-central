@@ -338,7 +338,9 @@ class Track(models.Model):
     """
     Represents a set of tracks
     """
-    
+    class Meta:
+        ordering = ["-id"]
+
     uuid = models.TextField()
     name = models.TextField()
     json = JsonField(default="", null=True)

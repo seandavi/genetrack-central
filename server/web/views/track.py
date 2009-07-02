@@ -20,34 +20,42 @@ def delete_track(request, tid):
     return html.redirect( "/project/view/%s/" % project.id )
 
 @private_login_required
-def edit_track(request, tid):
+def edit_track(request, pid, tid):
     "Updates or creates a project"
     user = request.user
     
     form = TrackForm( request.POST )   
+    project = authorize.get_project(user=user, pid=pid, write=False)
     
     if form.is_valid():
         # incoming data
         get = form.cleaned_data.get
-        if pid == 'new':
-            project = authorize.create_project(user=user, name=get('name'), info=get('info') )
-            user.message_set.create(message="Project created")
-            return html.redirect("/project/list/")
+        
+        json = {}
+        if tid == '0':
+            track = authorize.create_track(user=user, pid=pid, name=get('name'), json=json )
+            message="New track created"
         else:
-            authorize.update_project(user=user, pid=pid, name=get('name'), info=get('info') )
-            user.message_set.create(message="Project updated")
-            return html.redirect("/project/view/%s/" % pid)
+            track = authorize.update_track(user=user, name=get('name'), tid=tid, json=json)
+            message="Track updated"
+
+        user.message_set.create(message=message)
+        
+        return html.redirect("/project/view/%s/" % track.project.id)
+
     else:
         # no form data sent
-        if tid == 'new':
+        if tid == '0':
             title = 'Create New Track'
             form = TrackForm( )            
         else:
             title = 'Edit Track'
-            form = TrackForm( )    
-            #project = authorize.get_project(user=user, pid=pid)
-            #form = ProjectForm( dict(name=project.name, info=project.info) )        
-        return html.template( request=request, name='track-edit.html', tid=tid, title=title, form=form )
+            track = authorize.get_track(user=user, tid=tid)
+            form = TrackForm(dict(name=track.name) )    
+        
+        param = html.Params(tid=tid, pid=pid, title=title)
+
+        return html.template( request=request, name='track-edit.html', param=param, form=form )
  
 @login_required
 def view_track(request, did):

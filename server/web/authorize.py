@@ -66,7 +66,6 @@ def create_project( user, name, info='No info' ):
     member  = models.Member.objects.create(user=user, project=project, role=status.MANAGER)
     return project
 
-
 def project_count(user):
     """
     Returns the number of projects a user has
@@ -133,14 +132,33 @@ def delete_data(user, pid, dids):
         else:
            user.message_set.create(message="May not delete data %s" % datum.name) 
 
+def get_track(user, tid):
+    """
+    Creates a track
+    """
+    track = models.Track.objects.get(id=tid)
+    proj  = get_project(user=user, pid=track.project.id, write=False)
+    return track
+
 def create_track(user, pid, name, json={}):
     """
-    Creates a data entry from a django style stream (uploaded data)
+    Creates a track
     """
     proj = get_project(user=user, pid=pid, write=False)
     uuid = util.uuid()
     track = models.Track( owner=user, project=proj, name=name, json=json, uuid=uuid)
     track.save()
+    return track
+
+def update_track(user, tid, name, json={}):
+    """
+    Updates a track
+    """
+    track = get_track(user=user, tid=tid)
+    track.name = name
+    track.json = json
+    track.save()
+    print '>>>>>>>>>>>>>>>', tid
     return track
 
 def delete_track(user, tid):
