@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}{{title}}{% endblock %}
+
+{% block header %}<h2 align="center">Edit track information</h2>{% endblock %}
+
+{% block mainbody %}
+
+<form method="post" action="/track/edit/{{tid}}/">
+
+    <!-- left sidebar -->
+    <div class="span-4">&nbsp;</div>
+
+    <div class="span-16">
+        <fieldset id="login" class="box">
+            <legend>Track details</legend>
+            
+            <div>
+                <div class="capsx">NAME</div>
+                <div >{{form.name}}</div>
+                    
+                <div style="padding-top:15px;">
+                    <input type="submit" name="submit" value="Submit"/> &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <input type="button" name="cancel" value="Cancel" onclick="javascript:history.back(1)"/>
+                </div>
+                
+            </div>
+
+        </fieldset>
+    </div>
+
+    <div class="span-4 last">&nbsp;</div>
+
+</form>
+
+{% endblock %}

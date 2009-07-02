@@ -129,6 +129,9 @@ TEMPLATE_DIRS = (
     # custom pages for administration
     path_join(TEMPLATE_PATH, 'admin'),
 
+    # custom pages for tracks
+    path_join(TEMPLATE_PATH, 'track'),
+
     # custom template tags
     path_join(TEMPLATE_PATH, 'tags'),
 
