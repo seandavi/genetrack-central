@@ -1,0 +1,13 @@
+{% load boxes %}
+
+<div>
+      <h3 class="caps">CREATE PROJECT</h3>
+      <div class="box">
+          <div class="quiet" align="center">
+            {% if user.is_private %}
+              <a href="/project/edit/new/" id="create-project">New Project</a></div>
+            {% else %}
+                New Project
+            {% endif %}
+      </div>
+</div>

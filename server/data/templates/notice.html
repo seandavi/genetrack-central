@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load markup %}
+{% load boxes %}
+
+
+{% block title %}No public access{% endblock %}
+
+{% block header %}
+<h2 align="center">Public access not available</h2>
+{% endblock %}
+
+{% block mainbody %}
+
+<!-- left sidebar -->
+<div class="span-7">&nbsp;</div>
+
+<div class="span-10">
+   
+   <div class="notice">The action you've selected is not available for <b>public</b> users.</div>
+   
+   <div>
+   Options:
+   <ul>
+        <li>go back and try something else</li>
+        <li>try logging in as a <a href="/logout">different user</a></li>
+        <li>request an account</li>
+    </ul>
+   </div>
+</div>
+
+<div class="span-7 last" >&nbsp;</div>
+
+{% endblock %}

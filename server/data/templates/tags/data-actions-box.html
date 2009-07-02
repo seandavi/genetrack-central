@@ -7,16 +7,14 @@
             
             <a href="/data/download/{{data.id}}/">Download</a> {% sep %}
 
-            {% if data.write_access %}
+            {% if user.is_private %}                
                 <a href="/data/edit/{{data.id}}/">Edit</a>
+                {% sep %}
+                <a href="/data/result/upload/{{data.id}}/">Add results</a>
             {% else %}
-                Edit
+                Edit {% sep %} Add results
             {% endif %}
 
-            {% sep %}
-
-            <a href="/data/result/upload/{{data.id}}/">Add Analysis</a>
-    
         </div>
     </div>
 </div>

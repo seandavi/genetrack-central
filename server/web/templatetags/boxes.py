@@ -38,6 +38,12 @@ def project_actions_box(context):
         'project': context['project'],
     }
 
+@register.inclusion_tag('project-create-box.html', takes_context=True)
+def project_create_box(context):
+    return {
+        'user': context['user'],
+    }
+
 @register.inclusion_tag('data-actions-box.html', takes_context=True)
 def data_actions_box(context):
     return {
