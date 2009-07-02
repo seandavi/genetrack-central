@@ -143,16 +143,18 @@ def create_track(user, pid, name, json={}):
     track.save()
     return track
 
-def delete_track(user, pid, tid):
+def delete_track(user, tid):
     "Deletes data from a project"
-    project = get_project(user=user, pid=pid, write=False)  
-    track = models.Track.objects.get(id=tid, project=project)
+    track = models.Track.objects.get(id=tid)
+    project = get_project(user=user, pid=track.project.id)  
+
     if project.is_manager or track.owner == user:
         track.delete()
         message = "Deleted track %s" % track.name
     else:
-        message="May not delete track %s" % track.name
+        message = "May not delete track %s" % track.name
     user.message_set.create(message=message)
+    return project
 
 def get_result(user, rid):
     "Returns a result for a given user"

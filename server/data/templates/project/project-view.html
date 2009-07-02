@@ -26,8 +26,7 @@
 
         $("#project-info").hide()
 
-        $("#tabs").tabs();
-
+        $("#tabs").tabs({ cookie: { expires: 30 } });
 
     });
 </script>
@@ -82,17 +81,46 @@
             
             <!-- TRACKS tab -->
             <div id="tabs-show-tracks">
+                <div>
                 {% for track in project.tracks.all %}
                     <div class="data name row ">
-                        {% sep %} <a href="{% url web.views.data.view track.id %}">
-                            {{track.name}}</a>
+                        
+                        
+                        
+                        <div width="20px" style="float:right;margin-left:20px;"><a href="{% url web.views.track.delete_track track.id %}" border="0"><span class="ui-icon ui-icon-trash">&nbsp;</a>
+                            </span>
+                        </div>
+                        
+                        <div width="20px" style="float:right"><a href="{% url web.views.track.edit_track track.id %}" border="0"><span class="ui-icon ui-icon-folder-open">&nbsp;</a>
+                            </span>
+                        </div>
+
+                        <div>
+                            {% sep %} <a href="{% url web.views.data.view track.id %}">
+                            Track: {{track.name}}</a>
+                        </div>
+                    
                     </div>
                 {% endfor %}
+                </div>
                 &nbsp;
             </div>
 
             <div id="tabs-create-tracks">
-                Create Tracks
+                
+                <div>
+                    To create new tracks please <a href="/track/edit/new">click here</a>
+                </div>
+
+                <ul style="padding-top:10px;">
+                   <li>Only data that can be processed and has fininshed running may be selected in the track builder.
+                    </li>
+
+                    <li>
+                    Each data also has a default track directly accesible from the data view page (click on a dataset). 
+                    </li>
+                </ul>
+
             </div>
 
             <div id="tabs-galaxy-tools">Using Galaxy tools</div>
@@ -112,11 +140,11 @@
 
     {% account_box 'project-view' %}
 
+    {% filter_box %}
+
     {% upload_box %}
 
     {% project_actions_box %}
-
-    {% filter_box %}
 
     {% admin_box %}
 

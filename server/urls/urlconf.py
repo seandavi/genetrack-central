@@ -26,6 +26,9 @@ urlpatterns = patterns('',
     # data related urls
     (r'^data/',  include('urls.data_urls')),
 
+    # track related urls
+    (r'^track/',  include('urls.track_urls')),
+
     # password reset related urls
     (r'^password/',  include('urls.password_urls')),
     
