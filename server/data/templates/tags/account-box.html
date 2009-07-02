@@ -1,6 +1,10 @@
 {% load boxes %}
 <div>
-    <h3 class="capsx">YOUR ACCOUNT &bull; <a href="/logout">LOG OUT</a></h3>
+    <h3 class="capsx">YOUR ACCOUNT
+        {%if user.is_authenticated %}
+           &nbsp;{% sep %}&nbsp;<a href="/logout">LOG OUT</a>
+        {% endif %}
+    </h3>
     {%if user.is_authenticated %}
         <div class="box" >
             <div class="quiet">Logged in as <b>{{user.get_full_name}}</b></div>

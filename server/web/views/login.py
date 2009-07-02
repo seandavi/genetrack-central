@@ -24,6 +24,10 @@ def index(request):
     # users are not logged in so we can't use the Django messaging system
     error_message = ''
 
+    if request.user.is_authenticated and request.user.username=='public':
+        # someone is attempting a public access
+        return html.template( request, name='notice.html')
+
     #
     # a logged in superuser may 'impersonate' other users 
     # this behavior may be disabled in the settings

@@ -5,13 +5,21 @@
     <div class="box">
         <div class="quiet" align="center">
             <a href="#" id="project-info-link">Info</a> {% sep %}
-            <a href="{% url web.views.project.share project.id %}">Sharing</a>{% sep %} 
-            {% if project.is_manager %}
-                <a href="{% url web.views.project.edit project.id %}">Edit</a>{% sep %} 
-                <a href="{% url web.views.project.delete project.id %}">Delete</a>
+            
+            {% if user.is_private %}
+
+                <a href="{% url web.views.project.share project.id %}">Sharing</a>{% sep %} 
+                {% if project.is_manager %}
+                    <a href="{% url web.views.project.edit project.id %}">Edit</a>{% sep %} 
+                    <a href="{% url web.views.project.delete project.id %}">Delete</a>
+                {% else %}
+                    Edit {% sep %} Delete
+                {% endif %}
+            
             {% else %}
-                Edit {% sep %} Delete
+                Sharing {% sep %} Edit {% sep %} Delete
             {% endif %}
+
         </div>
     </div>
 </div>

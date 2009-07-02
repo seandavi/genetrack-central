@@ -112,14 +112,14 @@ def upload_processor(request, pid):
     # this is needed only because the JUPload applet makes a HEAD request        
     return html.response('SUCCESS\n')
 
-@login_required
+@private_login_required
 def upload_start(request, pid):
     "Renders the upload page"
     user = request.user
     project = authorize.get_project(user=user, pid=pid, write=False)    
     return html.template( request=request, name='data-upload.html', project=project)
 
-@login_required
+@private_login_required
 def upload_simple(request, pid):
     "Renders the upload page"
     user = request.user

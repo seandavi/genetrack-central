@@ -73,7 +73,7 @@ def load_users(fname, options):
         user, flag = user_get(username=username, email=email, first_name=first_name, last_name=last_name, is_superuser=is_superuser, is_staff=is_superuser)
         if flag:
             logger.debug( 'created user: %s' % user.get_full_name() )
-            if username in ('admin', 'demo'):
+            if username in ('admin', 'demo', 'public'):
                 # admin user will get the secret key as password
                 user.set_password(passwd)
             else:

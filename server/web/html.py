@@ -39,6 +39,7 @@ def redirect(url):
 def template(request, name, mimetype=None, **kwd):
     """Renders a template and returns it as an http response"""
     user = request.user        
+    user.is_private = (user.username!='public')
     messages = user.get_and_delete_messages()
     page = render(name, messages=messages, user=user, **kwd)
     return response(page, mimetype=mimetype)

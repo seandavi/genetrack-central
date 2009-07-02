@@ -2,8 +2,12 @@
 <div>
     <h3 class="caps">ADD DATA</h3>
     <div class="box" id="filter-box">
-        <div align="center">
-            <a href="{% url web.views.data.upload_start project.id %}">Upload data</a> 
+        <div align="center" class="quiet">
+            {% if user.is_private %}
+                <a href="{% url web.views.data.upload_start project.id %}">Upload data</a> 
+            {% else %}
+                 Upload data
+            {% endif %}
         </div>
     </div>
 </div>
