@@ -12,7 +12,7 @@ genetrack-dependencies.zip file, unpack it and install each of the programs. We 
 include python2.5 for you (skip it if you have already installed
 python).
 
-In a command shell navigate to the genetrack distribution and type:
+In a command shell navigate to the genetrack distribution and type::
 
      genetrack.bat test
     
@@ -27,20 +27,27 @@ but several steps need to be followed:
   2. Install Macports from:
   
   3. The following is using Macports to install binaries. From
-     a terminal install python2.6, numpy, setuptools and hdf5-18 like so:
+     a terminal install python2.6, numpy, setuptools and hdf5-18 like so::
         
         sudo port install python26
         sudo port install py26-setuptools
         sudo port install py26-numpy
            
   4. Now we need to install hdf then pytables and the latter needs us to specify the location of
-     the location of the HDF libraries. For that we need to write:
+     the location of the HDF libraries. For that we need to write::
      
         sudo port install hdf5-18
         export HDF5_DIR=/opt/local
         easy_install-2.6 tables
   
-Run genetrack.sh test to verify that everything works.
+  5. install django and bx-python::
+  
+        easy_install django
+        easy_install genetrack
+        
+Navigate to a folder and verify that everything works::
+    
+    genetrack.sh test
 
 Linux/Unix
 ----------
