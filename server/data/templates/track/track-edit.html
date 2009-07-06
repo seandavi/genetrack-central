@@ -21,27 +21,32 @@
                 
                 <div class="capsx">DATA</div>
                 <div class="pad10">
+                    {% if param.data %}
                     <select name="did">
                         {% for data in param.data %}
-                            <option value="{{data.id}}">{{data.name}}</option>
+                            <option value="{{data.id}}">{{data.name}} (id={{data.id}})</option>
                         {% endfor %}
                     </select>
                     <input type="button" name="add" value="Add"/> 
+                    {% else %}
+                    <div class="notice">No data can be visualized!
+                    You will need to upload some data that can be drawn as tracks.
+                    </div>
+                    {% endif %}
                 </div>
 
                 <div class="capsx">TRACKS</div>
+                <div class="pad10">{{form.text}}</div>
+
                 <div class="pad10">
-                    <textarea id="json">AAA
-                    </textarea>
+                   Help on <a href="http://genetrack.bx.psu.edu/trackoptions.html">track options</a>
                 </div>
 
                 <div class="pad10">
-                   Help on <a href="#">track options</a>
-                </div>
-
-                <div class="pad10">
+                    <input type="button" name="add" value="Preview Track"/> 
+                    &nbsp;&nbsp;|&nbsp;&nbsp;
                     <input type="submit" name="submit" value="Create Track"/> &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="button" name="cancel" value="Cancel" onclick="javascript:history.back(1)"/>
+                    <input type="button" name="cancel" value="Go Back" onclick="javascript:history.back(1)"/>
                 </div>
             </div>
 

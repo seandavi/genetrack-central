@@ -1,7 +1,7 @@
 """
 Track related views
 """
-import os, mimetypes
+import os, mimetypes, string
 from django.conf import settings
 from django import forms
 from genetrack import logger, conf
@@ -12,6 +12,19 @@ from server.web import login_required, private_login_required
 class TrackForm(forms.Form):
     "For project editing"    
     name = forms.CharField( initial='Track name', widget=forms.TextInput(attrs=dict(size=80)))
+    text = forms.CharField( initial='', widget=forms.Textarea(attrs=dict(id='json')))
+
+def track_parse(text):
+    # clean all lines
+    lines = filter(None, map(string.strip, text.splitlines()))
+    try:
+        json = dict()
+        for line in lines:
+            pass
+        return json
+    except Exception, exc:
+        return None
+    
 
 @private_login_required
 def delete_track(request, tid):

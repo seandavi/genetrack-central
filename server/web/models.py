@@ -338,6 +338,7 @@ class Track(models.Model):
     uuid = models.TextField()
     name = models.TextField()
     json = JsonField(default="", null=True)
+    text = models.TextField(default="", null=True)
     owner = models.ForeignKey(User)
     project = models.ForeignKey(Project, related_name='tracks')    
     tstamp = models.DateField(auto_now_add=True)
