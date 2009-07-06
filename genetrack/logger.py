@@ -76,6 +76,20 @@ def test( verbose=0 ):
     import doctest
     doctest.testmod( verbose=verbose )
 
+def OptionParser(usage=None):
+    "An option parser that can disable various logger levels"
+    from optparse import OptionParser
+
+    parser = OptionParser(usage=usage)
+    
+    parser.add_option(
+        '-v', '--verbosity', action="store", 
+        dest="verbosity", type="int", default=1, 
+        help="sets the verbosity (0, 1) (default=1)",
+    )
+
+    return parser
+
 if __name__ == "__main__":
     test()
    

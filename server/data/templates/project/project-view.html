@@ -44,8 +44,9 @@
             <ul>
                 <li><a href="#tabs-data">Data listing ({{project.data_count}})</a></li> 
                 <li><a href="#tabs-show-tracks">Saved Tracks ({{project.track_count}})</a></li> 
-                <li><a href="#tabs-create-tracks">Create Tracks</a></li> 
+                <!-- 
                 <li><a href="#tabs-galaxy-tools">Galaxy Tools</a></li> 
+                -->
             </ul>
  
             <!-- DATA tab -->
@@ -81,6 +82,11 @@
             
             <!-- TRACKS tab -->
             <div id="tabs-show-tracks">
+                
+                <div align="center" style="padding:5px;">
+                    To create new tracks please <a href="{% url web.views.track.edit_track project.id 0 %}">click here</a>
+                </div>
+
                 <div>
                 {% for track in project.tracks.all %}
                     <div class="data name row ">
@@ -103,25 +109,6 @@
                 </div>
                 &nbsp;
             </div>
-
-            <div id="tabs-create-tracks">
-                
-                <div>
-                    To create new tracks please <a href="{% url web.views.track.edit_track project.id 0 %}">click here</a>
-                </div>
-
-                <ul style="padding-top:10px;">
-                   <li>Only data that can be processed and has fininshed running may be selected in the track builder.
-                    </li>
-
-                    <li>
-                    Each data also has a default track directly accesible from the data view page (click on a dataset). 
-                    </li>
-                </ul>
-
-            </div>
-
-            <div id="tabs-galaxy-tools">Using Galaxy tools</div>
 
         </div>
 

@@ -2,20 +2,20 @@
 Commonly used constants
 """
 
-MEMBER  = 'member'
-MANAGER = 'manager'
+MEMBER  = u'member'
+MANAGER = u'manager'
 
 #
 # data constants
 #
-NEW        = 'new'
-RUNNING    = 'running'
-UPLOADING  = 'uploading'
-WAITING    = 'waiting'
-INDEXED    = 'indexed'
-INTERVAL   = 'interval'
-ERROR      = 'joberror'
-STORED     = 'stored'
+NEW        = u'new'
+RUNNING    = u'running'
+UPLOADING  = u'uploading'
+WAITING    = u'waiting'
+INDEXED    = u'indexed'
+INTERVAL   = u'interval'
+ERROR      = u'joberror'
+STORED     = u'stored'
 
 #
 # data that can be marked as ready
@@ -32,9 +32,9 @@ ALL = INPROGRESS | READY
 #
 # job constants
 #
-INDEXING_JOB = 'Indexing-Job'
-SUMMARY_JOB  = 'Summary-Job'
-PEAK_PREDICTION_JOB   = 'Peak-Prediction-Job'
+INDEXING_JOB = u'Indexing-Job'
+SUMMARY_JOB  = u'Summary-Job'
+PEAK_PREDICTION_JOB   = u'Peak-Prediction-Job'
 
 
 DEFAULT_PROJECT_INFO = """

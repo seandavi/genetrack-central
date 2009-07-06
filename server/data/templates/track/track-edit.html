@@ -9,18 +9,38 @@
 <form method="post" action="/track/edit/{{param.pid}}/{{param.tid}}/">
 
     <!-- left sidebar -->
-    <div class="span-4">&nbsp;</div>
+    <div class="span-2">&nbsp;</div>
 
-    <div class="span-16">
+    <div class="span-20">
         <fieldset id="login" class="box">
             <legend>Track details</legend>
             
             <div>
                 <div class="capsx">NAME</div>
-                <div >{{form.name}}</div>
-                    
-                <div style="padding-top:15px;">
-                    <input type="submit" name="submit" value="Submit"/> &nbsp;&nbsp;|&nbsp;&nbsp;
+                <div class="pad10">{{form.name}}</div>
+                
+                <div class="capsx">DATA</div>
+                <div class="pad10">
+                    <select name="did">
+                        {% for data in param.data %}
+                            <option value="{{data.id}}">{{data.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="button" name="add" value="Add"/> 
+                </div>
+
+                <div class="capsx">TRACKS</div>
+                <div class="pad10">
+                    <textarea id="json">AAA
+                    </textarea>
+                </div>
+
+                <div class="pad10">
+                   Help on <a href="#">track options</a>
+                </div>
+
+                <div class="pad10">
+                    <input type="submit" name="submit" value="Create Track"/> &nbsp;&nbsp;|&nbsp;&nbsp;
                     <input type="button" name="cancel" value="Cancel" onclick="javascript:history.back(1)"/>
                 </div>
             </div>
@@ -28,7 +48,7 @@
         </fieldset>
     </div>
 
-    <div class="span-4 last">&nbsp;</div>
+    <div class="span-2 last">&nbsp;</div>
 
 </form>
 

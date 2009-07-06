@@ -46,6 +46,12 @@ div.colborder {
     padding-bottom: 10px;
 }
 
+textarea#json {
+	width: 720px;
+	height: 220px;
+	padding: 5px;
+}
+
 .result.last{
     font: 0.7em Verdana, Arial, Helvetica, sans-serif;
     padding-left:75px;

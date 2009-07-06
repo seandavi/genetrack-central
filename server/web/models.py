@@ -113,12 +113,6 @@ class Project( models.Model ):
         self.data_count = Data.objects.filter(project=self).count()
         self.save()
 
-    def add_data(self, child, parent=None):
-        "Adds a data to a project tree"
-        tree, flag = ProjectTree.objects.get_or_create(project=self, child=child, parent=parent)
-        if not flag:
-            logger.warn('data %s is already in project %s' % (child, self))
-
     @property
     def members(self):    
         return Member.objects.filter(project=self).select_related().all()
@@ -135,16 +129,13 @@ class Project( models.Model ):
     def manager_names(self):
         return self.names_by_role(role=status.MANAGER)
 
+    def track_data(self):
+        "Data that is viewable in a track"
+        return [ d for d in self.data_list() if d.status in status.VIEWABLE ]
+
     def data_list(self):
         "A list of all data in this project"
         return [ d for d in Data.objects.filter(project=self).order_by('-id') ]
-
-    def data_tree(self):
-        "A tree of data"
-        tree = {}
-        pairs = [ (p.parent, p.child) for p in ProjectTree.objects.filter(project=self) ]
-       
-        return tree
 
 class Member(models.Model):
     """
@@ -154,7 +145,7 @@ class Member(models.Model):
     >>> proj = Project.objects.create(name="Project", info="some info", json=dict(value=1))
     >>> memb = Member(user=user, project=proj, role=status.MANAGER)
     >>> memb.role
-    'manager'
+    u'manager'
     """
     roles   = [ status.MANAGER, status.MEMBER ]
     choices = zip(roles, roles)
@@ -183,7 +174,7 @@ class Data( models.Model ):
     >>> project.data_count
     1
     >>> data1.status
-    'stored'
+    u'stored'
     >>> data1.delete()
     >>>
     >>> # project datacounts refreshed
@@ -333,6 +324,9 @@ class Job(models.Model):
     owner  = models.ForeignKey(User)
     json   = JsonField(default="", null=True)
     status = models.TextField(default=status.NEW, choices=choices)
+
+    def __str__(self):
+        return "<Job id=%s: json=%s>" % (self.id, self.json)
 
 class Track(models.Model):
     """

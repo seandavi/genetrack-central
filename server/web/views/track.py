@@ -53,8 +53,9 @@ def edit_track(request, pid, tid):
             track = authorize.get_track(user=user, tid=tid)
             form = TrackForm(dict(name=track.name) )    
         
-        param = html.Params(tid=tid, pid=pid, title=title)
-
+        data  = project.track_data()
+        print data
+        param = html.Params(tid=tid, pid=pid, title=title, data=data)
         return html.template( request=request, name='track-edit.html', param=param, form=form )
  
 @login_required
