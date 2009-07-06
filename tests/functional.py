@@ -264,7 +264,7 @@ class ServerTest( TwillTest ):
         tc.find("extra-info")
 
         # upload two results for it
-        tc.follow("Add Analysis")
+        tc.follow("Add results")
         tc.formfile("1", "content", conf.testdata('short-data.bed') )
         tc.formfile("1", "image", conf.testdata('readcounts.png') )
         tc.submit()
@@ -272,7 +272,7 @@ class ServerTest( TwillTest ):
         tc.back()
 
         # upload one image
-        tc.follow("Add Analysis")
+        tc.follow("Add results")
         tc.formfile("1", "image", conf.testdata('shift.png') )
         tc.submit()
         tc.follow("shift.png")
