@@ -17,9 +17,9 @@ On Windows run: genetrack.bat
 On Unix like systems run: genetrack.sh 
 
 to see all the possible parameters that this script takes.
-The default setting will work with the default server layout.
+The default settings will work with the initial server layout.
 
-Now run the manager script with the 'test' parameter. If all tests pass
+Run the manager script with the 'test' parameter. If all tests pass
 then run the manager script with the 'runserver' parameter. This will populate and
 start a test server on the http://127.0.0.1:8080 . Type this URL into your browser to
 see GeneTrack
