@@ -14,11 +14,15 @@
         // makes entire row clickable
         $("#add-button").click(function(){
 
-            var currval = $("#json").val()
-            var newval = currval + "row=1; color=RED; glyph=AUTOMATIC\n"
+            var json = $("#json")
+            var currval = json.val()
+            var newval = currval + "row=1; color=RED; glyph=AUTOMATIC; data=45\n"
+
+            var lines = currval.split("\n").length
+
             //debugger
-            
-            $("#json").val( newval )
+            newval = currval + '\n' + lines
+            json.val( newval )
 
         });
 

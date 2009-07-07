@@ -1,17 +1,19 @@
 """
 Parses a chart specification from a text
 """
-testlines = """
+import pyparsing
+
+test_input = """
 
 #
 # track spec
 #
 
-row=1;   color  =  RED; glyph=BAR; data=8946;
+color  =  RED; glyph=BAR; data=8946; newrow=no;
 
-  row =  2   ; color=BLUE; glyph  =ORF; data= 34555;      
+color=BLUE; glyph  =ORF; data= 34555; row=above
 
-row=2; color=GOLD; glyph=ORF; data=15664;        
+;color=GOLD; glyph=ORF; data=15664;        
 
 
 """
@@ -29,11 +31,11 @@ def color_check(value):
 
 # maps dictionarly keys to validation functions
 validator = dict(
-    data=int, row=int, layer=int, glyph=glyph_check, color=color_check, 
-    height=int, 
+    data=int, layer=int, glyph=glyph_check, color=color_check, 
+    height=int, newrow=str,
     )
 
-REQUIRED = set('row data glyph'.split())
+REQUIRED = set('data glyph'.split())
 
 def parse(text):
     """
@@ -50,7 +52,7 @@ def parse(text):
         for line in lines:
             row = {}
             data.append( row )
-            line  = line.rstrip(';')
+            line  = line.strip(';')
             pairs = split(line, ';')
             for pair in pairs:
                 key, value = split(pair, '=')
@@ -62,20 +64,42 @@ def parse(text):
     except Exception, exc:
         errmsg = str(exc)
     
-    if not data:
-        errmsg = "Field must contain at least one track. Click 'Add' above."
-
-    for entry in data:
-        diff = REQUIRED - set(entry.keys())
-        if diff:
-            errmsg = 'Required attributes: %s' % ', '.join(diff)
-
     if errmsg:
         logger.error('Track validation error %s' % errmsg)
+    else:
+        if not data:
+            errmsg = "Field must contain at least one track. Click 'Add' above."
+
+        for entry in data:
+            diff = REQUIRED - set(entry.keys())
+            if diff:
+                errmsg = 'Required attributes: %s' % ', '.join(diff)
     return data, errmsg
 
+def parse2(text):
+    lines = clean(text)
+    from pyparsing import alphanums, ZeroOrMore, Word
+
+    name = Word(alphanums)
+    pair = name + "=" + name 
+    expr = pair + ZeroOrMore(";" + pair)
+
+    #for line in lines:
+    line = "A    =   1; B    =   2;;;;;;    "
+    for line in lines:
+        print expr.parseString(line)
+
+
+def clean(text):
+    "Cleans input to contain only nonempty lines"
+    lines = map(strip, text.splitlines())
+    lines = filter(None, lines)
+    lines = filter(lambda r: not r.startswith('#'), lines)
+    lines = map(lambda x: x.strip(';'), lines)
+    return lines
+
 def test():
-    data = parse(testlines)
+    data = parse2(test_input)
     print data
 
 if __name__ == '__main__':
