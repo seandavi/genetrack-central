@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load boxes %}
 
 {% block title %}{{title}}{% endblock %}
 
@@ -30,7 +31,7 @@
                             <option value="{{data.id}}">{{data.name}} (id={{data.id}})</option>
                         {% endfor %}
                     </select>
-                    <input type="button" name="add" value="Add"/> 
+                    <input type="button" name="add" value="Add"/> {% sep %} click to add the selected data to the tracks
                 </div>
 
                 <div class="capsx">TRACKS</div>
@@ -44,12 +45,16 @@
                 <div class="pad10">
                     <input type="button" name="add" value="Preview Track"/> 
                     &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="submit" name="submit" value="Create Track"/> &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <input type="submit" name="submit" value="{{param.btn_name}}"/> &nbsp;&nbsp;|&nbsp;&nbsp;
                     <input type="button" name="cancel" value="Project View" onclick='javascript:window.location="/project/view/{{param.pid}}/"'/>
                 </div>
                 {% else %}
-                    <div class="notice">
-                        This project does not contain data that be directly visualized!
+                    <div class="notice" align="center">
+                        <h3>
+                            This project does not contain data that can be visualized!
+                        <h3>
+                        <h3>See more information on the <a href="http://genetrack.bx.psu.edu/">GeneTrack site</a></h3>
+                        <h4>Back to <a href="/project/view/{{param.pid}}/">Project View</a></h4>
                     </div>
                 {% endif %}
             </div>

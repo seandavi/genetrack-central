@@ -8,11 +8,25 @@ from genetrack import logger, conf
 from server.web import html, status
 from server.web import models, authorize
 from server.web import login_required, private_login_required
+from genetrack.visual import chartspec
 
+class AttributeField(forms.Field):
+    "Custom field for attribute validation"
+    def clean(self, value):
+        "Adding a custom validation"
+        if not value:
+            raise forms.ValidationError('Field may not be empty.')
+        value, errmsg = chartspec.parse(value)
+        if errmsg:
+            raise forms.ValidationError(errmsg)
+        # Always return the cleaned data.
+        return value
+        
 class TrackForm(forms.Form):
     "For project editing"    
     name = forms.CharField( initial='Track name', widget=forms.TextInput(attrs=dict(size=80)))
-    text = forms.CharField( initial='', widget=forms.Textarea(attrs=dict(id='json')))
+    text = AttributeField( initial='', widget=forms.Textarea(attrs=dict(id='json')))
+    
 
 def track_parse(text):
     # clean all lines
@@ -46,15 +60,19 @@ def edit_track(request, pid, tid):
     submit = 'submit' in request.POST
     
     # setting the title
-    title  = 'Create New Track' if create else 'Edit Track'
+    if create:
+        title, btn_name = 'Create New Track', 'Create Track'
+
+    else:
+        title, btn_name = 'Edit Track', 'Edit Track'
 
     # valid incoming data
     if submit and form.is_valid():
         # valid incoming data
         get  = form.cleaned_data.get
         name = get('name')
-        text = get('text')
-        json = {}
+        text = request.POST['text']
+        json = get('text')
         if create:
             track = authorize.create_track(user=user, pid=pid, name=name, json=json, text=text )
         else:
@@ -71,7 +89,7 @@ def edit_track(request, pid, tid):
             form = TrackForm(dict(name=track.name, text=track.text))
     
     data  = project.track_data()
-    param = html.Params(tid=tid, pid=pid, title=title, data=data)
+    param = html.Params(tid=tid, pid=pid, title=title, data=data, btn_name=btn_name)
     return html.template( request=request, name='track-edit.html', param=param, form=form )
  
 @login_required
