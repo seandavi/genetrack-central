@@ -5,14 +5,38 @@
 
 {% block header %}<h2 align="center">{{param.title}}</h2>{% endblock %}
 
+{% block local-headers%}
+
+<script>
+    
+    $(document).ready(function(){
+
+        // makes entire row clickable
+        $("#add-button").click(function(){
+
+            var currval = $("#json").val()
+            var newval = currval + "row=1; color=RED; glyph=AUTOMATIC\n"
+            //debugger
+            
+            $("#json").val( newval )
+
+        });
+
+    });
+</script>
+
+{% endblock %}
+
 {% block mainbody %}
 
-<form method="post" action="/track/edit/{{param.pid}}/{{param.tid}}/">
+<form method="post" action="/track/edit/{{param.pid}}/{{param.tid}}/" id="mainform">
 
     <!-- left sidebar -->
     <div class="span-2">&nbsp;</div>
 
     <div class="span-20">
+        <div id="test"> VALUE</div>
+
         <fieldset id="login" class="box">
             <legend>Track details</legend>
             
@@ -31,7 +55,7 @@
                             <option value="{{data.id}}">{{data.name}} (id={{data.id}})</option>
                         {% endfor %}
                     </select>
-                    <input type="button" name="add" value="Add"/> {% sep %} click to add the selected data to the tracks
+                    <input type="button" name="add" id="add-button" value="Add"/> {% sep %} click to add the selected data to the tracks
                 </div>
 
                 <div class="capsx">TRACKS</div>
