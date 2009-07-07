@@ -140,25 +140,28 @@ def get_track(user, tid):
     proj  = get_project(user=user, pid=track.project.id, write=False)
     return track
 
-def create_track(user, pid, name, json={}):
+def create_track(user, pid, name, json={}, text=''):
     """
     Creates a track
     """
     proj = get_project(user=user, pid=pid, write=False)
     uuid = util.uuid()
-    track = models.Track( owner=user, project=proj, name=name, json=json, uuid=uuid)
+    track = models.Track( owner=user, project=proj, name=name, json=json, uuid=uuid, text=text)
     track.save()
+    user.message_set.create(message="Track %s created" % name)
     return track
 
-def update_track(user, tid, name, json={}):
+def update_track(user, tid, name, json={}, text=''):
     """
     Updates a track
     """
     track = get_track(user=user, tid=tid)
     track.name = name
-    track.json = json
+    # json serialization will not trigger unless explicitly assigned
+    track.json = json 
+    track.text = text
     track.save()
-    print '>>>>>>>>>>>>>>>', tid
+    user.message_set.create(message="Track updated")
     return track
 
 def delete_track(user, tid):
