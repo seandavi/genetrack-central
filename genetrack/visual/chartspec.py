@@ -17,7 +17,7 @@ color=BLUE; glyph  =ORF; data= 34555; row=above
 
 
 """
-from genetrack import logger
+#from genetrack import logger
 from string import strip
 
 def split(text, sep):
@@ -39,28 +39,36 @@ REQUIRED = set('data glyph'.split())
 
 def parse(text):
     """
-    Parses a text and attempts to return a dictionary
+    Parses a text and build a list of dictionaries based on a grammar.
     """
-    data, errmsg = [], None
-
-    # keep only lines with content
-    lines = map(strip, text.splitlines())
-    lines = filter(None, lines)
-    lines = filter(lambda r: not r.startswith('#'), lines)
     
+    lines = clean(text)
+    
+    from pyparsing import Word, Optional, OneOrMore, alphas, nums, Group
+    
+    alphanums = alphas + nums
+    
+    name  = Word(alphanums).setResultsName("name")
+    value = Optional(" ") + Word(alphanums + " ").setResultsName("value")
+    pair  = name + "=" + value + ";"
+
+    expr  = OneOrMore(Group(pair))
+
+    data, errmsg = [], None
     try:
         for line in lines:
-            row = {}
-            data.append( row )
-            line  = line.strip(';')
-            pairs = split(line, ';')
-            for pair in pairs:
-                key, value = split(pair, '=')
-                row[key.lower()] = validator[key](value.upper() )
+            row = dict()
+            for result in expr.parseString(line):    
+                name = result.name.lower()
+                value = result.value.upper()
+                row[name] = validator[name](value)
+            data.append(row)
+    
+    # trying to produce useful error messages 
     except KeyError, exc:
         errmsg = 'Unknown attribute: %s' % exc
     except ValueError, exc:
-        errmsg = 'Attribute error: %s' % exc
+        errmsg = 'Attribute validation error: %s' % exc
     except Exception, exc:
         errmsg = str(exc)
     
@@ -69,26 +77,11 @@ def parse(text):
     else:
         if not data:
             errmsg = "Field must contain at least one track. Click 'Add' above."
-
         for entry in data:
             diff = REQUIRED - set(entry.keys())
             if diff:
                 errmsg = 'Required attributes: %s' % ', '.join(diff)
     return data, errmsg
-
-def parse2(text):
-    lines = clean(text)
-    from pyparsing import alphanums, ZeroOrMore, Word
-
-    name = Word(alphanums)
-    pair = name + "=" + name 
-    expr = pair + ZeroOrMore(";" + pair)
-
-    #for line in lines:
-    line = "A    =   1; B    =   2;;;;;;    "
-    for line in lines:
-        print expr.parseString(line)
-
 
 def clean(text):
     "Cleans input to contain only nonempty lines"
@@ -99,7 +92,7 @@ def clean(text):
     return lines
 
 def test():
-    data = parse2(test_input)
+    data = parse(test_input)
     print data
 
 if __name__ == '__main__':
