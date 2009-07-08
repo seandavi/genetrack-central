@@ -121,7 +121,11 @@ rem
 echo.
 echo *** windows editor start ***
 echo.
-cmd /c "c:\Program Files\EditPlus 2\editplus.exe"
+
+REM cmd /c "c:\Program Files\EditPlus 2\editplus.exe"
+
+cmd /c "C:\Program Files\ActiveState Komodo Edit 5\komodo.exe"
+
 goto :eof
 
 :docs

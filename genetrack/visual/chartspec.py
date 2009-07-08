@@ -2,22 +2,28 @@
 Parses a chart specification from a text
 """
 import pyparsing
+from pyparsing import *
+
+from genetrack import logger
 
 test_input = """
 
 #
-# track spec
+#track spec
 #
 
-color  =  RED; glyph=BAR; data=8946; newrow=no;
+color  =  RED; glyph=BAR; data=8946; row=new;
 
-color=BLUE; glyph  =ORF; data= 34555; row=above
+color=BLUE; glyph  =ORF; data= 34555; row=same
 
 ;color=GOLD; glyph=ORF; data=15664;        
 
+data=1; glyph=AAA;
 
 """
+
 #from genetrack import logger
+
 from string import strip
 
 def split(text, sep):
@@ -29,10 +35,10 @@ def glyph_check(value):
 def color_check(value):
     return str(value)
 
-# maps dictionarly keys to validation functions
+# maps dictionary keys to validation functions
 validator = dict(
     data=int, layer=int, glyph=glyph_check, color=color_check, 
-    height=int, newrow=str,
+    height=int, row=str,
     )
 
 REQUIRED = set('data glyph'.split())
@@ -43,9 +49,7 @@ def parse(text):
     """
     
     lines = clean(text)
-    
-    from pyparsing import Word, Optional, OneOrMore, alphas, nums, Group
-    
+        
     alphanums = alphas + nums
     
     name  = Word(alphanums).setResultsName("name")
@@ -58,7 +62,7 @@ def parse(text):
     try:
         for line in lines:
             row = dict()
-            for result in expr.parseString(line):    
+            for result in expr.parseString(line):  
                 name = result.name.lower()
                 value = result.value.upper()
                 row[name] = validator[name](value)
@@ -72,6 +76,7 @@ def parse(text):
     except Exception, exc:
         errmsg = str(exc)
     
+    # check for error messages during parsing    
     if errmsg:
         logger.error('Track validation error %s' % errmsg)
     else:
@@ -84,16 +89,21 @@ def parse(text):
     return data, errmsg
 
 def clean(text):
-    "Cleans input to contain only nonempty lines"
+    """
+    Cleans input to contain only, nonempty lines ending in semicolons.
+    Makes creating parsing rules a lot easier.
+    """
     lines = map(strip, text.splitlines())
     lines = filter(None, lines)
     lines = filter(lambda r: not r.startswith('#'), lines)
-    lines = map(lambda x: x.strip(';'), lines)
+    lines = map( lambda x: x.strip(';'), lines)
+    lines = map( lambda x: x + ';', lines)
     return lines
 
 def test():
-    data = parse(test_input)
-    print data
+    data, errmsg = parse(test_input)
+    for row in data:
+        print row
 
 if __name__ == '__main__':
     test()

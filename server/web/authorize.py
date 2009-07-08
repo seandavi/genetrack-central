@@ -148,7 +148,7 @@ def create_track(user, pid, name, json={}, text=''):
     uuid = util.uuid()
     track = models.Track( owner=user, project=proj, name=name, json=json, uuid=uuid, text=text)
     track.save()
-    user.message_set.create(message="Track %s created" % name)
+    user.message_set.create(message="Created track <b>%s</b>" % name)
     return track
 
 def update_track(user, tid, name, json={}, text=''):
@@ -161,7 +161,7 @@ def update_track(user, tid, name, json={}, text=''):
     track.json = json 
     track.text = text
     track.save()
-    user.message_set.create(message="Track updated")
+    user.message_set.create(message="Updated track: <b>%s</b>" % track.name)
     return track
 
 def delete_track(user, tid):
@@ -171,9 +171,9 @@ def delete_track(user, tid):
 
     if project.is_manager or track.owner == user:
         track.delete()
-        message = "Deleted track %s" % track.name
+        message = "Deleted track <b>%s</b>" % track.name
     else:
-        message = "May not delete track %s" % track.name
+        message = "May not delete track <b>%s</b>" % track.name
     user.message_set.create(message=message)
     return project
 

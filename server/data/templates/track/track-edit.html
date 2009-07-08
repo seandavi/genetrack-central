@@ -16,14 +16,19 @@
 
             var json = $("#json")
             var currval = json.val()
-            var newval = currval + "row=1; color=RED; glyph=AUTOMATIC; data=45\n"
+            var newval = currval + "color=RED; glyph=AUTO; data=45; row=NEW;\n"
 
             var lines = currval.split("\n").length
 
             //debugger
-            newval = currval + '\n' + lines
+            //newval = currval + '\n' + lines
             json.val( newval )
 
+        });
+
+        $("#help-panel").hide()
+        $("#help-link").click(function(){
+            $("#help-panel").toggle('fast')
         });
 
     });
@@ -67,7 +72,41 @@
                 <div class="pad10">{{form.text}}</div>
 
                 <div class="pad10">
-                   Help on <a href="http://genetrack.bx.psu.edu/trackoptions.html">track options</a>
+                   <div>
+                        Help on <a id="help-link" href="#">track options</a>
+                   </div>
+                   <div id="help-panel">
+                        <blockquote>
+                        <pre>
+                    --- Required attributes ---
+
+    color -> RED, GREEN, BLUE, WHITE, BLACK, PURPLE, ORANGE ... or a hexcolor #FAFACC
+    glyph -> AUTO, ORF, INTERVAL, ARROW, BOOKMARK
+    data  -> <number> the id of the data (filled in when clicking Add)
+
+                    --- Optional attributes ---
+
+    label   -> text (the label for the track, left)
+    label2  -> text (label on the second axis, right)
+    color2  -> see color (color for secondary data, fit)
+    row     -> NEW, SAME (what row will the track will go)
+    layer   -> number (the order of drawing within a row)
+    alpha   -> percent (the transparency of the track)
+    offset  -> number multiple tracks may be shifted vertically
+    height  -> number the height of the track in pixels
+
+                   --- Action attributes ---
+
+    subtract -> data id (subtract this data)
+    divide   -> data id (divide with this data)
+    minimum  -> value (filters data below this minimum)
+    fitting  -> yes, no (wether or not to enable fitting for this track)
+    predict  -> yes, no (wether to generate extra prediction tracks)
+    </pre>
+                        </blockquote>
+                        <h5>
+                            Options are explained on the <a href="http://genetrack.bx.psu.edu/trackoptions.html">track options</a> page</h5>
+                    </div>
                 </div>
 
                 <div class="pad10">

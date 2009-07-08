@@ -27,19 +27,6 @@ class TrackForm(forms.Form):
     name = forms.CharField( initial='Track name', widget=forms.TextInput(attrs=dict(size=80)))
     text = AttributeField( initial='', widget=forms.Textarea(attrs=dict(id='json')))
     
-
-def track_parse(text):
-    # clean all lines
-    lines = filter(None, map(string.strip, text.splitlines()))
-    try:
-        json = dict()
-        for line in lines:
-            pass
-        return json
-    except Exception, exc:
-        return None
-    
-
 @private_login_required
 def delete_track(request, tid):
     "Deletes a track"
