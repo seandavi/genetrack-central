@@ -80,10 +80,14 @@ goto :eof
 echo.
 echo *** Initializing the data ***
 echo.
-if "%2" == "delete" del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
-if "%2" == "delete" rmdir /Q /S %GENETRACK_SERVER_HOME%\data\storage
-if "%2" == "delete" rmdir /Q /S %GENETRACK_SERVER_HOME%\data\static\cache
 
+rem skipping delete
+if "%2" != "delete" goto :skipdelete
+del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
+rmdir /Q /S %GENETRACK_SERVER_HOME%\data\storage
+rmdir /Q /S %GENETRACK_SERVER_HOME%\data\static\cache
+
+: skipdelete
 %PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
 %PYTHON_EXE% -m server.scripts.initializer %GENETRACK_SERVER_HOME%\data\init\initial-users.csv
 goto :eof
@@ -143,7 +147,7 @@ goto :eof
 echo.
 echo *** executes jobrunner ***
 echo.
-%PYTHON_EXE% %DEFAULT_HOME%\genetrack\scripts\jobrunner.py %$
+%PYTHON_EXE% %DEFAULT_HOME%\server\scripts\jobrunner.py %$
 goto :eof
 
 :pushdoc

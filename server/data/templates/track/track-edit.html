@@ -3,7 +3,9 @@
 
 {% block title %}{{title}}{% endblock %}
 
-{% block header %}<h2 align="center">{{param.title}}</h2>{% endblock %}
+{% block header %}
+    <h2 align="center">{{param.title}}</h2>
+{% endblock %}
 
 {% block local-headers%}
 
@@ -16,7 +18,8 @@
 
             var json = $("#json")
             var currval = json.val()
-            var newval = currval + "color=RED; glyph=AUTO; data=45; row=NEW;\n"
+            var data_id = $("#data_id option:selected").val() 
+            var newval = currval + "color=RED; glyph=AUTO; data=" + data_id + ";\n"
 
             var lines = currval.split("\n").length
 
@@ -58,10 +61,9 @@
                 
                 <div class="capsx">DATA</div>
                 <div class="pad10">
-                    
-                    <select name="did">
+                    <select id="data_id">
                         {% for data in param.data %}
-                            <option value="{{data.id}}">{{data.name}} (id={{data.id}})</option>
+                            <option value="{{data.id}}">{{data.name}} ({{data.id}})</option>
                         {% endfor %}
                     </select>
                     <input type="button" name="add" id="add-button" value="Add"/> {% sep %} click to add the selected data to the tracks

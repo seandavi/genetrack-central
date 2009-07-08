@@ -19,6 +19,7 @@ class AttributeField(forms.Field):
         value, errmsg = chartspec.parse(value)
         if errmsg:
             raise forms.ValidationError(errmsg)
+        
         # Always return the cleaned data.
         return value
         
@@ -48,10 +49,10 @@ def edit_track(request, pid, tid):
     
     # setting the title
     if create:
-        title, btn_name = 'Create New Track', 'Create Track'
+        title, btn_name = 'Create New Track', 'Save Track'
 
     else:
-        title, btn_name = 'Edit Track', 'Edit Track'
+        title, btn_name = 'Edit Track', 'Save Track'
 
     # valid incoming data
     if submit and form.is_valid():
@@ -59,14 +60,13 @@ def edit_track(request, pid, tid):
         get  = form.cleaned_data.get
         name = get('name')
         text = request.POST['text']
-        json = get('text')
+        json = get(text)
         if create:
             track = authorize.create_track(user=user, pid=pid, name=name, json=json, text=text )
         else:
             track = authorize.update_track(user=user, name=name, tid=tid, json=json, text=text)
         return html.redirect("/project/view/%s/" % track.project.id)
     
-    print '.............', submit
     # no data submission
     if not submit:
         if create:
