@@ -6,17 +6,16 @@ from genetrack import conf, logger
 
 try:
     import pychartdir
+    # load and set the chartdirector license
+    CHARTDIRECTOR_LICENSE = os.getenv('CHARTDIRECTOR_LICENSE', '')
+    if CHARTDIRECTOR_LICENSE:
+        pychartdir.setLicenseCode( CHARTDIRECTOR_LICENSE ) 
+    else:
+        logger.warn('chartdirector license not found')
+    has_chartdir = True
 except ImportError, exc:
     logger.error('software requirements not met: %s' % exc)
-    sys.exit()
-
-
-# load and set the chartdirector license
-CHARTDIRECTOR_LICENSE = os.getenv('CHARTDIRECTOR_LICENSE', '')
-if CHARTDIRECTOR_LICENSE:
-    pychartdir.setLicenseCode( CHARTDIRECTOR_LICENSE ) 
-else:
-    logger.warn('chartdirector license not found')
+    has_chartdir = False
 
 # setting constants
 
@@ -56,13 +55,14 @@ class Options(object):
     (1, 2, 3)
     """
     defaults = dict()
-    def __init__(self, **kwds):
-        self.update( self.defaults )
-        self.update( kwds )
+    def __init__(self, init={}, **kwds):
+        self.update(self.defaults)
+        self.update(init)
+        self.update(kwds)
 
     def update(self, data):
         "Updates the internal dictionary"
-        self.__dict__.update( data )
+        self.__dict__.update(data)
 
 class ChartOptions(Options):
     """
@@ -99,6 +99,7 @@ class ChartOptions(Options):
         xscale=[1,100], 
         yscale=[], 
         yscale2=[],
+        yaxis2='',
         
         # colors
         hGridColor=-1, vGridColor=GREY, 
@@ -150,7 +151,7 @@ def show_plot( chart ):
     root.mainloop()
 
 def max2( data, default=1 ):
-    "Safe max, that can handle an empty list"
+    "Safe max that can handle an empty list"
     try:
         return max(data)
     except ValueError, exc:

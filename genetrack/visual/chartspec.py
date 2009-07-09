@@ -30,8 +30,10 @@ def split(text, sep):
     "Split and strip whitespace in one call"
     return map(strip, text.split(sep))
 
+VALID_GLYPHS = set( "AUTO BAR LINE ORF INTERVAL BOOKMARK" )
+
 def glyph_check(value):
-    return str(value)
+    return str(value).upper()
 
 def color_check(value):
     return str(value)
@@ -43,7 +45,7 @@ validator = dict(
     )
 
 # attributes that must be present
-REQUIRED = set('data glyph'.split())
+REQUIRED_ATTRS = set('data glyph'.split())
 
 def clean(text):
     """
@@ -88,7 +90,7 @@ def parse(text):
             data.append(row)
             
             # check required keys
-            diff = REQUIRED-set(row.keys())
+            diff = REQUIRED_ATTRS - set(row.keys())
             if diff:
                 text = ", ".join(diff)
                 raise Exception("Missing required attributes: %s -> line %s" % (text, lineno) )
