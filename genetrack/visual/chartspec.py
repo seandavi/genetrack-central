@@ -47,8 +47,8 @@ REQUIRED = set('data glyph'.split())
 
 def clean(text):
     """
-    Cleans input to contain only, nonempty lines ending in semicolons.
-    Makes creating parsing rules a lot easier.
+    Cleans input to contain only, nonempty lines ending with semicolons.
+    Makes creating parsing rules easier.
     """
     lines = map(strip, text.splitlines())
     lines = filter(None, lines)
@@ -68,6 +68,7 @@ def parse(text):
     alphanums = '#+-.' + alphas + nums 
     
     name  = Word(alphanums).setResultsName("name")
+    # values may include whitespace
     value = Optional(" ") + Word(alphanums + " ").setResultsName("value")
     pair  = name + "=" + value + ";"
     expr  = OneOrMore(Group(pair)) + StringEnd()
@@ -84,7 +85,7 @@ def parse(text):
                 name = result.name.lower()
                 value = result.value.upper()
                 row[name] = validator[name](value)
-                data.append(row)
+            data.append(row)
             
             # check required keys
             diff = REQUIRED-set(row.keys())
@@ -104,8 +105,6 @@ def parse(text):
         raise Exception("Field must contain at least one track. Click 'Add' above.")
                     
     return data
-
-
 
 def test():
     data = parse(test_input)
