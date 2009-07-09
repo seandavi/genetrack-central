@@ -68,25 +68,23 @@ def parse(text):
                 row[name] = validator[name](value)
             data.append(row)
     
-    # trying to produce useful error messages 
+    # trying to produce more useful error messages 
     except KeyError, exc:
-        errmsg = 'Unknown attribute: %s' % exc
+        raise Exception('Unknown attribute: %s' % exc)
     except ValueError, exc:
-        errmsg = 'Attribute validation error: %s' % exc
-    except Exception, exc:
-        errmsg = str(exc)
+        raise Exception('Attribute validation error: %s' % exc)
     
-    # check for error messages during parsing    
-    if errmsg:
-        logger.error('Track validation error %s' % errmsg)
-    else:
-        if not data:
-            errmsg = "Field must contain at least one track. Click 'Add' above."
-        for entry in data:
-            diff = REQUIRED - set(entry.keys())
-            if diff:
-                errmsg = 'Required attributes: %s' % ', '.join(diff)
-    return data, errmsg
+    # may not be empty
+    if not data:
+        raise Exception("Field must contain at least one track. Click 'Add' above.")
+        
+    # check every row for required attributes   
+    for row in data:
+        diff = REQUIRED - set(row.keys())
+        if diff:
+            raise Exception("Missing required attributes: %s" % ", ".join(diff))
+            
+    return data
 
 def clean(text):
     """
@@ -101,7 +99,7 @@ def clean(text):
     return lines
 
 def test():
-    data, errmsg = parse(test_input)
+    data = parse(test_input)
     for row in data:
         print row
 

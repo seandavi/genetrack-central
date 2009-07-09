@@ -5,7 +5,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 
 class AccessError(Exception):
-     def __init__(self, msg='Invalid access'):
+    def __init__(self, msg='Invalid access'):
         Exception.__init__(self, msg)
 
 def project_list(user):

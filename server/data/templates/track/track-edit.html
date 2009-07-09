@@ -47,7 +47,6 @@
     <div class="span-2">&nbsp;</div>
 
     <div class="span-20">
-        <div id="test"> VALUE</div>
 
         <fieldset id="login" class="box">
             <legend>Track details</legend>
@@ -104,6 +103,8 @@
     minimum  -> value (filters data below this minimum)
     fitting  -> yes, no (wether or not to enable fitting for this track)
     predict  -> yes, no (wether to generate extra prediction tracks)
+    
+    Lines starting with the # symbol are comments.
     </pre>
                         </blockquote>
                         <h5>
@@ -114,7 +115,7 @@
                 <div class="pad10">
                     <input type="button" name="add" value="Preview Track"/> 
                     &nbsp;&nbsp;|&nbsp;&nbsp;
-                    <input type="submit" name="submit" value="{{param.btn_name}}"/> &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <input type="submit" name="submit" value="Save Track"/> &nbsp;&nbsp;|&nbsp;&nbsp;
                     <input type="button" name="cancel" value="Project View" onclick='javascript:window.location="/project/view/{{param.pid}}/"'/>
                 </div>
                 {% else %}

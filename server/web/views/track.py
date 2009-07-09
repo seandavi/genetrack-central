@@ -10,16 +10,29 @@ from server.web import models, authorize
 from server.web import login_required, private_login_required
 from genetrack.visual import chartspec
 
+def fixup_paths(json):
+    "Adds path information for known data attribute fields"
+    known_attrs = ('data', )
+    for row in json:
+        for attr in known_attrs:
+            key = '%s_path' % attr
+            row[key]=models.Data.objects.get(id=row[attr]).content.path
+    return json
+
 class AttributeField(forms.Field):
     "Custom field for attribute validation"
     def clean(self, value):
         "Adding a custom validation"
         if not value:
             raise forms.ValidationError('Field may not be empty.')
-        value, errmsg = chartspec.parse(value)
-        if errmsg:
-            raise forms.ValidationError(errmsg)
         
+        # check format then fixup the paths
+        try:
+            value = chartspec.parse(value)
+            value = fixup_paths(value)
+        except Exception, exc:
+            raise forms.ValidationError(exc)
+            
         # Always return the cleaned data.
         return value
         
@@ -34,49 +47,58 @@ def delete_track(request, tid):
     project = authorize.delete_track(user=request.user, tid=tid)
     return html.redirect( "/project/view/%s/" % project.id )
 
+def create_track(request, pid, tid):
+    "New track page"
+    form = TrackForm()
+    project = authorize.get_project(user=request.user, pid=pid, write=False)
+    data = project.track_data()
+    param = html.Params(tid=tid, pid=pid, title='Create Track', data=data)
+    return html.template( request=request, name='track-edit.html', param=param, form=form )
+
 @private_login_required
 def edit_track(request, pid, tid):
     "Updates or creates a project"
     user = request.user
     
-    #
+    # detect track creation or editing
+    create = (tid == '0')
+    submit = ('submit' in request.POST)
+    title = 'Create track' if create else 'Edit track'
+    
+    # form represents the incoming parameters
     form = TrackForm( request.POST )   
+    valid = form.is_valid()
+    
+    # a create request with no form submission
+    if create and not submit:
+        return create_track(request=request, pid=pid, tid=tid)
+    
+    # get project related information
     project = authorize.get_project(user=user, pid=pid, write=False)
-    
-    # track creation or editing
-    create = tid == '0'
-    submit = 'submit' in request.POST
-    
-    # setting the title
-    if create:
-        title, btn_name = 'Create New Track', 'Save Track'
-
-    else:
-        title, btn_name = 'Edit Track', 'Save Track'
-
-    # valid incoming data
-    if submit and form.is_valid():
-        # valid incoming data
-        get  = form.cleaned_data.get
-        name = get('name')
-        text = request.POST['text']
-        json = get(text)
-        if create:
-            track = authorize.create_track(user=user, pid=pid, name=name, json=json, text=text )
-        else:
-            track = authorize.update_track(user=user, name=name, tid=tid, json=json, text=text)
-        return html.redirect("/project/view/%s/" % track.project.id)
-    
-    # no data submission
-    if not submit:
-        if create:
-            form = TrackForm() 
-        else:
-            track = authorize.get_track(user=user, tid=tid)
-            form = TrackForm(dict(name=track.name, text=track.text))
-    
     data  = project.track_data()
-    param = html.Params(tid=tid, pid=pid, title=title, data=data, btn_name=btn_name)
+    param = html.Params(tid=tid, pid=pid, title=title, data=data)
+    
+    # valid incoming form data data
+    if submit:
+        if valid:
+            # valid submit data
+            get  = form.cleaned_data.get
+            name = get('name')
+            text = request.POST['text']
+            json = get('text')
+            if create:
+                track = authorize.create_track(user=user, pid=pid, name=name, json=json, text=text )
+            else:
+                track = authorize.update_track(user=user, name=name, tid=tid, json=json, text=text)
+            return html.redirect("/project/view/%s/" % track.project.id)
+        else:
+            #invalid submit data, the form already contains the error messages
+            return html.template( request=request, name='track-edit.html', param=param, form=form )
+            
+    
+    # this is an edit track reuest, populate form accordingly
+    track = authorize.get_track(user=user, tid=tid)
+    form = TrackForm(dict(name=track.name, text=track.text))
     return html.template( request=request, name='track-edit.html', param=param, form=form )
  
 @login_required
