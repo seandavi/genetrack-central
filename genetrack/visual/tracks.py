@@ -104,8 +104,17 @@ class XYTrack(Base):
         "Draw itself on the screen requires PIL"
         show_plot(self.c)
 
+    def add_legend(self, text):
+        "Adds a legend to the chart."
+        if text:
+            o = self.o
+            legend = self.c.addLegend(o.lpad, o.tpad, 0, None, o.fontSize)
+            legend.setBackground(TRANSPARENT)
+            legend.setFontSize(o.fontSize)
+            
 class BarTrack(XYTrack):
     "Implements a bar graph"
+    
     def draw(self, data, options=None):
         # may override 
         o = options or self.o
@@ -121,7 +130,27 @@ class BarTrack(XYTrack):
             
         layer.setUseYAxis(axis)
         layer.setXData(data.x)
-        #self.add_legend(text=o.name)
+        self.add_legend(text=o.name)
+
+class LineTrack(XYTrack):
+    "Implements a line track"
+    
+    def draw(self, data, options=None):
+        # may override 
+        o = options or self.o
+        layer = self.c.addBarLayer(data.y, color=o.color, name=o.ylabel)
+        layer.setBarWidth(o.lw)
+        layer.setBorderColor(o.color)
+        
+        # switch axes
+        if o.yaxis2:
+            axis = self.c.yAxis2()
+        else:    
+            axis = self.c.yAxis()
+            
+        layer.setUseYAxis(axis)
+        layer.setXData(data.x)
+        self.add_legend(text=o.name)
         
 class TrackManager(object):
     pass
