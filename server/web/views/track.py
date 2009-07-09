@@ -14,7 +14,8 @@ def fixup_paths(json):
     "Adds path information for known data attribute fields"
     known_attrs = ('data', )
     for row in json:
-        for attr in known_attrs:
+        attrs = [ attr for attr in known_attrs if attr in row]
+        for attr in attrs:
             key = '%s_path' % attr
             row[key]=models.Data.objects.get(id=row[attr]).content.path
     return json
@@ -23,12 +24,16 @@ class AttributeField(forms.Field):
     "Custom field for attribute validation"
     def clean(self, value):
         "Adding a custom validation"
+        
+        # some data must be present
         if not value:
             raise forms.ValidationError('Field may not be empty.')
         
         # check format then fixup the paths
         try:
+            # parse it into a json
             value = chartspec.parse(value)
+            # add paths to data
             value = fixup_paths(value)
         except Exception, exc:
             raise forms.ValidationError(exc)

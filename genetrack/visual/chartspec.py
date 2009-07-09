@@ -23,10 +23,11 @@ data=1; glyph=AAA;
 """
 
 #from genetrack import logger
-
+from itertools import *
 from string import strip
 
 def split(text, sep):
+    "Split and strip whitespace in one call"
     return map(strip, text.split(sep))
 
 def glyph_check(value):
@@ -41,50 +42,8 @@ validator = dict(
     height=int, row=str,
     )
 
+# attributes that must be present
 REQUIRED = set('data glyph'.split())
-
-def parse(text):
-    """
-    Parses a text and build a list of dictionaries based on a grammar.
-    """
-    
-    lines = clean(text)
-        
-    alphanums = alphas + nums
-    
-    name  = Word(alphanums).setResultsName("name")
-    value = Optional(" ") + Word(alphanums + " ").setResultsName("value")
-    pair  = name + "=" + value + ";"
-
-    expr  = OneOrMore(Group(pair))
-
-    data, errmsg = [], None
-    try:
-        for line in lines:
-            row = dict()
-            for result in expr.parseString(line):  
-                name = result.name.lower()
-                value = result.value.upper()
-                row[name] = validator[name](value)
-            data.append(row)
-    
-    # trying to produce more useful error messages 
-    except KeyError, exc:
-        raise Exception('Unknown attribute: %s' % exc)
-    except ValueError, exc:
-        raise Exception('Attribute validation error: %s' % exc)
-    
-    # may not be empty
-    if not data:
-        raise Exception("Field must contain at least one track. Click 'Add' above.")
-        
-    # check every row for required attributes   
-    for row in data:
-        diff = REQUIRED - set(row.keys())
-        if diff:
-            raise Exception("Missing required attributes: %s" % ", ".join(diff))
-            
-    return data
 
 def clean(text):
     """
@@ -97,6 +56,55 @@ def clean(text):
     lines = map( lambda x: x.strip(';'), lines)
     lines = map( lambda x: x + ';', lines)
     return lines
+
+def parse(text):
+    """
+    Parses the chart minilanguage and build a chart specific json dataset.
+    """
+    
+    # clean and split the data to simplify parsing rule
+    lines = clean(text)
+        
+    alphanums = '#+-.' + alphas + nums 
+    
+    name  = Word(alphanums).setResultsName("name")
+    value = Optional(" ") + Word(alphanums + " ").setResultsName("value")
+    pair  = name + "=" + value + ";"
+    expr  = OneOrMore(Group(pair)) + StringEnd()
+
+    # a json list with dictionaries for each track
+    
+    # trying to produce more useful error messages
+    # so there is some catch and re-raise 
+    data = []
+    for lineno, line in zip(count(1), lines):
+        try:
+            row = dict()
+            for result in expr.parseString(line):  
+                name = result.name.lower()
+                value = result.value.upper()
+                row[name] = validator[name](value)
+                data.append(row)
+        except ParseException, exc:
+            raise Exception('format error at line %s' %( lineno))
+        except KeyError, exc:
+            raise Exception('Unknown attribute: %s -> line %s' % (exc, lineno))
+        except ValueError, exc:
+            raise Exception('Attribute validation error: %s -> line %s' % (exc, lineno))
+
+    # may not be empty
+    if not data:
+        raise Exception("Field must contain at least one track. Click 'Add' above.")
+        
+    # check every row for required attributes   
+    for row in data:
+        diff = REQUIRED - set(row.keys())
+        if diff:
+            raise Exception("Missing required attributes: %s" % ", ".join(diff))
+            
+    return data
+
+
 
 def test():
     data = parse(test_input)
