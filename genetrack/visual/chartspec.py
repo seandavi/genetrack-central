@@ -85,6 +85,13 @@ def parse(text):
                 value = result.value.upper()
                 row[name] = validator[name](value)
                 data.append(row)
+            
+            # check required keys
+            diff = REQUIRED-set(row.keys())
+            if diff:
+                text = ", ".join(diff)
+                raise Exception("Missing required attributes: %s -> line %s" % (text, lineno) )
+                
         except ParseException, exc:
             raise Exception('format error at line %s' %( lineno))
         except KeyError, exc:
@@ -95,13 +102,7 @@ def parse(text):
     # may not be empty
     if not data:
         raise Exception("Field must contain at least one track. Click 'Add' above.")
-        
-    # check every row for required attributes   
-    for row in data:
-        diff = REQUIRED - set(row.keys())
-        if diff:
-            raise Exception("Missing required attributes: %s" % ", ".join(diff))
-            
+                    
     return data
 
 
