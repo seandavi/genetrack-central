@@ -91,7 +91,7 @@ class ChartOptions(Options):
         ylabel  = 'Y-Label', 
         ylabel2 = '',
         xlabel  = 'X-Label',
-
+        legend  = '',
         # location of the X axis
         XAxisOnTop  = 0, 
 
@@ -102,7 +102,8 @@ class ChartOptions(Options):
         yaxis2='',
         
         # colors
-        hGridColor=-1, vGridColor=GREY, 
+        color = BLACK,
+        hGridColor=-1, vGridColor=GREY,
         fgColor=BLACK, bgColor=WHITE, altBgColor=-1, edgeColor=GREY, 
         XAxisColor=BLACK, YTickColor=BLACK, barColor=BLACK,
 

@@ -6,7 +6,7 @@ Track specification.
 from chartutil import *
 from genetrack import logger
 
-class Base(object):
+class TrackBase(object):
     """
     Contains the functionality that all charts must have. 
     This is an abstract class that cannot be instantiated.    
@@ -24,7 +24,7 @@ class Base(object):
         self.init_axes()
         self.init_finalize()
     
-class XYTrack(Base):
+class XYTrack(TrackBase):
     """
     Representation of a track
     """
@@ -104,54 +104,41 @@ class XYTrack(Base):
         "Draw itself on the screen requires PIL"
         show_plot(self.c)
 
-    def add_legend(self, text):
+    def add_legend(self, legend):
         "Adds a legend to the chart."
-        if text:
+        if legend:
             o = self.o
             legend = self.c.addLegend(o.lpad, o.tpad, 0, None, o.fontSize)
             legend.setBackground(TRANSPARENT)
             legend.setFontSize(o.fontSize)
-            
-class BarTrack(XYTrack):
-    "Implements a bar graph"
-    
-    def draw(self, data, options=None):
-        # may override 
-        o = options or self.o
-        layer = self.c.addBarLayer(data.y, color=o.color, name=o.ylabel)
-        layer.setBarWidth(o.lw)
-        layer.setBorderColor(o.color)
-        
-        # switch axes
-        if o.yaxis2:
-            axis = self.c.yAxis2()
-        else:    
-            axis = self.c.yAxis()
-            
-        layer.setUseYAxis(axis)
-        layer.setXData(data.x)
-        self.add_legend(text=o.name)
 
-class LineTrack(XYTrack):
-    "Implements a line track"
+def draw_bars(track, data, options=None):
+    "Draws bars on a track"
+    o = options or track.o
+    layer = track.c.addBarLayer(data.y, color=o.color, name=o.legend)
+    layer.setBarWidth(o.lw)
+    layer.setBorderColor(o.color)
     
-    def draw(self, data, options=None):
-        # may override 
-        o = options or self.o
-        layer = self.c.addBarLayer(data.y, color=o.color, name=o.ylabel)
-        layer.setBarWidth(o.lw)
-        layer.setBorderColor(o.color)
+    # switch axes
+    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
         
-        # switch axes
-        if o.yaxis2:
-            axis = self.c.yAxis2()
-        else:    
-            axis = self.c.yAxis()
-            
-        layer.setUseYAxis(axis)
-        layer.setXData(data.x)
-        self.add_legend(text=o.name)
+    layer.setUseYAxis(axis)
+    layer.setXData(data.x)
+    track.add_legend(o.legend)
+
+def draw_line(track, data, options=None):
+    "Draws bars on a track"
+    o = options or track.o
+    layer = track.c.addLineLayer(data.y, color=o.color, name=o.legend)
+    layer.setLineWidth(o.lw)
+    
+    # switch axes
+    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
         
+    layer.setUseYAxis(axis)
+    layer.setXData(data.x)
+    track.add_legend(o.legend)
+    
 class TrackManager(object):
     pass
         
@@ -160,12 +147,23 @@ def test():
     data_id = 1
     data_path = models.Data.objects.get(id=data_id).content.path
     
-    data = dict(color=RED, glyph='AUTO', data=data_id, data_path=data_path)
+    init= dict(color=RED, glyph='AUTO', data=data_id, data_path=data_path, xscale=(0,100) )
 
-    options = ChartOptions(init=data, yaxis2=2)
-    data = Options( x=range(100), y=range(100) )
-    track = BarTrack(options)
-    track.draw(data=data)
+    # general options
+    opts = ChartOptions(init=init, ylabel='Bars', legend='Bar Legend', ylabel2="Line" )
+    
+    y = range(50)+range(50, 1,-1)
+    x = range(len(y))
+    
+    data = Options( x=x, y=y )
+    
+    track = XYTrack(opts)
+    baropts = ChartOptions(color=RED, legend='Bar Legend', ylabel2="Line" )
+    draw_bars(track=track, data=data, options=baropts)
+    
+    lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE)
+    draw_line(track=track, data=data, options=lineopts)
+    
     track.show()
     
 if __name__ == '__main__':
