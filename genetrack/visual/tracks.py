@@ -3,6 +3,7 @@ Track specification.
 """
 
 # lots of constants and other names
+from itertools import *
 from chartutil import *
 from genetrack import logger
 
@@ -112,8 +113,13 @@ class XYTrack(TrackBase):
             legend.setBackground(TRANSPARENT)
             legend.setFontSize(o.fontSize)
 
+# Drawing functions take indentical parameters and operate on a data object
+# that have x,y attributes (labels for seqments)
+#
+# some code duplication accross drawing functions, 
+#
 def draw_bars(track, data, options=None):
-    "Draws bars on a track"
+    "Draws bars data.y vs data.x"
     o = options or track.o
     layer = track.c.addBarLayer(data.y, color=o.color, name=o.legend)
     layer.setBarWidth(o.lw)
@@ -127,7 +133,7 @@ def draw_bars(track, data, options=None):
     track.add_legend(o.legend)
 
 def draw_line(track, data, options=None):
-    "Draws bars on a track"
+    "Draws lines data.y vs data.x"
     o = options or track.o
     layer = track.c.addLineLayer(data.y, color=o.color, name=o.legend)
     layer.setLineWidth(o.lw)
@@ -138,6 +144,27 @@ def draw_line(track, data, options=None):
     layer.setUseYAxis(axis)
     layer.setXData(data.x)
     track.add_legend(o.legend)
+
+def unwind(data):
+    "Unwinds a data into a segment array"
+    fast = []
+    map(fast.extend, data)
+    labels = fast[2::3]
+    fast[2::3] = [ NOVALUE ] * len(data)
+    return fast, labels
+    
+def draw_segments(track, data, options=None):
+    """
+    Draws a seqment from a list of data in the form
+    (start, end, label)
+    """
+        
+    o = options or track.o
+    y = [ options.yc ] * len(data)
+    fast, labels  = unwind(data)
+    layer = track.c.addLineLayer(y , color=o.color, name=o.legend)
+    layer.setLineWidth(o.lw)
+    layer.setXData(fast)
     
 class TrackManager(object):
     pass
@@ -163,6 +190,12 @@ def test():
     
     lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE)
     draw_line(track=track, data=data, options=lineopts)
+    
+    segopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE, yc=10)
+    
+    data = ( (10, 20, 'A'), (50, 80, 'B') )
+    draw_segments(track=track, data=data, options=segopts)
+    
     
     track.show()
     
