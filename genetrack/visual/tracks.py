@@ -99,8 +99,7 @@ class XYTrack(TrackBase):
         self.c.xAxis().setTickLength(-5)
         self.c.xAxis().setColors(GREY, o.XAxisColor, BLACK, TRANSPARENT)
         self.c.setXAxisOnTop(o.XAxisOnTop)
-    
-    
+        
     def show(self):
         "Draw itself on the screen requires PIL"
         show_plot(self.c)
@@ -117,7 +116,6 @@ class XYTrack(TrackBase):
 # that have x,y attributes (labels for seqments)
 #
 # some code duplication accross drawing functions, 
-#
 def draw_bars(track, data, options=None):
     "Draws bars data.y vs data.x"
     o = options or track.o
@@ -150,7 +148,7 @@ def unwind(data):
     fast = []
     map(fast.extend, data)
     labels = fast[2::3]
-    fast[2::3] = [ NOVALUE ] * len(data)
+    fast[2::3] = [ NOVALUE ] * len(labels)
     return fast, labels
     
 def draw_segments(track, data, options=None):
@@ -160,8 +158,9 @@ def draw_segments(track, data, options=None):
     """
         
     o = options or track.o
-    y = [ options.yc ] * len(data)
     fast, labels  = unwind(data)
+    y = [ options.offset ] * (3*len(fast))
+    
     layer = track.c.addLineLayer(y , color=o.color, name=o.legend)
     layer.setLineWidth(o.lw)
     layer.setXData(fast)
@@ -191,9 +190,9 @@ def test():
     lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE)
     draw_line(track=track, data=data, options=lineopts)
     
-    segopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE, yc=10)
+    segopts = ChartOptions(yaxis2=True, legend='Segments', color=GOLD, offset=10, lw=10)
     
-    data = ( (10, 20, 'A'), (50, 80, 'B') )
+    data = ( (10, 20, 'A'), (30, 50, 'B'), (80, 100), 'C' )
     draw_segments(track=track, data=data, options=segopts)
     
     
