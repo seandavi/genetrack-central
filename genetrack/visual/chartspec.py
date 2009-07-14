@@ -12,13 +12,13 @@ test_input = """
 #track spec
 #
 
-color  =  RED; glyph=BAR; data=8946; row=new;
+color=RED; glyph=BAR; data=8946; row=new;
 
 color=BLUE; glyph  =ORF; data= 34555; row=same
 
 ;color=GOLD; glyph=ORF; data=15664;        
 
-data=1; glyph=AAA;
+data=1; glyph=AAA; color=DD0000;
 
 """
 
@@ -35,8 +35,23 @@ VALID_GLYPHS = set( "AUTO BAR LINE ORF INTERVAL BOOKMARK" )
 def glyph_check(value):
     return str(value).upper()
 
+VALID_COLORS = dict(
+    BLUE=0x0000DD,  RED=0xDD0000,     GREEN =0x00DD00,
+    GREY=0xCECECE,  LIGHT=0xEFEFEF,   BLACK=0x000000,
+    WHITE=0xFFFFFF, PURPLE=0x990066,  ORANGE=0xFF3300, 
+    TEAL= 0x009999, CRIMSON=0xDC143C, GOLD=0xFFD700,
+    NAVY=0x000080,  SIENNA=0xA0522D,  LIGHT_GREEN=0x33FF00, 
+    SPRING_GREEN=0x00FF7F, YELLOW_GREEN=0x9ACD32,
+    )
+
 def color_check(value):
-    return str(value)
+    "Get a builtin color or hex value"
+    #print VALID_COLORS
+    value = value.upper()
+    if value in VALID_COLORS:
+        return VALID_COLORS[value]
+    else:    
+        return int( "0x%s" % value, 16)
 
 # maps dictionary keys to validation functions
 validator = dict(

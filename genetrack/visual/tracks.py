@@ -213,7 +213,7 @@ def draw_labels(track, x, y, labels, options):
     else:
         textbox.setPos(0, -(o.lw + 2))
         
-        
+
 class TrackManager(object):
     pass
         
@@ -239,7 +239,7 @@ def test():
     draw_arrow(track=track, data=arrdata, options=arropts)
     
     
-    segopts = ChartOptions(yaxis2=True, legend='Segments', color=GOLD, offset=20, lw=15, label_offset=-15)
+    segopts = ChartOptions(yaxis2=True, legend='Segments', color=0xAA0D2940, offset=20, lw=15, label_offset=-15)
     segdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80, 'C') )
     draw_segments(track=track, data=segdata, options=segopts)
     
