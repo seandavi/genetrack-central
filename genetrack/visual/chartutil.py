@@ -108,6 +108,7 @@ class ChartOptions(Options):
         fontType="arialbd.ttf",
         lw=1,
         offset=0,
+        label_offset = 0,
         # used for for glyph drawing
         arrow_polygon = ARROW_POLYGON1, 
         stripe_coords=STRIPE_COORDS,

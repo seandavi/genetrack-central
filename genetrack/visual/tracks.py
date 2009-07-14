@@ -115,7 +115,7 @@ class Track(TrackBase):
 # Drawing functions take indentical parameters and operate on a data object
 # that have x,y attributes (labels for seqments)
 #
-# some code duplication accross drawing functions,
+# some code duplication accross drawing functions, mostly to speed it up
 
 def unwind(data):
     "Unwinds a data into a segment array"
@@ -165,6 +165,11 @@ def draw_segments(track, data, options=None):
     layer = track.c.addLineLayer(y , color=o.color, name=o.legend)
     layer.setLineWidth(o.lw)
     layer.setXData(fast)
+    
+    # drawing the labels
+    if options.show_labels:
+        midpoints = [ (e[0] + e[1])/2.0 for e in data ]
+        draw_labels(track=track, x=midpoints, y=y, labels=labels, options=o)
 
 def draw_arrow(track, data, options=None):
     """
@@ -190,6 +195,25 @@ def draw_arrow(track, data, options=None):
     layer.setLineWidth(o.lw)
     layer.setXData(x)
     
+    # drawing the labels
+    if options.show_labels:
+        midpoints = [ (e[0] + e[1])/2.0 for e in data ]
+        draw_labels(track=track, x=midpoints, y=y, labels=labels, options=o)
+
+def draw_labels(track, x, y, labels, options):
+    "Draws labels at an offset"
+    o = options
+    scatter = track.c.addScatterLayer(x, y, "", CIRCLESYMBOL, 0, 0xff3333, 0xff3333)
+    scatter.addExtraField(labels)
+    scatter.setDataLabelFormat("{field0}")
+    textbox = scatter.setDataLabelStyle(o.fontType, o.fontSize, o.color)
+    textbox.setAlignment(CENTER)
+    if o.label_offset:
+        textbox.setPos(0, -o.label_offset )
+    else:
+        textbox.setPos(0, -(o.lw + 2))
+        
+        
 class TrackManager(object):
     pass
         
@@ -215,8 +239,8 @@ def test():
     draw_arrow(track=track, data=arrdata, options=arropts)
     
     
-    segopts = ChartOptions(yaxis2=True, legend='Segments', color=GOLD, offset=20, lw=15)
-    segdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80), 'C' )
+    segopts = ChartOptions(yaxis2=True, legend='Segments', color=GOLD, offset=20, lw=15, label_offset=-15)
+    segdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80, 'C') )
     draw_segments(track=track, data=segdata, options=segopts)
     
     baropts = ChartOptions(color=RED, legend='Bar Legend', ylabel2="Line" )
