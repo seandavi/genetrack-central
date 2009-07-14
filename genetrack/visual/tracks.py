@@ -1,12 +1,50 @@
 """
-Track specification.
+Track specification using ChartDirector. 
 """
 
 # lots of constants and other names
 from itertools import *
-from chartutil import *
+from trackdefs import *
 from genetrack import logger
+from StringIO import StringIO
 
+import pychartdir
+# load and set the chartdirector license
+CHARTDIRECTOR_LICENSE = os.getenv('CHARTDIRECTOR_LICENSE', '')
+if CHARTDIRECTOR_LICENSE:
+    pychartdir.setLicenseCode( CHARTDIRECTOR_LICENSE ) 
+else:
+    logger.warn('chartdirector license not found')
+    
+# a few handy constants
+TRANSPARENT  = pychartdir.Transparent
+TOPCENTER    = pychartdir.TopCenter
+NOVALUE      = pychartdir.NoValue
+CIRCLESYMBOL = pychartdir.CircleSymbol
+CROSS        = pychartdir.CrossShape(0.1)
+CENTER       = pychartdir.Center
+PNG          = pychartdir.PNG
+
+def save(chart, fname):
+    "Saves a chart to a file."
+    chart.makeChart(fname)
+
+def show(chart):
+    """
+    Helper class that displays chart image in a Tk window. 
+    Clicking on the image quits the application. Requires the PIL library.
+    """
+    import Tkinter
+    from PIL import ImageTk, Image
+
+    output = StringIO()
+    output.write( chart.makeChart2( PNG ) )
+    output.seek(0) # rewind
+    root  = Tkinter.Tk()
+    image = ImageTk.PhotoImage( image=Image.open( output ) )
+    Tkinter.Button(image=image, command=root.quit).pack()
+    root.mainloop()
+    
 class TrackBase(object):
     """
     Contains the functionality that all charts must have. 
@@ -102,7 +140,7 @@ class Track(TrackBase):
         
     def show(self):
         "Draw itself on the screen requires PIL"
-        show_plot(self.c)
+        show(self.c)
 
     def add_legend(self, legend):
         "Adds a legend to the chart."
@@ -188,7 +226,7 @@ def draw_arrow(track, data, options=None):
     ac = [ 90 ] * len(data) # rotation angles
     
     # create the vector layer
-    layer = track.c.addVectorLayer(x, y, rc, ac, XAxisScale, o.color, o.legend)
+    layer = track.c.addVectorLayer(x, y, rc, ac, pychartdir.XAxisScale, o.color, o.legend)
     layer.setArrowAlignment(TOPCENTER)
     layer.setArrowHead2(o.arrow_polygon)
     layer.setArrowHead(o.lw)
@@ -201,7 +239,7 @@ def draw_arrow(track, data, options=None):
         draw_labels(track=track, x=midpoints, y=y, labels=labels, options=o)
 
 def draw_labels(track, x, y, labels, options):
-    "Draws labels at an offset"
+    "Draws labels the x,y coordinates"
     o = options
     scatter = track.c.addScatterLayer(x, y, "", CIRCLESYMBOL, 0, 0xff3333, 0xff3333)
     scatter.addExtraField(labels)
@@ -214,8 +252,27 @@ def draw_labels(track, x, y, labels, options):
         textbox.setPos(0, -(o.lw + 2))
         
 
-class TrackManager(object):
-    pass
+class MultiTrack(object):
+    "Represents multiple tracks merged into a single image"
+    def __init__(self, options, tracks=[]):
+        self.o = options
+        self.tracks = []
+        self.w = self.o.lpad + self.o.w + self.o.rpad
+        self.h = self.o.tpad + sum([ t.o.h for t in tracks ]) + self.o.bpad
+        self.c = pychartdir.MultiChart( self.w, self.h)    
+
+        # add each track to the multichart
+        ypos = self.o.tpad
+        for track in tracks:
+            self.c.addChart(self.o.lpad, ypos, track.c)
+            ypos += track.o.h
+        
+    def draw(self):
+        pass
+    
+    def show(self):
+        "Draw itself on the screen requires PIL"
+        show(self.c)   
         
 def test():
     from server.web import models
@@ -225,35 +282,37 @@ def test():
     init= dict(color=RED, glyph='AUTO', data=data_id, data_path=data_path, xscale=(-10,110) )
 
     # general options
-    opts = ChartOptions(init=init, ylabel='Bars', legend='Bar Legend', ylabel2="Line" )
+    opts = ChartOptions(init=init, ylabel='Bars', legend='Bar Legend', ylabel2="Line", tpad=20 )
     
     y = range(50)+range(50, 1,-1)
     x = range(len(y))
     
     data = ( x, y )
     
-    track = Track(opts)
+    opts1 = ChartOptions(init=init, ylabel='Bars', legend='Bar Legend', ylabel2="Line", bpad=0, tpad=20, XAxisOnTop=1 )
+    track1 = Track(opts1)
+    
+    opts2 = ChartOptions(init=init, ylabel='Bars', legend='Bar Legend', ylabel2="Line", tpad=0 )
+    track2 = Track(opts2)
         
     arropts = ChartOptions(yaxis2=True, legend='Arrows', color=NAVY, offset=40, lw=10)
     arrdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80, 'C') )
-    draw_arrow(track=track, data=arrdata, options=arropts)
+    draw_arrow(track=track2, data=arrdata, options=arropts)
     
     
     segopts = ChartOptions(yaxis2=True, legend='Segments', color=0xAA0D2940, offset=20, lw=15, label_offset=-15)
     segdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80, 'C') )
-    draw_segments(track=track, data=segdata, options=segopts)
+    draw_segments(track=track1, data=segdata, options=segopts)
     
     baropts = ChartOptions(color=RED, legend='Bar Legend', ylabel2="Line" )
-    draw_bars(track=track, data=data, options=baropts)
+    draw_bars(track=track1, data=data, options=baropts)
     
     lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE)
-    draw_line(track=track, data=data, options=lineopts)
+    draw_line(track=track1, data=data, options=lineopts)
     
-    
-    
-    
-    
-    track.show()
+    tracks= [ track1, track2 ]
+    m = MultiTrack(options=opts, tracks=tracks)
+    m.show()
     
 if __name__ == '__main__':
     test()

@@ -4,22 +4,14 @@ Specifies constants used in drawing the charts.
 import os, sys
 from genetrack import conf, logger
 
-import pychartdir
-# load and set the chartdirector license
-CHARTDIRECTOR_LICENSE = os.getenv('CHARTDIRECTOR_LICENSE', '')
-if CHARTDIRECTOR_LICENSE:
-    pychartdir.setLicenseCode( CHARTDIRECTOR_LICENSE ) 
-else:
-    logger.warn('chartdirector license not found')
-
-from pychartdir import XAxisScale
-# setting constants
-
 # arrow polygon heads
 ARROW_POLYGON1 = [ -5, 0, 0, 0, 5, -0, 0, 5 ]
 ARROW_POLYGON2 = [ -6, 0, 0, 0, 6, -0, 0, 6 ]
 
-# colors
+# nucleosome specific intervals relative to the start site of the nucleosome
+STRIPE_COORDS = [(0, 4), (9, 14), (19, 25), (30, 35), (40, 45), (50, 56), (61, 66), (71, 76), (81, 86), (91, 97), (102, 107), (112, 117), (122, 128), (133, 138), (143, 147)]
+
+# toned colors
 BLUE, RED, GREEN = 0x0000DD, 0xDD0000, 0x00DD00 
 GREY, LIGHT, BLACK = 0xCECECE, 0xEFEFEF, 0x000000
 WHITE, PURPLE, ORANGE = 0xFFFFFF, 0x990066, 0xFF3300
@@ -27,20 +19,8 @@ TEAL, CRIMSON, GOLD = 0x009999, 0xDC143C,  0xFFD700
 NAVY, SIENNA = 0x000080, 0xA0522D 
 LIGHT_GREEN, SPRING_GREEN, YELLOW_GREEN = 0x33FF00, 0x00FF7F, 0x9ACD32
 
-# other constants
-TRANSPARENT  = pychartdir.Transparent
-TOPCENTER    = pychartdir.TopCenter
-NOVALUE      = pychartdir.NoValue
-CIRCLESYMBOL = pychartdir.CircleSymbol
-CROSS        = pychartdir.CrossShape(0.1)
-CENTER       = pychartdir.Center
-PNG          = pychartdir.PNG
-
-# plot types
-LINE, BARS, SCATTER, VECTOR, SEGMENT, STRIPES = "LINE BARS SCATTER VECTOR SEGMENT STRIPES".split()
-
-# nucleosome specific intervals relative to the start site of the nucleosome
-STRIPE_COORDS = [(0, 4), (9, 14), (19, 25), (30, 35), (40, 45), (50, 56), (61, 66), (71, 76), (81, 86), (91, 97), (102, 107), (112, 117), (122, 128), (133, 138), (143, 147)]
+# indicates transparent color (chardirector specific)
+TRANSPARENT = 4278190080
 
 class Options(object):
     """
@@ -111,7 +91,6 @@ class ChartOptions(Options):
         label_offset = 0,
         # used for for glyph drawing
         arrow_polygon = ARROW_POLYGON1, 
-        stripe_coords=STRIPE_COORDS,
     )
     
 class TrackOptions( ChartOptions ):
@@ -127,44 +106,6 @@ class TrackOptions( ChartOptions ):
     ) 
     defaults = dict(ChartOptions.defaults) 
     defaults.update(custom)
-
-def save_plot( chart, fname):
-    "Saves a chart to a file."
-    chart.makeChart( fname )
-
-def show_plot( chart ):
-    """
-    Helper class that displays chart image in a Tk window. 
-    Clicking on the image quits the application. Requires the PIL library.
-    """
-    import Tkinter, StringIO
-    from PIL import ImageTk, Image
-
-    output = StringIO.StringIO()
-    output.write( chart.makeChart2( PNG ) )
-    output.seek(0) # rewind
-    root  = Tkinter.Tk()
-    image = ImageTk.PhotoImage( image=Image.open( output ) )
-    Tkinter.Button(image=image, command=root.quit).pack()
-    root.mainloop()
-
-def max2( data, default=1 ):
-    "Safe max that can handle an empty list"
-    try:
-        return max(data)
-    except ValueError, exc:
-        return default
-
-def medmax( data, default=5 ):
-    "Median maxima, that can handle an empty list"
-    try:
-        med = [ x for x in data[:] if x > 2 ]
-        med.sort()
-        idx  = int( (len(med)-1 ) * 0.95 )
-        mxv1 = max(-4, med[idx] )
-        return mxv1
-    except Exception:
-        return default
 
 def test( verbose=0 ):
     "Performs module level testing"
