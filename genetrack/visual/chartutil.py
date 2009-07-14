@@ -4,19 +4,15 @@ Specifies constants used in drawing the charts.
 import os, sys
 from genetrack import conf, logger
 
-try:
-    import pychartdir
-    # load and set the chartdirector license
-    CHARTDIRECTOR_LICENSE = os.getenv('CHARTDIRECTOR_LICENSE', '')
-    if CHARTDIRECTOR_LICENSE:
-        pychartdir.setLicenseCode( CHARTDIRECTOR_LICENSE ) 
-    else:
-        logger.warn('chartdirector license not found')
-    has_chartdir = True
-except ImportError, exc:
-    logger.error('software requirements not met: %s' % exc)
-    has_chartdir = False
+import pychartdir
+# load and set the chartdirector license
+CHARTDIRECTOR_LICENSE = os.getenv('CHARTDIRECTOR_LICENSE', '')
+if CHARTDIRECTOR_LICENSE:
+    pychartdir.setLicenseCode( CHARTDIRECTOR_LICENSE ) 
+else:
+    logger.warn('chartdirector license not found')
 
+from pychartdir import XAxisScale
 # setting constants
 
 # arrow polygon heads

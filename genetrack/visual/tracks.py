@@ -25,7 +25,7 @@ class TrackBase(object):
         self.init_axes()
         self.init_finalize()
     
-class XYTrack(TrackBase):
+class Track(TrackBase):
     """
     Representation of a track
     """
@@ -115,33 +115,7 @@ class XYTrack(TrackBase):
 # Drawing functions take indentical parameters and operate on a data object
 # that have x,y attributes (labels for seqments)
 #
-# some code duplication accross drawing functions, 
-def draw_bars(track, data, options=None):
-    "Draws bars data.y vs data.x"
-    o = options or track.o
-    layer = track.c.addBarLayer(data.y, color=o.color, name=o.legend)
-    layer.setBarWidth(o.lw)
-    layer.setBorderColor(o.color)
-    
-    # switch axes
-    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
-        
-    layer.setUseYAxis(axis)
-    layer.setXData(data.x)
-    track.add_legend(o.legend)
-
-def draw_line(track, data, options=None):
-    "Draws lines data.y vs data.x"
-    o = options or track.o
-    layer = track.c.addLineLayer(data.y, color=o.color, name=o.legend)
-    layer.setLineWidth(o.lw)
-    
-    # switch axes
-    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
-        
-    layer.setUseYAxis(axis)
-    layer.setXData(data.x)
-    track.add_legend(o.legend)
+# some code duplication accross drawing functions,
 
 def unwind(data):
     "Unwinds a data into a segment array"
@@ -150,6 +124,33 @@ def unwind(data):
     labels = fast[2::3]
     fast[2::3] = [ NOVALUE ] * len(labels)
     return fast, labels
+
+def draw_bars(track, data, options=None):
+    "Draws bars data=(x,y)"
+    o = options or track.o
+    x, y = data
+    layer = track.c.addBarLayer(y, color=o.color, name=o.legend)
+    layer.setBarWidth(o.lw)
+    layer.setBorderColor(o.color)
+    
+    # select axes
+    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+    layer.setUseYAxis(axis)
+    layer.setXData(x)
+    track.add_legend(o.legend)
+
+def draw_line(track, data, options=None):
+    "Draws lines data=(x,y)"
+    o = options or track.o
+    x, y = data
+    layer = track.c.addLineLayer(y, color=o.color, name=o.legend)
+    layer.setLineWidth(o.lw)
+    
+    # select axes
+    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+    layer.setUseYAxis(axis)
+    layer.setXData(x)
+    track.add_legend(o.legend)
     
 def draw_segments(track, data, options=None):
     """
@@ -159,11 +160,35 @@ def draw_segments(track, data, options=None):
         
     o = options or track.o
     fast, labels  = unwind(data)
-    y = [ options.offset ] * (3*len(fast))
+    y = [ options.offset ] * len(fast) # vertical coordinate
     
     layer = track.c.addLineLayer(y , color=o.color, name=o.legend)
     layer.setLineWidth(o.lw)
     layer.setXData(fast)
+
+def draw_arrow(track, data, options=None):
+    """
+    Draws a seqment from a list of data in the form
+    (start, end, label)
+    """
+    o = options or track.o
+    fast, labels  = unwind(data)
+    
+    # the way this works is that uses a reference point to draw an arrow
+    # of given lenght then rotates it into the right direction, see ChartDirector
+    # VectorLayer for more info
+    x  = fast[1::3] # reference on x
+    y  = [ options.offset ] * len(data) # vertical coordinate
+    rc = [ e[1] - e[0] for e in data ] # lenghts on x
+    ac = [ 90 ] * len(data) # rotation angles
+    
+    # create the vector layer
+    layer = track.c.addVectorLayer(x, y, rc, ac, XAxisScale, o.color, o.legend)
+    layer.setArrowAlignment(TOPCENTER)
+    layer.setArrowHead2(o.arrow_polygon)
+    layer.setArrowHead(o.lw)
+    layer.setLineWidth(o.lw)
+    layer.setXData(x)
     
 class TrackManager(object):
     pass
@@ -173,7 +198,7 @@ def test():
     data_id = 1
     data_path = models.Data.objects.get(id=data_id).content.path
     
-    init= dict(color=RED, glyph='AUTO', data=data_id, data_path=data_path, xscale=(0,100) )
+    init= dict(color=RED, glyph='AUTO', data=data_id, data_path=data_path, xscale=(-10,110) )
 
     # general options
     opts = ChartOptions(init=init, ylabel='Bars', legend='Bar Legend', ylabel2="Line" )
@@ -181,19 +206,27 @@ def test():
     y = range(50)+range(50, 1,-1)
     x = range(len(y))
     
-    data = Options( x=x, y=y )
+    data = ( x, y )
     
-    track = XYTrack(opts)
+    track = Track(opts)
+        
+    arropts = ChartOptions(yaxis2=True, legend='Arrows', color=NAVY, offset=40, lw=10)
+    arrdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80, 'C') )
+    draw_arrow(track=track, data=arrdata, options=arropts)
+    
+    
+    segopts = ChartOptions(yaxis2=True, legend='Segments', color=GOLD, offset=20, lw=15)
+    segdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80), 'C' )
+    draw_segments(track=track, data=segdata, options=segopts)
+    
     baropts = ChartOptions(color=RED, legend='Bar Legend', ylabel2="Line" )
     draw_bars(track=track, data=data, options=baropts)
     
     lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE)
     draw_line(track=track, data=data, options=lineopts)
     
-    segopts = ChartOptions(yaxis2=True, legend='Segments', color=GOLD, offset=10, lw=10)
     
-    data = ( (10, 20, 'A'), (30, 50, 'B'), (80, 100), 'C' )
-    draw_segments(track=track, data=data, options=segopts)
+    
     
     
     track.show()
