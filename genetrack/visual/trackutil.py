@@ -1,5 +1,5 @@
 """
-Specifies constants used in drawing the charts. 
+Specifies constants and utilities used in drawing the charts. 
 """
 import os, sys
 from genetrack import conf, logger
@@ -8,19 +8,22 @@ from genetrack import conf, logger
 ARROW_POLYGON1 = [ -5, 0, 0, 0, 5, -0, 0, 5 ]
 ARROW_POLYGON2 = [ -6, 0, 0, 0, 6, -0, 0, 6 ]
 
-# nucleosome specific intervals relative to the start site of the nucleosome
-STRIPE_COORDS = [(0, 4), (9, 14), (19, 25), (30, 35), (40, 45), (50, 56), (61, 66), (71, 76), (81, 86), (91, 97), (102, 107), (112, 117), (122, 128), (133, 138), (143, 147)]
+_VALID_GLYPHS = set( "AUTO BAR LINE ORF INTERVAL BOOKMARK" )
 
-# toned colors, chartdirector specific
-BLUE, RED, GREEN = 0x0000DD, 0xDD0000, 0x00DD00 
-GREY, LIGHT, BLACK = 0xCECECE, 0xEFEFEF, 0x000000
-WHITE, PURPLE, ORANGE = 0xFFFFFF, 0x990066, 0xFF3300
-TEAL, CRIMSON, GOLD = 0x009999, 0xDC143C,  0xFFD700
-NAVY, SIENNA = 0x000080, 0xA0522D 
-LIGHT_GREEN, SPRING_GREEN, YELLOW_GREEN = 0x33FF00, 0x00FF7F, 0x9ACD32
+_VALID_COLORS = dict(
+    BLUE=0x0000DD,  RED=0xDD0000,     GREEN =0x00DD00,
+    GREY=0xCECECE,  LIGHT=0xEFEFEF,   BLACK=0x000000,
+    WHITE=0xFFFFFF, PURPLE=0x990066,  ORANGE=0xFF3300, 
+    TEAL= 0x009999, CRIMSON=0xDC143C, GOLD=0xFFD700,
+    NAVY=0x000080,  SIENNA=0xA0522D,  LIGHT_GREEN=0x33FF00, 
+    SPRING_GREEN=0x00FF7F, YELLOW_GREEN=0x9ACD32,
+    WHEAT=0xD8D8BF, TOMATO=0xFF6347, SKY=0x3299CC, ROYAL_BLUE=0x4169E1,
+    SILVER=0xC0C0C0, ORCHID=0xDB70DB, HOTPINK=0xFF69B4, AQUAMARINE=0x70DB93,
+    VIOLET=0x4F2F4F, OLIVE=0x808000, PERU=0xCD853F, SLATE=0x6A5ACD,
 
-# indicates transparent color (chardirector specific)
-TRANSPARENT = 4278190080
+    # indicates transparent color (chardirector specific)
+    TRANSPARENT = 4278190080
+)
 
 class Options(object):
     """
@@ -39,6 +42,21 @@ class Options(object):
     def update(self, data):
         "Updates the internal dictionary"
         self.__dict__.update(data)
+
+    def __contains__(self, value):
+        return value in self.__dict__
+    
+    def __getitem__(self, key):
+        return self.__dict__[key]
+        
+# loads valid colors into the namespace
+COLORS = Options(init=_VALID_COLORS)
+
+TRANSPARENT = COLORS.TRANSPARENT
+RED   = COLORS.RED
+BLACK = COLORS.BLACK
+WHITE = COLORS.WHITE
+GREY  = COLORS.GREY
 
 class ChartOptions(Options):
     """
@@ -110,6 +128,10 @@ class TrackOptions( ChartOptions ):
     defaults = dict(ChartOptions.defaults) 
     defaults.update(custom)
 
+def split(text, sep):
+    "Split and strip whitespace in one call"
+    return map(strip, text.split(sep))
+    
 def test( verbose=0 ):
     "Performs module level testing"
     import doctest

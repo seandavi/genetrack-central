@@ -25,7 +25,7 @@ data=1; glyph=AAA; color=#DD0000 10%;
 #from genetrack import logger
 from itertools import *
 from string import strip
-from trackutils import VALID_COLORS, VALID_GLYPHS
+from trackutil import *
 
 def split(text, sep):
     "Split and strip whitespace in one call"
@@ -46,8 +46,8 @@ def color_check(value):
     value = value.strip(' #%').upper()
     elems = value.split() # optional second integer is the alpha channel
     color = elems[0]
-    if color in VALID_COLORS:
-        color = VALID_COLORS[color]
+    if color in COLORS:
+        color = COLORS[color]
     else:    
         color = int( "0x%s" % color, 16)
     if len(elems)>1:

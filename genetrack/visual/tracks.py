@@ -4,7 +4,7 @@ Track specification using ChartDirector.
 
 # lots of constants and other names
 from itertools import *
-from trackdefs import *
+from trackutil import *
 from genetrack import logger
 from StringIO import StringIO
 
@@ -24,6 +24,10 @@ CIRCLESYMBOL = pychartdir.CircleSymbol
 CROSS        = pychartdir.CrossShape(0.1)
 CENTER       = pychartdir.Center
 PNG          = pychartdir.PNG
+
+# a few default colors
+
+BLACK, RED, GREY = COLORS.BLACK, COLORS.RED, COLORS.GREY
 
 def save(chart, fname):
     "Saves a chart to a file."
@@ -50,12 +54,12 @@ class TrackBase(object):
     Contains the functionality that all charts must have. 
     This is an abstract class that cannot be instantiated.    
     """
-    def __init__(self, options):
+    def __init__(self, options=None):
         """
         Requires an options parameter must be created with the L{ChartOptions} 
         function.  
         """
-        self.o, self.c = options, None
+        self.o, self.c = options or ChartOptions(), None
         
         # hopefull this will permit easier backend changes
         self.init_chart()
@@ -264,8 +268,8 @@ def draw_marks(track, data, options):
 
 class MultiTrack(object):
     "Represents multiple tracks merged into a single image"
-    def __init__(self, options, tracks=[]):
-        self.o = options
+    def __init__(self, options=None, tracks=[]):
+        self.o = options or ChartOptions()
         self.tracks = []
         self.w = self.o.lpad + self.o.w + self.o.rpad
         self.h = self.o.tpad + sum([ t.o.h for t in tracks ]) + self.o.bpad
@@ -308,7 +312,7 @@ def test():
     opts3 = TrackOptions(init=init, ylabel='', tpad=0 )
     track3 = Track(opts3)
     
-    arropts = ChartOptions(yaxis2=True, legend='Arrows', color=NAVY, offset=0, lw=10)
+    arropts = ChartOptions(yaxis2=True, legend='Arrows', color=COLORS.NAVY, offset=0, lw=10)
     arrdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80, 'C') )
     draw_arrow(track=track2, data=arrdata, options=arropts)
     draw_arrow(track=track3, data=arrdata, options=arropts)
@@ -320,11 +324,12 @@ def test():
     baropts = ChartOptions(color=RED, legend='Bar Legend', ylabel2="Line" )
     draw_bars(track=track1, data=data, options=baropts)
     
-    lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE)
+    lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=COLORS.VIOLET)
     draw_line(track=track1, data=data, options=lineopts)
     
     # layout must ba last
-    draw_zones(track=track1, data=segdata, options=lineopts)
+    zoneopts = ChartOptions(yaxis2=True, legend='Line Legend', color=COLORS.OLIVE)
+    draw_zones(track=track1, data=segdata, options=zoneopts)
     
     draw_marks( track=track1, options=lineopts, data=[ 55 ])
     tracks= [ track1, track2, track3 ]

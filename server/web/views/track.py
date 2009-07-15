@@ -8,7 +8,7 @@ from genetrack import logger, conf
 from server.web import html, status
 from server.web import models, authorize
 from server.web import login_required, private_login_required
-from genetrack.visual import chartspec
+from genetrack.visual import trackspec
 
 def fixup_paths(json):
     "Adds path information for known data attribute fields"
@@ -32,7 +32,7 @@ class AttributeField(forms.Field):
         # check format then fixup the paths
         try:
             # parse it into a json
-            value = chartspec.parse(value)
+            value = trackspec.parse(value)
             # add paths to data
             value = fixup_paths(value)
         except Exception, exc:
