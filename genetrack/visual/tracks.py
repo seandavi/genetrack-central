@@ -225,6 +225,8 @@ def draw_arrow(track, data, options=None):
     rc = [ e[1] - e[0] for e in data ] # lenghts on x
     ac = [ 90 ] * len(data) # rotation angles
     
+    print y
+    
     # create the vector layer
     layer = track.c.addVectorLayer(x, y, rc, ac, pychartdir.XAxisScale, o.color, o.legend)
     layer.setArrowAlignment(TOPCENTER)
@@ -289,15 +291,19 @@ def test():
     
     data = ( x, y )
     
-    opts1 = ChartOptions(init=init, ylabel='Bars', legend='Bar Legend', ylabel2="Line", bpad=0, tpad=20, XAxisOnTop=1 )
+    opts1 = ChartOptions(init=init, ylabel='Bars', ylabel2="Line", bpad=1, tpad=20, XAxisOnTop=1 )
     track1 = Track(opts1)
     
-    opts2 = ChartOptions(init=init, ylabel='Bars', legend='Bar Legend', ylabel2="Line", tpad=0 )
+    opts2 = TrackOptions(init=init, ylabel='', tpad=0 )
     track2 = Track(opts2)
-        
-    arropts = ChartOptions(yaxis2=True, legend='Arrows', color=NAVY, offset=40, lw=10)
+    
+    opts3 = TrackOptions(init=init, ylabel='', tpad=0 )
+    track3 = Track(opts3)
+    
+    arropts = ChartOptions(yaxis2=True, legend='Arrows', color=NAVY, offset=0, lw=10)
     arrdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80, 'C') )
     draw_arrow(track=track2, data=arrdata, options=arropts)
+    draw_arrow(track=track3, data=arrdata, options=arropts)
     
     
     segopts = ChartOptions(yaxis2=True, legend='Segments', color=0xAA0D2940, offset=20, lw=15, label_offset=-15)
@@ -310,7 +316,7 @@ def test():
     lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE)
     draw_line(track=track1, data=data, options=lineopts)
     
-    tracks= [ track1, track2 ]
+    tracks= [ track1, track2, track3 ]
     m = MultiTrack(options=opts, tracks=tracks)
     m.show()
     

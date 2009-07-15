@@ -101,8 +101,11 @@ class TrackOptions( ChartOptions ):
     (800, 60, 12, 'abc')
     """
     custom = dict( 
-        lw=12, XAxisColor=TRANSPARENT, YTickColor=TRANSPARENT, 
-        tpad=0, bpad=0, h=60, yscale=[-10, 10], xlabel=None
+        lw=12,
+        XAxisColor=TRANSPARENT, YTickColor=TRANSPARENT, 
+        tpad=0, bpad=1, h=60,
+        yscale=[-10, 10],
+        xlabel=None
     ) 
     defaults = dict(ChartOptions.defaults) 
     defaults.update(custom)
