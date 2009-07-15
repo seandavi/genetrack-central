@@ -11,7 +11,7 @@ ARROW_POLYGON2 = [ -6, 0, 0, 0, 6, -0, 0, 6 ]
 # nucleosome specific intervals relative to the start site of the nucleosome
 STRIPE_COORDS = [(0, 4), (9, 14), (19, 25), (30, 35), (40, 45), (50, 56), (61, 66), (71, 76), (81, 86), (91, 97), (102, 107), (112, 117), (122, 128), (133, 138), (143, 147)]
 
-# toned colors
+# toned colors, chartdirector specific
 BLUE, RED, GREEN = 0x0000DD, 0xDD0000, 0x00DD00 
 GREY, LIGHT, BLACK = 0xCECECE, 0xEFEFEF, 0x000000
 WHITE, PURPLE, ORANGE = 0xFFFFFF, 0x990066, 0xFF3300
@@ -90,7 +90,7 @@ class ChartOptions(Options):
         offset=0,
         label_offset = 0,
         # used for for glyph drawing
-        arrow_polygon = ARROW_POLYGON1, 
+        arrow_polygon = ARROW_POLYGON2, 
     )
     
 class TrackOptions( ChartOptions ):

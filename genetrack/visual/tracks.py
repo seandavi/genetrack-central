@@ -86,9 +86,9 @@ class Track(TrackBase):
             - and width minus left + right padding.
         """
         o = self.o
-        h = o.h - o.tpad - o.bpad
-        w = o.w - o.lpad - o.rpad
-        self.area = self.c.setPlotArea(o.lpad, o.tpad, w, h, o.bgColor, o.altBgColor, o.edgeColor, o.hGridColor, o.vGridColor)
+        self.h = o.h - o.tpad - o.bpad
+        self.w = o.w - o.lpad - o.rpad
+        self.area = self.c.setPlotArea(o.lpad, o.tpad, self.w, self.h, o.bgColor, o.altBgColor, o.edgeColor, o.hGridColor, o.vGridColor)
 
     def init_axes(self):
         """
@@ -155,7 +155,7 @@ class Track(TrackBase):
 #
 # some code duplication accross drawing functions, mostly to speed it up
 
-def unwind(data):
+def unwind_segments(data):
     "Unwinds a data into a segment array"
     fast = []
     map(fast.extend, data)
@@ -190,6 +190,7 @@ def draw_line(track, data, options=None):
     layer.setXData(x)
     track.add_legend(o.legend)
     
+    
 def draw_segments(track, data, options=None):
     """
     Draws a seqment from a list of data in the form
@@ -197,7 +198,7 @@ def draw_segments(track, data, options=None):
     """
         
     o = options or track.o
-    fast, labels  = unwind(data)
+    fast, labels  = unwind_segments(data)
     y = [ options.offset ] * len(fast) # vertical coordinate
     
     layer = track.c.addLineLayer(y , color=o.color, name=o.legend)
@@ -215,7 +216,7 @@ def draw_arrow(track, data, options=None):
     (start, end, label)
     """
     o = options or track.o
-    fast, labels  = unwind(data)
+    fast, labels  = unwind_segments(data)
     
     # the way this works is that uses a reference point to draw an arrow
     # of given lenght then rotates it into the right direction, see ChartDirector
@@ -224,8 +225,6 @@ def draw_arrow(track, data, options=None):
     y  = [ options.offset ] * len(data) # vertical coordinate
     rc = [ e[1] - e[0] for e in data ] # lenghts on x
     ac = [ 90 ] * len(data) # rotation angles
-    
-    print y
     
     # create the vector layer
     layer = track.c.addVectorLayer(x, y, rc, ac, pychartdir.XAxisScale, o.color, o.legend)
@@ -253,6 +252,15 @@ def draw_labels(track, x, y, labels, options):
     else:
         textbox.setPos(0, -(o.lw + 2))
         
+def draw_zones(track, data, options):
+    "Shades the background"
+    for x in data:
+        track.c.xAxis().addZone(x[0], x[1], options.color);
+    
+def draw_marks(track, data, options):
+    "Draws marks"
+    for x in data:
+        track.c.xAxis().addMark(x, options.color);
 
 class MultiTrack(object):
     "Represents multiple tracks merged into a single image"
@@ -266,7 +274,7 @@ class MultiTrack(object):
         # add each track to the multichart
         ypos = self.o.tpad
         for track in tracks:
-            self.c.addChart(self.o.lpad, ypos, track.c)
+            self.c.addChart(self.o.lpad, ypos-20, track.c)
             ypos += track.o.h
         
     def draw(self):
@@ -305,10 +313,9 @@ def test():
     draw_arrow(track=track2, data=arrdata, options=arropts)
     draw_arrow(track=track3, data=arrdata, options=arropts)
     
-    
     segopts = ChartOptions(yaxis2=True, legend='Segments', color=0xAA0D2940, offset=20, lw=15, label_offset=-15)
     segdata = ( (10, 20, 'A'), (30, 50, 'B'), (100, 80, 'C') )
-    draw_segments(track=track1, data=segdata, options=segopts)
+    
     
     baropts = ChartOptions(color=RED, legend='Bar Legend', ylabel2="Line" )
     draw_bars(track=track1, data=data, options=baropts)
@@ -316,9 +323,19 @@ def test():
     lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=BLUE)
     draw_line(track=track1, data=data, options=lineopts)
     
+    # layout must ba last
+    draw_zones(track=track1, data=segdata, options=lineopts)
+    
+    draw_marks( track=track1, options=lineopts, data=[ 55 ])
     tracks= [ track1, track2, track3 ]
     m = MultiTrack(options=opts, tracks=tracks)
+    
     m.show()
     
 if __name__ == '__main__':
-    test()
+    import time
+    now = time.time()
+    for i in range(1):
+        test()
+    #print time.time()-now
+    

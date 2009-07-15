@@ -18,7 +18,7 @@ color=BLUE; glyph  =ORF; data= 34555; row=same
 
 ;color=GOLD; glyph=ORF; data=15664;        
 
-data=1; glyph=AAA; color=DD0000;
+data=1; glyph=AAA; color=DD0000 10%;
 
 """
 
@@ -44,14 +44,23 @@ VALID_COLORS = dict(
     SPRING_GREEN=0x00FF7F, YELLOW_GREEN=0x9ACD32,
     )
 
+def set_transparency(color, alpha):
+    "Sets the transparency of a color"
+    return color
+
 def color_check(value):
-    "Get a builtin color or hex value"
-    #print VALID_COLORS
-    value = value.upper()
-    if value in VALID_COLORS:
-        return VALID_COLORS[value]
+    "Gets a builtin color or hex value. Applies transparency"
+    value = value.strip(' #%').upper()
+    elems = value.split()
+    color = elems[0]
+    if color in VALID_COLORS:
+        color = VALID_COLORS[color]
     else:    
-        return int( "0x%s" % value, 16)
+        color = int( "0x%s" % color, 16)
+    if len(elems)>1:
+        alpha = int(elems[1])
+        color = set_transparency(color, alpha)        
+    return color        
 
 # maps dictionary keys to validation functions
 validator = dict(
@@ -82,7 +91,7 @@ def parse(text):
     # clean and split the data to simplify parsing rule
     lines = clean(text)
         
-    alphanums = '#+-.' + alphas + nums 
+    alphanums = '%#+-.' + alphas + nums 
     
     name  = Word(alphanums).setResultsName("name")
     # values may include whitespace
