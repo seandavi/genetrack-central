@@ -4,8 +4,6 @@ Parses a chart specification from a text
 import pyparsing
 from pyparsing import *
 
-from genetrack import logger
-
 test_input = """
 
 #
@@ -22,7 +20,6 @@ data=1; glyph=AAA; color=#DD0000 10%; topaxis=true
 
 """
 
-#from genetrack import logger
 from itertools import *
 from string import strip
 from trackutil import *
@@ -47,7 +44,7 @@ def set_transparency(color, alpha):
     return color | alpha # combine color with new alpha channel
 
 def color_check(value):
-    "Gets a builtin color or hex value. Applies transparency"
+    "Gets a builtin color or hex value. Also applies transparency"
     value = value.strip(' #%').upper()
     elems = value.split() # optional second integer is the alpha channel
     color = elems[0]
@@ -99,8 +96,9 @@ def parse(text):
     alphanums = '%#+-._' + alphas + nums 
     
     name  = Word(alphanums).setResultsName("name")
+    
     # values may include whitespace
-    value = Optional(" ") + Word(alphanums + " ").setResultsName("value")
+    value = Optional(" ") + Word(alphanums + " ").setResultsName("value")    
     pair  = name + "=" + value + ";"
     expr  = OneOrMore(Group(pair)) + StringEnd()
 

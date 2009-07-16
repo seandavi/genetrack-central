@@ -2,7 +2,6 @@
 Specifies constants and utilities used in drawing the charts. 
 """
 import os, sys
-from genetrack import conf, logger
 
 # arrow polygon heads
 ARROW_POLYGON1 = [ -5, 0, 0, 0, 5, -0, 0, 5 ]
