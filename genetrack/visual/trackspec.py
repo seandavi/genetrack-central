@@ -56,15 +56,16 @@ def color_check(value):
 
 def boolean(value):
     if value in ('TRUE', 'T', '1'):
-        return True
+        return 1
     elif value in ('FALSE', 'F', '0'):
-        return False
+        return 0
     raise Exception('invalid boolean value %s' % value)
     
 # maps dictionary keys to validation functions
 validator = dict(
     data=int, layer=int, glyph=glyph_check, color=color_check, 
-    height=int, topaxis=boolean
+    height=int, topx=boolean, tpad=int, bpad=int, rpad=int, lpad=int,
+    h=int, w=int,
     )
 
 # attributes that must be present
@@ -90,7 +91,7 @@ def parse(text):
     # clean and split the data to simplify parsing rule
     lines = clean(text)
         
-    alphanums = '%#+-.' + alphas + nums 
+    alphanums = '%#+-._' + alphas + nums 
     
     name  = Word(alphanums).setResultsName("name")
     # values may include whitespace

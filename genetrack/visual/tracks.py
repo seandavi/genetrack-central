@@ -305,7 +305,7 @@ def test():
     
     data = ( x, y )
     
-    opts1 = ChartOptions(init=init, ylabel='Bars', ylabel2="Line", bpad=1, tpad=20, topx=0 )
+    opts1 = ChartOptions(init=init, ylabel='Bars', ylabel2="Line", bpad=1, tpad=20, topx=1 )
     track1 = Track(opts1)
     
     opts2 = TrackOptions(init=init, ylabel='', tpad=0 )

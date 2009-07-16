@@ -78,7 +78,7 @@ class ChartOptions(Options):
         w=800, h=200, 
         
         # padding: top, bottom, right, left
-        tpad=20, bpad=0, rpad=60, lpad=60, 
+        tpad=10, bpad=0, rpad=60, lpad=60, 
         
         # labels and axis position
         show_labels = True, 
@@ -87,7 +87,7 @@ class ChartOptions(Options):
         xlabel  = '',
         legend  = '',
         # location of the X axis
-        topx  = 1, 
+        topx = 1, 
 
         # set the default scales
         xscale=[1,100], 

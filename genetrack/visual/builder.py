@@ -49,13 +49,14 @@ def preview(text):
     
     # collect globals
     span = []
-    for row in json:
+    for index, row in enumerate(json):
+
         target = row.get('target')
         glyph  = row.get('glyph')
         data   = row.get('data')
         color  = row.get('color', BLACK)
         xychart = glyph in XYCHARTS
-        newtrack = (target is None) or (not chart)
+        newtrack = (chart is None) or (target is None)
         
         # generate the proper options
         opts = ChartOptions(init=row) if xychart else TrackOptions(init=row)
@@ -74,7 +75,6 @@ def preview(text):
         if target == 'global':
             span.append( (draw, chart, data, opts) ) 
         
-            
         if newtrack:   
             collect.append( chart )
             
@@ -93,13 +93,18 @@ def test( verbose=0 ):
 if __name__ == "__main__":
     test()
     text = """
-    color=RED; glyph=BAR; data=8946;
-    color=BLUE 10%; glyph=LINE; data=15664; target=same
-    color=GOLD 50%; glyph=ZONES; data=15664; target=global
-    color=BLUE; glyph=ORF; data= 34555;
     
-    color=NAVY; glyph=BAR; data=8946; topx=0
-    color=SKY 10%; glyph=LINE; data=15664; target=same; 
+    color=BLUE; glyph=ORF; data= 34555; tpad=30; h=200
+    color=SPRING_GREEN 50; glyph=ORF; data= 34555; tpad=30; h=200
+    
+    color=RED; glyph=BAR; data=8946; topx=1; tpad=20
+    
+    #color=BLUE 10%; glyph=LINE; data=15664; target=same
+    #color=GOLD 50%; glyph=ZONES; data=15664; target=global
+    
+    
+    color=NAVY; glyph=BAR; data=8946;
+    #color=SKY 10%; glyph=LINE; data=15664; topx=0; target=same; 
     """
     preview(text)
 
