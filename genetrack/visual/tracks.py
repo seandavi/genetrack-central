@@ -140,7 +140,7 @@ class Track(TrackBase):
         self.c.xAxis().setTickDensity(o.w/20)
         self.c.xAxis().setTickLength(-5)
         self.c.xAxis().setColors(GREY, o.XAxisColor, BLACK, TRANSPARENT)
-        self.c.setXAxisOnTop(o.XAxisOnTop)
+        self.c.setXAxisOnTop(o.topx)
         
     def show(self):
         "Draw itself on the screen requires PIL"
@@ -203,14 +203,14 @@ def draw_segments(track, data, options=None):
         
     o = options or track.o
     fast, labels  = unwind_segments(data)
-    y = [ options.offset ] * len(fast) # vertical coordinate
+    y = [ o.offset ] * len(fast) # vertical coordinate
     
     layer = track.c.addLineLayer(y , color=o.color, name=o.legend)
     layer.setLineWidth(o.lw)
     layer.setXData(fast)
     
     # drawing the labels
-    if options.show_labels:
+    if o.show_labels:
         midpoints = [ (e[0] + e[1])/2.0 for e in data ]
         draw_labels(track=track, x=midpoints, y=y, labels=labels, options=o)
 
@@ -226,7 +226,7 @@ def draw_arrow(track, data, options=None):
     # of given lenght then rotates it into the right direction, see ChartDirector
     # VectorLayer for more info
     x  = fast[1::3] # reference on x
-    y  = [ options.offset ] * len(data) # vertical coordinate
+    y  = [ o.offset ] * len(data) # vertical coordinate
     rc = [ e[1] - e[0] for e in data ] # lenghts on x
     ac = [ 90 ] * len(data) # rotation angles
     
@@ -239,13 +239,13 @@ def draw_arrow(track, data, options=None):
     layer.setXData(x)
     
     # drawing the labels
-    if options.show_labels:
+    if o.show_labels:
         midpoints = [ (e[0] + e[1])/2.0 for e in data ]
         draw_labels(track=track, x=midpoints, y=y, labels=labels, options=o)
 
 def draw_labels(track, x, y, labels, options):
     "Draws labels the x,y coordinates"
-    o = options
+    o = options or track.o
     scatter = track.c.addScatterLayer(x, y, "", CIRCLESYMBOL, 0, 0xff3333, 0xff3333)
     scatter.addExtraField(labels)
     scatter.setDataLabelFormat("{field0}")
@@ -256,15 +256,17 @@ def draw_labels(track, x, y, labels, options):
     else:
         textbox.setPos(0, -(o.lw + 2))
         
-def draw_zones(track, data, options):
+def draw_zones(track, data, options=None):
+    o = options or track.o
     "Shades the background"
     for x in data:
-        track.c.xAxis().addZone(x[0], x[1], options.color);
+        track.c.xAxis().addZone(x[0], x[1], o.color);
     
 def draw_marks(track, data, options):
     "Draws marks"
+    o = options or track.o
     for x in data:
-        track.c.xAxis().addMark(x, options.color);
+        track.c.xAxis().addMark(x, o.color);
 
 class MultiTrack(object):
     "Represents multiple tracks merged into a single image"
@@ -303,7 +305,7 @@ def test():
     
     data = ( x, y )
     
-    opts1 = ChartOptions(init=init, ylabel='Bars', ylabel2="Line", bpad=1, tpad=20, XAxisOnTop=1 )
+    opts1 = ChartOptions(init=init, ylabel='Bars', ylabel2="Line", bpad=1, tpad=20, topx=0 )
     track1 = Track(opts1)
     
     opts2 = TrackOptions(init=init, ylabel='', tpad=0 )

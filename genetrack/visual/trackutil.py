@@ -78,16 +78,16 @@ class ChartOptions(Options):
         w=800, h=200, 
         
         # padding: top, bottom, right, left
-        tpad=20, bpad=20, rpad=60, lpad=60, 
+        tpad=20, bpad=0, rpad=60, lpad=60, 
         
         # labels and axis position
         show_labels = True, 
-        ylabel  = 'Y-Label', 
+        ylabel  = '', 
         ylabel2 = '',
-        xlabel  = 'X-Label',
+        xlabel  = '',
         legend  = '',
         # location of the X axis
-        XAxisOnTop  = 0, 
+        topx  = 1, 
 
         # set the default scales
         xscale=[1,100], 

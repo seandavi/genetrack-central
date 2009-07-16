@@ -18,7 +18,7 @@ color=BLUE; glyph  =ORF; data= 34555; row=same
 
 ;color=GOLD; glyph=ORF; data=15664;        
 
-data=1; glyph=AAA; color=#DD0000 10%;
+data=1; glyph=AAA; color=#DD0000 10%; topaxis=true
 
 """
 
@@ -54,10 +54,17 @@ def color_check(value):
         color = set_transparency(color, int(elems[1]))        
     return color        
 
+def boolean(value):
+    if value in ('TRUE', 'T', '1'):
+        return True
+    elif value in ('FALSE', 'F', '0'):
+        return False
+    raise Exception('invalid boolean value %s' % value)
+    
 # maps dictionary keys to validation functions
 validator = dict(
     data=int, layer=int, glyph=glyph_check, color=color_check, 
-    height=int, row=str,
+    height=int, topaxis=boolean
     )
 
 # attributes that must be present
@@ -102,7 +109,8 @@ def parse(text):
             for result in expr.parseString(line):  
                 name = result.name.lower()
                 value = result.value.upper()
-                row[name] = validator[name](value)
+                func = validator.get(name, str)
+                row[name] = func(value)
             data.append(row)
             
             # check required keys
