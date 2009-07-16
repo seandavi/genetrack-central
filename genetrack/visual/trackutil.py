@@ -8,6 +8,11 @@ from genetrack import conf, logger
 ARROW_POLYGON1 = [ -5, 0, 0, 0, 5, -0, 0, 5 ]
 ARROW_POLYGON2 = [ -6, 0, 0, 0, 6, -0, 0, 6 ]
 
+# various arrowhead polygons
+ARROWS = {}
+for i in range(1, 20):
+    ARROWS[str(i*2)] = [ -i, 0, 0, 0, i, -0, 0, i ]
+
 _VALID_GLYPHS = set( "AUTO BAR LINE ORF INTERVAL BOOKMARK" )
 
 _VALID_COLORS = dict(
@@ -90,7 +95,7 @@ class ChartOptions(Options):
         topx = 1, 
 
         # set the default scales
-        xscale=[1,100], 
+        xscale=[1,200], 
         yscale=[], 
         yscale2=[],
         yaxis2='',
@@ -108,7 +113,7 @@ class ChartOptions(Options):
         offset=0,
         label_offset = 0,
         # used for for glyph drawing
-        arrow_polygon = ARROW_POLYGON2, 
+        arrow = ARROWS['10'],
     )
     
 class TrackOptions( ChartOptions ):
@@ -121,7 +126,7 @@ class TrackOptions( ChartOptions ):
     custom = dict( 
         lw=12,
         XAxisColor=TRANSPARENT, YTickColor=TRANSPARENT, 
-        tpad=0, bpad=1, h=60,
+        tpad=0, bpad=0, h=60,
         yscale=[-10, 10],
         xlabel=None
     ) 

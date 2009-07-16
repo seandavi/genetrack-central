@@ -233,7 +233,7 @@ def draw_arrow(track, data, options=None):
     # create the vector layer
     layer = track.c.addVectorLayer(x, y, rc, ac, pychartdir.XAxisScale, o.color, o.legend)
     layer.setArrowAlignment(TOPCENTER)
-    layer.setArrowHead2(o.arrow_polygon)
+    layer.setArrowHead2(o.arrow)
     layer.setArrowHead(o.lw)
     layer.setLineWidth(o.lw)
     layer.setXData(x)

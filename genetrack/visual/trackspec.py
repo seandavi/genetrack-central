@@ -16,7 +16,7 @@ color=RED; glyph=BAR; data=8946; row=new;
 
 color=BLUE; glyph  =ORF; data= 34555; row=same
 
-;color=GOLD; glyph=ORF; data=15664;        
+;color=GOLD; glyph=ORF; data=15664;  arrow=10      
 
 data=1; glyph=AAA; color=#DD0000 10%; topaxis=true
 
@@ -34,6 +34,11 @@ def split(text, sep):
 def glyph_check(value):
     return str(value).upper()
 
+def arrow_check(value):
+    if value not in ARROWS:
+        raise Exception('invalid arrow %s' % value)
+    return ARROWS[value]
+    
 def set_transparency(color, alpha):
     "Sets the transparency of a color"
     # courtesy of Pindi Albert
@@ -65,7 +70,7 @@ def boolean(value):
 validator = dict(
     data=int, layer=int, glyph=glyph_check, color=color_check, 
     height=int, topx=boolean, tpad=int, bpad=int, rpad=int, lpad=int,
-    h=int, w=int,
+    h=int, w=int, arrow=arrow_check, lw=int,
     )
 
 # attributes that must be present
@@ -107,7 +112,7 @@ def parse(text):
     for lineno, line in zip(count(1), lines):
         try:
             row = dict()
-            for result in expr.parseString(line):  
+            for result in expr.parseString(line):
                 name = result.name.lower()
                 value = result.value.upper()
                 func = validator.get(name, str)

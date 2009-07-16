@@ -25,7 +25,7 @@ def populate(json):
         if row['glyph'] in( 'BAR', 'LINE'):
             row['data'] = T
         else:
-            row['data'] = [(10, 20, 'Alpha'), (30, 50, 'Beta'), (100, 80, 'Delta'), (150, 190, 'Gamma')]
+            row['data'] = [(13, 22, 'Alpha'), (32, 57, 'Beta'), (112, 89, 'Delta'), (157, 193, 'Gamma')]
             
     return json
 
@@ -64,16 +64,19 @@ def preview(text):
         # reuse last track
         chart = tracks.Track(options=opts) if newtrack else chart
         draw = DRAW_FUNC[glyph]
-        draw(track=chart, data=data, options=opts)
-        
-        # apply all spanning functions
-        for func in span:
-            (func, c, d, o) = elem
-            func(track=c, data=d, options=o)
         
         # add global functions to the span
-        if target == 'global':
-            span.append( (draw, chart, data, opts) ) 
+        if target == 'GLOBAL':
+            span.append( (draw, chart, data, opts) )
+        else:
+            draw(track=chart, data=data, options=opts)
+            
+        # apply all spanning functions
+        for elem in span:
+            (func, c, d, o) = elem
+            func(track=chart, data=d, options=o)
+        
+        print span, target
         
         if newtrack:   
             collect.append( chart )
@@ -94,16 +97,20 @@ if __name__ == "__main__":
     test()
     text = """
     
-    color=BLUE; glyph=ORF; data= 34555; tpad=30; h=200
-    color=SPRING_GREEN 50; glyph=ORF; data= 34555; tpad=30; h=200
+    color=BLUE; glyph=ORF; data= 34555; tpad=0; h=200; arrow=10; lw=10
+    color=SPRING_GREEN 50; glyph=ORF; data= 34555; offset=-1; target=same; 
+    color=LIGHT_GREEN 80; glyph=ZONES; data= 34555; offset=2; target=global
     
-    color=RED; glyph=BAR; data=8946; topx=1; tpad=20
+    color=PERU; glyph=ORF; data= 34555
+    
+    
+    color=RED; glyph=BAR; data=8946; topx=1; tpad=-1
     
     #color=BLUE 10%; glyph=LINE; data=15664; target=same
     #color=GOLD 50%; glyph=ZONES; data=15664; target=global
     
     
-    color=NAVY; glyph=BAR; data=8946;
+    color=NAVY; glyph=BAR; data=8946; tpad=0
     #color=SKY 10%; glyph=LINE; data=15664; topx=0; target=same; 
     """
     preview(text)
