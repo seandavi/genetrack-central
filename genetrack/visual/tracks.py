@@ -335,7 +335,7 @@ def shade_upstream(track, data, options=None):
     o = options or track.o
     "Shades the upstream regions"
     newdata = []
-    for x, y z in data:
+    for x, y, z in data:
         if y>x:
             lo, hi = x - o.lw, x
         else:
@@ -347,7 +347,7 @@ def shade_downstream(track, data, options=None):
     o = options or track.o
     "Shades the upstream regions"
     newdata = []
-    for x, y z in data:
+    for x, y, z in data:
         if y>x:
             lo, hi = x - o.lw, x
         else:
