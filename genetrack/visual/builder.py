@@ -48,7 +48,7 @@ def preview(text):
     chart, opts, collect = None, None, []
     
     # collect globals
-    span = []
+    collector = []
     for index, row in enumerate(json):
 
         target = row.get('target')
@@ -67,14 +67,14 @@ def preview(text):
         
         # add global functions to the span
         if target == 'GLOBAL':
-            span.append( (draw, data, opts) )
+            collector.append( (draw, data, opts) )
         else:
             assert chart is not None, 'Chart may not be none %s' % row
             draw(track=chart, data=data, options=opts)
             
         if newtrack:
             # draw global targets
-            for elem in span:
+            for elem in collector:
                 (func, d, o) = elem
                 func(track=chart, data=d, options=o)
             collect.append( chart )
@@ -104,15 +104,15 @@ if __name__ == "__main__":
     
     #color=ORANGE; glyph=BAR; data=8946; topx=1; tpad=0; target=global
     
-    color=NAVY; glyph=BAR; data=8946; topx=1; tpad=40
+    color=NAVY; glyph=BAR; data=8946; topx=1; tpad=40; grid=no
     
     color=RED; glyph=LINE; data=15664; tpad=0; target=last; lw=10
 
-    color=BLUE 20%; glyph=SEGMENT; data= 34555;bpad=1
+    color=BLUE 20%; glyph=SEGMENT; data= 34555;bpad=1; grid=no
     
-    color=BLUE 20%; glyph=SEGMENT; data= 34555;h=200; offset=-1; label_offset=-15; legend=Orf1
+    color=BLUE 20%; glyph=SEGMENT; data= 34555;h=200; offset=-1; label_offset=-15; legend=Orf1 tracks for the win; bgcolor=GREY 80%; grid=no
     
-    color=RED 20%; glyph=ORF; data= 34555;  offset=2; arrow=3; rotate=10; target=last; show_labels=0
+    color=RED 20%; glyph=ORF; data= 34555;  offset=2; arrow=10; rotate=-90; lw=50; target=last; show_labels=0; 
     
     #color=ORANGE; glyph=BAR; data=8946; topx=1; tpad=0
     #color=BLUE 10%; glyph=LINE; data=15664; tpad=0; target=last

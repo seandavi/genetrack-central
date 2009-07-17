@@ -63,9 +63,9 @@ def color_check(value):
 
 def boolean(value):
     value = value.upper()
-    if value in ('TRUE', 'T', '1'):
+    if value in ('TRUE', 'T', '1', 'YES'):
         return 1
-    elif value in ('FALSE', 'F', '0'):
+    elif value in ('FALSE', 'F', '0', 'NO'):
         return 0
     raise Exception('invalid boolean value %s' % value)
     
@@ -74,8 +74,8 @@ validator = dict(
     data=int, layer=int, glyph=glyph_check, color=color_check, 
     height=int, topx=boolean, tpad=int, bpad=int, rpad=int, lpad=int,
     h=int, w=int, arrow=arrow_check, lw=int,
-    label_offset=int, target=target_check,
-    rotate=float
+    label_offset=int, target=target_check, show_labels=boolean, rotate=float,
+    bgcolor=color_check, grid=boolean,
     )
 
 # attributes that must be present

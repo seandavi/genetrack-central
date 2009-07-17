@@ -101,8 +101,10 @@ class ChartOptions(Options):
         
         # colors
         color = BLACK,
+        bgcolor=WHITE,
+        grid = 1,
         hGridColor=-1, vGridColor=GREY,
-        fgColor=BLACK, bgColor=WHITE, altBgColor=-1, edgeColor=GREY, 
+        altBgColor=-1, edgeColor=GREY, 
         XAxisColor=BLACK, YTickColor=BLACK, barColor=BLACK,
 
         # fontsizes and linewidth

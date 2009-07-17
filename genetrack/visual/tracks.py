@@ -92,8 +92,11 @@ class Track(TrackBase):
         o = self.o
         self.h = o.h - o.tpad - o.bpad
         self.w = o.w - o.lpad - o.rpad
-        self.area = self.c.setPlotArea(o.lpad, o.tpad, self.w, self.h, o.bgColor, o.altBgColor, o.edgeColor, o.hGridColor, o.vGridColor)
-
+        if o.grid:
+            self.area = self.c.setPlotArea(o.lpad, o.tpad, self.w, self.h, o.bgcolor, o.altBgColor, o.edgeColor, o.hGridColor, o.vGridColor)
+        else:
+            self.area = self.c.setPlotArea(o.lpad, o.tpad, self.w, self.h, o.bgcolor, o.altBgColor, o.edgeColor, TRANSPARENT)
+            
     def init_axes(self):
         """
         Initializes the axes, margins, tick densities
