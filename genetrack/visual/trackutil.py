@@ -79,7 +79,8 @@ class ChartOptions(Options):
     defaults = dict( 
         
         # widht, height
-        w=800, h=200, 
+        w=800,
+        h=200, 
         
         # padding: top, bottom, right, left
         tpad=10, bpad=0, rpad=60, lpad=60, 
@@ -107,6 +108,9 @@ class ChartOptions(Options):
         altBgColor=-1, edgeColor=GREY, 
         XAxisColor=BLACK, YTickColor=BLACK, barColor=BLACK,
         spline=0,
+        
+        scaling=1,
+        newaxis=None,
         
         # fontsizes and linewidth
         fontSize=13, 

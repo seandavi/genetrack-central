@@ -108,7 +108,9 @@ if __name__ == "__main__":
     
     #color=ORANGE; style=BAR; data=8946; topx=1; tpad=0; target=global
     
-    color=BLACK; style=BAR; data=8946; topx=1; tpad=40; grid=no
+    color=BLACK 50%; style=BAR; data=8946; topx=1; tpad=40; grid=no; lw=20; scaling=0.5;newaxis=0
+    
+    color=BLUE 10%; style=ORF; data=15664; tpad=0; target=last; newaxis=-10; offset=10
     
     color=NAVY; style=STEPS; data=15664; tpad=0; lw=2; target=last
     

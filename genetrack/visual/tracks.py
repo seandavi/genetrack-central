@@ -170,16 +170,39 @@ def unwind_segments(data):
     fast[2::3] = [ NOVALUE ] * len(labels)
     return fast, labels
 
+def scaling(y, options):
+    if options.scaling!=1:
+        s = options.scaling
+        return map(lambda x: x*s, y )
+    else:
+        return y
+
+def get_axis(track, o):
+    "Attempts to select a new axis"
+    if o.newaxis is not None:
+        hsize = o.fontSize/2
+        pos = pychartdir.Left if o.newaxis > 0 else pychartdir.Right 
+        axis = track.c.addAxis(pos , abs(o.newaxis))
+        axis.setMargin(hsize, hsize)
+        axis.setTickDensity(o.h/10) 
+        axis.setLabelStyle(o.fontType, o.fontSize)
+        axis.setTickLength(-5)
+        axis.setColors(GREY, o.YTickColor, BLACK, BLACK)
+    else:
+        axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+    return axis
+
+
 def draw_bars(track, data, options=None):
     "Draws bars data=(x,y)"
     o = options or track.o
     x, y = data
+    
+    y = scaling(y, options)
     layer = track.c.addBarLayer(y, color=o.color, name=o.legend)
     layer.setBarWidth(o.lw)
     layer.setBorderColor(o.color)
-    
-    # select axes
-    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+    axis = get_axis(track, options)
     layer.setUseYAxis(axis)
     layer.setXData(x)
     track.add_legend(o.legend)
@@ -188,14 +211,19 @@ def draw_scatter(track, data, options):
     "Draws lines data=(x,y)"
     o = options or track.o
     x, y = data
+    y = scaling(y, options)
     layer  = track.c.addScatterLayer(x, y, o.legend, pychartdir.CircleShape, o.lw, o.color)
     
     # select axes
     axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+    
     layer.setUseYAxis(axis)
+    
+    # scatter plots may get spline fitting automatically
     if o.spline:
         spline = track.c.addSplineLayer(y, o.color, 'Spline')
         spline.setLineWidth(o.lw/2)
+        spline.setTension( o.spline/1000.0 )
         spline.setXData(x)
         
     layer.setXData(x)
@@ -205,6 +233,7 @@ def draw_linelayer(track, data, options, func):
     "Draws lines data=(x,y)"
     o = options or track.o
     x, y = data
+    y = scaling(y, options)
     layer = func(y, o.color, o.legend)
     layer.setLineWidth(o.lw)
     layer.setBorderColor(o.color)
@@ -301,6 +330,30 @@ def draw_zones(track, data, options=None):
         track.c.xAxis().addZone(x[0], x[1], o.color);
     
     track.add_legend(o.legend)
+
+def shade_upstream(track, data, options=None):
+    o = options or track.o
+    "Shades the upstream regions"
+    newdata = []
+    for x, y z in data:
+        if y>x:
+            lo, hi = x - o.lw, x
+        else:
+            lo, hi = y, y + o.lw
+        newdata.append( (lo, hi, x) )
+    draw_zones(track, newdata, options)
+
+def shade_downstream(track, data, options=None):
+    o = options or track.o
+    "Shades the upstream regions"
+    newdata = []
+    for x, y z in data:
+        if y>x:
+            lo, hi = x - o.lw, x
+        else:
+            lo, hi = y, y + o.lw
+        newdata.append( (lo, hi, x) )
+    draw_zones(track, newdata, options)
     
 def draw_marks(track, data, options):
     "Draws marks"
