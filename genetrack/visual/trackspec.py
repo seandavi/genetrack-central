@@ -10,13 +10,13 @@ test_input = """
 #track spec
 #
 
-color=RED; glyph=BAR; data=8946; row=new;
+color=RED; style=BAR; data=8946; row=new;
 
-color=BLUE; glyph  =ORF; data= 34555; row=same
+color=BLUE; style  =ORF; data= 34555; row=same
 
-;color=GOLD; glyph=ORF; data=15664;  arrow=10 ;     
+;color=GOLD; style=ORF; data=15664;  arrow=10 ;     
 
-data=1; glyph=AAA; color=#DD0000 10%; topaxis=true
+data=1; style=AAA; color=#DD0000 10%; topaxis=true
 
 """
 
@@ -28,7 +28,9 @@ def split(text, sep):
     "Split and strip whitespace in one call"
     return map(strip, text.split(sep))
 
-def glyph_check(value):
+XY_STYLES = set(('BAR', 'LINE', 'STEPS', 'SCATTER'))
+
+def style_check(value):
     return str(value).upper()
 
 def arrow_check(value):
@@ -71,15 +73,15 @@ def boolean(value):
     
 # maps dictionary keys to validation functions
 validator = dict(
-    data=int, layer=int, glyph=glyph_check, color=color_check, 
+    data=int, layer=int, style=style_check, color=color_check, 
     height=int, topx=boolean, tpad=int, bpad=int, rpad=int, lpad=int,
     h=int, w=int, arrow=arrow_check, lw=int,
     label_offset=int, target=target_check, show_labels=boolean, rotate=float,
-    bgcolor=color_check, grid=boolean,
+    bgcolor=color_check, grid=boolean, spline=str,
     )
 
 # attributes that must be present
-REQUIRED_ATTRS = set('data glyph'.split())
+REQUIRED_ATTRS = set('data style'.split())
 
 def clean(text):
     """

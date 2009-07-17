@@ -184,11 +184,28 @@ def draw_bars(track, data, options=None):
     layer.setXData(x)
     track.add_legend(o.legend)
 
-def draw_line(track, data, options=None):
+def draw_scatter(track, data, options):
     "Draws lines data=(x,y)"
     o = options or track.o
     x, y = data
-    layer = track.c.addLineLayer(y, color=o.color, name=o.legend)
+    layer  = track.c.addScatterLayer(x, y, o.legend, pychartdir.CircleShape, o.lw, o.color)
+    
+    # select axes
+    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+    layer.setUseYAxis(axis)
+    if o.spline:
+        spline = track.c.addSplineLayer(y, o.color, 'Spline')
+        spline.setLineWidth(o.lw/2)
+        spline.setXData(x)
+        
+    layer.setXData(x)
+    track.add_legend(o.legend)
+    
+def draw_linelayer(track, data, options, func):
+    "Draws lines data=(x,y)"
+    o = options or track.o
+    x, y = data
+    layer = func(y, o.color, o.legend)
     layer.setLineWidth(o.lw)
     layer.setBorderColor(o.color)
     
@@ -198,6 +215,14 @@ def draw_line(track, data, options=None):
     layer.setXData(x)
     track.add_legend(o.legend)
     
+def draw_line(track, data, options=None):
+    "Draws lines data=(x,y)"
+    return draw_linelayer(track=track, data=data, options=options, func=track.c.addLineLayer)
+    
+def draw_steps(track, data, options=None):
+    "Draws lines data=(x,y)"
+    return draw_linelayer(track=track, data=data, options=options, func=track.c.addStepLineLayer)
+
 def draw_segments(track, data, options=None):
     """
     Draws a seqment from a list of data in the form
@@ -344,7 +369,7 @@ def test():
     draw_bars(track=track1, data=data, options=baropts)
     
     lineopts = ChartOptions(yaxis2=True, legend='Line Legend', color=COLORS.VIOLET)
-    draw_line(track=track1, data=data, options=lineopts)
+    draw_scatter(track=track1, data=data, options=lineopts)
     
     # layout must ba last
     zoneopts = ChartOptions(yaxis2=True, legend='Line Legend', color=COLORS.OLIVE)

@@ -106,7 +106,8 @@ class ChartOptions(Options):
         hGridColor=-1, vGridColor=GREY,
         altBgColor=-1, edgeColor=GREY, 
         XAxisColor=BLACK, YTickColor=BLACK, barColor=BLACK,
-
+        spline=0,
+        
         # fontsizes and linewidth
         fontSize=13, 
         fontType="arialbd.ttf",
