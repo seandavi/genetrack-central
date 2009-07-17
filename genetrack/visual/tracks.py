@@ -187,13 +187,13 @@ def draw_line(track, data, options=None):
     x, y = data
     layer = track.c.addLineLayer(y, color=o.color, name=o.legend)
     layer.setLineWidth(o.lw)
+    layer.setBorderColor(o.color)
     
     # select axes
     axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
     layer.setUseYAxis(axis)
     layer.setXData(x)
     track.add_legend(o.legend)
-    
     
 def draw_segments(track, data, options=None):
     """
@@ -207,12 +207,15 @@ def draw_segments(track, data, options=None):
     
     layer = track.c.addLineLayer(y , color=o.color, name=o.legend)
     layer.setLineWidth(o.lw)
+    layer.setBorderColor(o.color)
     layer.setXData(fast)
     
     # drawing the labels
     if o.show_labels:
         midpoints = [ (e[0] + e[1])/2.0 for e in data ]
         draw_labels(track=track, x=midpoints, y=y, labels=labels, options=o)
+    
+    track.add_legend(o.legend)
 
 def draw_arrow(track, data, options=None):
     """
@@ -228,7 +231,7 @@ def draw_arrow(track, data, options=None):
     x  = fast[1::3] # reference on x
     y  = [ o.offset ] * len(data) # vertical coordinate
     rc = [ e[1] - e[0] for e in data ] # lenghts on x
-    ac = [ 90 ] * len(data) # rotation angles
+    ac = [ 90 - o.rotate ] * len(data) # rotation angles
     
     # create the vector layer
     layer = track.c.addVectorLayer(x, y, rc, ac, pychartdir.XAxisScale, o.color, o.legend)
@@ -236,12 +239,17 @@ def draw_arrow(track, data, options=None):
     layer.setArrowHead2(o.arrow)
     layer.setArrowHead(o.lw)
     layer.setLineWidth(o.lw)
+    layer.setBorderColor(o.color)
     layer.setXData(x)
+    
+    layer.setBorderColor(track.c.dashLineColor(0x000000,pychartdir.DashLine)); 
     
     # drawing the labels
     if o.show_labels:
         midpoints = [ (e[0] + e[1])/2.0 for e in data ]
         draw_labels(track=track, x=midpoints, y=y, labels=labels, options=o)
+
+    track.add_legend(o.legend)
 
 def draw_labels(track, x, y, labels, options):
     "Draws labels the x,y coordinates"
@@ -249,18 +257,22 @@ def draw_labels(track, x, y, labels, options):
     scatter = track.c.addScatterLayer(x, y, "", CIRCLESYMBOL, 0, 0xff3333, 0xff3333)
     scatter.addExtraField(labels)
     scatter.setDataLabelFormat("{field0}")
-    textbox = scatter.setDataLabelStyle(o.fontType, o.fontSize, o.color)
+    textbox = scatter.setDataLabelStyle(o.fontType, o.fontSize, o.color, o.rotate)
     textbox.setAlignment(CENTER)
     if o.label_offset:
         textbox.setPos(0, -o.label_offset )
     else:
         textbox.setPos(0, -(o.lw + 2))
-        
+    
+    track.add_legend(o.legend)
+    
 def draw_zones(track, data, options=None):
     o = options or track.o
     "Shades the background"
     for x in data:
         track.c.xAxis().addZone(x[0], x[1], o.color);
+    
+    track.add_legend(o.legend)
     
 def draw_marks(track, data, options):
     "Draws marks"
@@ -268,6 +280,8 @@ def draw_marks(track, data, options):
     for x in data:
         track.c.xAxis().addMark(x, o.color);
 
+    track.add_legend(o.legend)
+    
 class MultiTrack(object):
     "Represents multiple tracks merged into a single image"
     def __init__(self, options=None, tracks=[]):

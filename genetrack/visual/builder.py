@@ -11,7 +11,7 @@ class LiveData(object):
         pass
 
 def test_bar():
-    N1, N2 = 50, 50
+    N1, N2 = 100, 100
     y = range(N1) + [ random.randint(1,100) for x in range(N2) ]
     x = range(len(y))
     return (x, y)
@@ -36,7 +36,7 @@ DRAW_FUNC = dict(
     BAR=tracks.draw_bars,
     LINE=tracks.draw_line,
     ORF=tracks.draw_arrow,
-    SEGMENT=tracks.draw_bars,
+    SEGMENT=tracks.draw_segments,
     ZONES=tracks.draw_zones,
     MARKS=tracks.draw_marks,
 )
@@ -56,7 +56,7 @@ def preview(text):
         data   = row.get('data')
         color  = row.get('color', BLACK)
         xychart = glyph in XYCHARTS
-        newtrack = (chart is None) or (target is None)
+        newtrack = (target is None)
         
         # generate the proper options
         opts = ChartOptions(init=row) if xychart else TrackOptions(init=row)
@@ -67,18 +67,16 @@ def preview(text):
         
         # add global functions to the span
         if target == 'GLOBAL':
-            span.append( (draw, chart, data, opts) )
+            span.append( (draw, data, opts) )
         else:
+            assert chart is not None, 'Chart may not be none %s' % row
             draw(track=chart, data=data, options=opts)
             
-        # apply all spanning functions
-        for elem in span:
-            (func, c, d, o) = elem
-            func(track=chart, data=d, options=o)
-        
-        print span, target
-        
-        if newtrack:   
+        if newtrack:
+            # draw global targets
+            for elem in span:
+                (func, d, o) = elem
+                func(track=chart, data=d, options=o)
             collect.append( chart )
             
     # general options
@@ -97,21 +95,34 @@ if __name__ == "__main__":
     test()
     text = """
     
-    color=BLUE; glyph=ORF; data= 34555; tpad=0; h=200; arrow=10; lw=10
-    color=SPRING_GREEN 50; glyph=ORF; data= 34555; offset=-1; target=same; 
-    color=LIGHT_GREEN 80; glyph=ZONES; data= 34555; offset=2; target=global
+    #color=BLUE; glyph=ORF; data= 34555; tpad=0; h=200; arrow=10; lw=10
+    #color=SPRING_GREEN 50; glyph=ORF; data= 34555; offset=-1; target=last; 
+    #color=LIGHT_GREEN 80; glyph=ZONES; data= 34555; offset=2; target=global
+    #color=PERU; glyph=ORF; data= 34555
     
-    color=PERU; glyph=ORF; data= 34555
+    color=olive 50%; glyph=ZONES; data= 34555; target=global
+    
+    #color=ORANGE; glyph=BAR; data=8946; topx=1; tpad=0; target=global
+    
+    color=NAVY; glyph=BAR; data=8946; topx=1; tpad=40
+    
+    color=RED; glyph=LINE; data=15664; tpad=0; target=last; lw=10
+
+    color=BLUE 20%; glyph=SEGMENT; data= 34555;bpad=1
+    
+    color=BLUE 20%; glyph=SEGMENT; data= 34555;h=200; offset=-1; label_offset=-15; legend=Orf1
+    
+    color=RED 20%; glyph=ORF; data= 34555;  offset=2; arrow=3; rotate=10; target=last; show_labels=0
+    
+    #color=ORANGE; glyph=BAR; data=8946; topx=1; tpad=0
+    #color=BLUE 10%; glyph=LINE; data=15664; tpad=0; target=last
     
     
-    color=RED; glyph=BAR; data=8946; topx=1; tpad=-1
-    
-    #color=BLUE 10%; glyph=LINE; data=15664; target=same
     #color=GOLD 50%; glyph=ZONES; data=15664; target=global
     
     
-    color=NAVY; glyph=BAR; data=8946; tpad=0
-    #color=SKY 10%; glyph=LINE; data=15664; topx=0; target=same; 
+    #color=NAVY; glyph=BAR; data=8946; tpad=0
+    #color=SKY 10%; glyph=LINE; data=15664; topx=0; target=last; 
     """
     preview(text)
 

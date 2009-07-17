@@ -14,7 +14,7 @@ color=RED; glyph=BAR; data=8946; row=new;
 
 color=BLUE; glyph  =ORF; data= 34555; row=same
 
-;color=GOLD; glyph=ORF; data=15664;  arrow=10      
+;color=GOLD; glyph=ORF; data=15664;  arrow=10 ;     
 
 data=1; glyph=AAA; color=#DD0000 10%; topaxis=true
 
@@ -35,6 +35,11 @@ def arrow_check(value):
     if value not in ARROWS:
         raise Exception('invalid arrow %s' % value)
     return ARROWS[value]
+
+def target_check(value):
+    if value.upper() not in ('GLOBAL', 'LAST'):
+        raise Exeption('invalid target %s' % value)
+    return value.upper()
     
 def set_transparency(color, alpha):
     "Sets the transparency of a color"
@@ -57,6 +62,7 @@ def color_check(value):
     return color        
 
 def boolean(value):
+    value = value.upper()
     if value in ('TRUE', 'T', '1'):
         return 1
     elif value in ('FALSE', 'F', '0'):
@@ -68,6 +74,8 @@ validator = dict(
     data=int, layer=int, glyph=glyph_check, color=color_check, 
     height=int, topx=boolean, tpad=int, bpad=int, rpad=int, lpad=int,
     h=int, w=int, arrow=arrow_check, lw=int,
+    label_offset=int, target=target_check,
+    rotate=float
     )
 
 # attributes that must be present
@@ -111,9 +119,9 @@ def parse(text):
         try:
             row = dict()
             for result in expr.parseString(line):
-                name = result.name.lower()
-                value = result.value.upper()
-                func = validator.get(name, str)
+                name  = result.name.lower()
+                value = result.value.strip()
+                func  = validator.get(name, str)
                 row[name] = func(value)
             data.append(row)
             

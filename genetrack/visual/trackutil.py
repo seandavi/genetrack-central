@@ -9,8 +9,8 @@ ARROW_POLYGON2 = [ -6, 0, 0, 0, 6, -0, 0, 6 ]
 
 # various arrowhead polygons
 ARROWS = {}
-for i in range(1, 20):
-    ARROWS[str(i*2)] = [ -i, 0, 0, 0, i, -0, 0, i ]
+for i in range(1, 30):
+    ARROWS[str(i)] = [ -i, 0, 0, 0, i, -0, 0, i ]
 
 _VALID_GLYPHS = set( "AUTO BAR LINE ORF INTERVAL BOOKMARK" )
 
@@ -110,9 +110,10 @@ class ChartOptions(Options):
         fontType="arialbd.ttf",
         lw=1,
         offset=0,
+        rotate=0,
         label_offset = 0,
         # used for for glyph drawing
-        arrow = ARROWS['10'],
+        arrow = ARROWS['5'],
     )
     
 class TrackOptions( ChartOptions ):
