@@ -34,8 +34,10 @@
             $("#help-panel").toggle('fast')
         });
         
-        window.location.hash='imagename'
-        
+        {% if param.imgname %}
+            // scrolls to the image after a preview
+            window.location.hash='imagename'
+        {% endif %}
     });
 </script>
 

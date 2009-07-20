@@ -72,7 +72,11 @@ def preview(json, debug=None):
         if target == 'GLOBAL':
             collector.append( (draw, data, opts) )
         
-        assert chart is not None, 'Chart may not be none %s' % row
+        if chart is None:
+            print 'Invalid chart order, empty chart'
+            continue
+        
+        
         draw(track=chart, data=data, options=opts)
             
         if newtrack:
@@ -107,7 +111,7 @@ if __name__ == "__main__":
     
     #color=ORANGE; style=BAR; data=8946; topx=1; tpad=0; target=global
     
-    color=BLACK 50%; style=BAR; data=8946; topx=1; tpad=40; grid=no; lw=20; scaling=0.5;newaxis=0
+    color=BLACK 50%; style=BAR; data=8946; topx=1; tpad=40; grid=no; lw=20; scaling=0.5; newaxis=0
     
     color=BLUE 10%; style=ORF; data=15664; tpad=0; target=last; newaxis=-10; offset=10
     

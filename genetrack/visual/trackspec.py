@@ -77,7 +77,9 @@ validator = dict(
     height=int, topx=boolean, tpad=int, bpad=int, rpad=int, lpad=int,
     h=int, w=int, arrow=arrow_check, lw=int,
     label_offset=int, target=target_check, show_labels=boolean, rotate=float,
-    bgcolor=color_check, grid=boolean, spline=float, scaling=float, newaxis=int,
+    bgcolor=color_check, grid=boolean, spline=float,
+    scaling=float,
+    newaxis=int,
     )
 
 # attributes that must be present

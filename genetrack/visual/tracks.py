@@ -179,6 +179,7 @@ def scaling(y, options):
 
 def get_axis(track, o):
     "Attempts to select a new axis"
+    print 'here', o.style, o.newaxis
     if o.newaxis is not None:
         hsize = o.fontSize/2
         pos = pychartdir.Left if o.newaxis > 0 else pychartdir.Right 
@@ -215,7 +216,7 @@ def draw_scatter(track, data, options):
     layer  = track.c.addScatterLayer(x, y, o.legend, pychartdir.CircleShape, o.lw, o.color)
     
     # select axes
-    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+    axis = get_axis(track, options)
     
     layer.setUseYAxis(axis)
     
@@ -239,7 +240,8 @@ def draw_linelayer(track, data, options, func):
     layer.setBorderColor(o.color)
     
     # select axes
-    axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+    axis = get_axis(track, options)
+    
     layer.setUseYAxis(axis)
     layer.setXData(x)
     track.add_legend(o.legend)
