@@ -384,6 +384,10 @@ class MultiTrack(object):
     def show(self):
         "Draw itself on the screen requires PIL"
         show(self.c)   
+ 
+    def save(self, fname):
+        "Draw itself on the screen requires PIL"
+        save(self.c, fname)
         
 def test():
     from server.web import models
@@ -433,11 +437,13 @@ def test():
     m = MultiTrack(options=opts, tracks=tracks)
     
     m.show()
+    m.save('a.png')
     
 if __name__ == '__main__':
     import time
     now = time.time()
-    for i in range(1):
-        test()
+    #for i in range(1):
+    test()
+    
     #print time.time()-now
     

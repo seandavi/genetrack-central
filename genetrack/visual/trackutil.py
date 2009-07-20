@@ -83,10 +83,13 @@ class ChartOptions(Options):
         h=200, 
         
         # padding: top, bottom, right, left
-        tpad=10, bpad=0, rpad=60, lpad=60, 
+        tpad=40, bpad=0, rpad=60, lpad=60, 
         
         # labels and axis position
-        show_labels = True, 
+        show_labels = True,
+        
+        # label on the y axis
+        
         ylabel  = '', 
         ylabel2 = '',
         xlabel  = '',
@@ -95,31 +98,58 @@ class ChartOptions(Options):
         topx = 1, 
 
         # set the default scales
-        xscale=[1,200], 
-        yscale=[], 
+        xscale=[1,200],
+        
+        # sets the y scale
+        yscale=[],
+        
+        # sets the second y scale
         yscale2=[],
+        
+        # sets the second y axis
         yaxis2='',
         
-        # colors
+        # foreground colors
         color = BLACK,
+        
+        # background color
         bgcolor=WHITE,
-        grid = 1,
+        
+        # grid presence
+        grid = True,
+        
         hGridColor=-1, vGridColor=GREY,
         altBgColor=-1, edgeColor=GREY, 
         XAxisColor=BLACK, YTickColor=BLACK, barColor=BLACK,
+        
+        # use spline fitting on scatter plots
         spline=0,
         
+        # scaling factor
         scaling=1,
+        
+        # adding a new axis
         newaxis=None,
         
         # fontsizes and linewidth
-        fontSize=13, 
+        fontSize=13,
+        
+        # font selection
         fontType="arialbd.ttf",
+        
+        # line width
         lw=1,
+        
+        # data offset
         offset=0,
+        
+        # arrow rotations
         rotate=0,
+        
+        # label offset
         label_offset = 0,
-        # used for for glyph drawing
+        
+        # arrow selection
         arrow = ARROWS['5'],
     )
     

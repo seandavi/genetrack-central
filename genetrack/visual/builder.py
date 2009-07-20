@@ -31,22 +31,21 @@ def populate(json):
             
     return json
 
-
-
 # drawing functions
 DRAW_FUNC = dict(
     BAR=tracks.draw_bars,
     LINE=tracks.draw_line,
     ORF=tracks.draw_arrow,
+    ARROW=tracks.draw_arrow,
     SEGMENT=tracks.draw_segments,
     ZONES=tracks.draw_zones,
     MARKS=tracks.draw_marks,
     STEPS=tracks.draw_steps,
     SCATTER=tracks.draw_scatter,
 )
-def preview(text):
+def preview(json, debug=None):
     "Generates a preview image"
-    json = trackspec.parse(text)    
+        
     
     json = populate(json)
     chart, opts, collect = None, None, []
@@ -72,9 +71,9 @@ def preview(text):
         # add global functions to the span
         if target == 'GLOBAL':
             collector.append( (draw, data, opts) )
-        else:
-            assert chart is not None, 'Chart may not be none %s' % row
-            draw(track=chart, data=data, options=opts)
+        
+        assert chart is not None, 'Chart may not be none %s' % row
+        draw(track=chart, data=data, options=opts)
             
         if newtrack:
             # draw global targets
@@ -86,14 +85,14 @@ def preview(text):
     # general options
     collect = filter(None, collect)
     m = tracks.MultiTrack(tracks=collect)
-    m.show()
+    if debug:
+        m.show()
     return m
     
 def test( verbose=0 ):
     "Performs module level testing"
     import doctest
     doctest.testmod( verbose=verbose )
-
     
 if __name__ == "__main__":
     test()
@@ -132,7 +131,9 @@ if __name__ == "__main__":
     #color=NAVY; style=BAR; data=8946; tpad=0
     #color=SKY 10%; style=LINE; data=15664; topx=0; target=last; 
     """
-    preview(text)
+    
+    json = trackspec.parse(text)
+    preview(json, debug=True)
 
 
 

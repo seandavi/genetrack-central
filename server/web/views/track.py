@@ -5,10 +5,10 @@ import os, mimetypes, string
 from django.conf import settings
 from django import forms
 from genetrack import logger, conf
-from server.web import html, status
+from server.web import html, status, webutil
 from server.web import models, authorize
 from server.web import login_required, private_login_required
-from genetrack.visual import trackspec
+from genetrack.visual import trackspec, builder
 
 def fixup_paths(json):
     "Adds path information for known data attribute fields"
@@ -53,7 +53,7 @@ def delete_track(request, tid):
     return html.redirect( "/project/view/%s/" % project.id )
 
 def create_track(request, pid, tid):
-    "New track page"
+    "Page to create a new track"
     form = TrackForm()
     project = authorize.get_project(user=request.user, pid=pid, write=False)
     data = project.track_data()
@@ -67,8 +67,9 @@ def edit_track(request, pid, tid):
     
     # detect track creation or editing
     create = (tid == '0')
-    submit = ('submit' in request.POST)
+    submit = ('submit' in request.POST) or ('preview' in request.POST)
     title = 'Create track' if create else 'Edit track'
+    preview = ('preview' in request.POST) # preview request
     
     # form represents the incoming parameters
     form = TrackForm( request.POST )   
@@ -81,7 +82,7 @@ def edit_track(request, pid, tid):
     # get project related information
     project = authorize.get_project(user=user, pid=pid, write=False)
     data  = project.track_data()
-    param = html.Params(tid=tid, pid=pid, title=title, data=data)
+    param = html.Params(tid=tid, pid=pid, title=title, data=data, imgname=None)
     
     # valid incoming form data data
     if submit:
@@ -91,7 +92,14 @@ def edit_track(request, pid, tid):
             name = get('name')
             text = request.POST['text']
             json = get('text')
-            if create:
+            
+            if preview:
+                imgname, imgpath = webutil.cache_file(name=user.id, ext='png')
+                multi = builder.preview(json)
+                multi.save(imgpath)
+                param.imgname = imgname
+                return html.template( request=request, name='track-edit.html', param=param, form=form )
+            elif create:
                 track = authorize.create_track(user=user, pid=pid, name=name, json=json, text=text )
             else:
                 track = authorize.update_track(user=user, name=name, tid=tid, json=json, text=text)

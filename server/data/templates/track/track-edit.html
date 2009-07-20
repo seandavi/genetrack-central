@@ -19,7 +19,7 @@
             var json = $("#json")
             var currval = json.val()
             var data_id = $("#data_id option:selected").val() 
-            var newval = currval + "color=RED; glyph=AUTO; data=" + data_id + ";\n"
+            var newval = currval + "color=RED; style=BAR; data=" + data_id + ";\n"
 
             var lines = currval.split("\n").length
 
@@ -33,7 +33,9 @@
         $("#help-link").click(function(){
             $("#help-panel").toggle('fast')
         });
-
+        
+        window.location.hash='imagename'
+        
     });
 </script>
 
@@ -44,9 +46,9 @@
 <form method="post" action="/track/edit/{{param.pid}}/{{param.tid}}/" id="mainform">
 
     <!-- left sidebar -->
-    <div class="span-2">&nbsp;</div>
+    <div class="span-1">&nbsp;</div>
 
-    <div class="span-20">
+    <div class="span-22">
 
         <fieldset id="login" class="box">
             <legend>Track details</legend>
@@ -82,27 +84,15 @@
                     --- Required attributes ---
 
     color -> RED, GREEN, BLUE, WHITE, BLACK, PURPLE, ORANGE ... or a hexcolor #FAFACC
-    glyph -> AUTO, ORF, INTERVAL, ARROW, BOOKMARK
+    style -> AUTO, ORF, INTERVAL, ARROW, BOOKMARK
     data  -> <number> the id of the data (filled in when clicking Add)
 
                     --- Optional attributes ---
 
     label   -> text (the label for the track, left)
-    label2  -> text (label on the second axis, right)
-    color2  -> see color (color for secondary data, fit)
-    row     -> NEW, SAME (what row will the track will go)
-    layer   -> number (the order of drawing within a row)
-    alpha   -> percent (the transparency of the track)
+    scale   -> scaling factor
     offset  -> number multiple tracks may be shifted vertically
     height  -> number the height of the track in pixels
-
-                   --- Action attributes ---
-
-    subtract -> data id (subtract this data)
-    divide   -> data id (divide with this data)
-    minimum  -> value (filters data below this minimum)
-    fitting  -> yes, no (wether or not to enable fitting for this track)
-    predict  -> yes, no (wether to generate extra prediction tracks)
     
     Lines starting with the # symbol are comments.
     </pre>
@@ -113,9 +103,10 @@
                 </div>
 
                 <div class="pad10">
-                    <input type="button" name="add" value="Preview Track"/> 
-                    &nbsp;&nbsp;|&nbsp;&nbsp;
+                    <input type="submit" name="preview" value="Preview Track"/> &nbsp;&nbsp;|&nbsp;&nbsp;
+                    
                     <input type="submit" name="submit" value="Save Track"/> &nbsp;&nbsp;|&nbsp;&nbsp;
+                    
                     <input type="button" name="cancel" value="Project View" onclick='javascript:window.location="/project/view/{{param.pid}}/"'/>
                 </div>
                 {% else %}
@@ -130,9 +121,16 @@
             </div>
 
         </fieldset>
+        <div>
+        {% if param.imgname %}
+            <a name="imagename"></a>
+            <img src="/static/cache/{{param.imgname}}"
+            <div align="center">Track preview</div>
+        {% endif %}
+        </div>
     </div>
 
-    <div class="span-2 last">&nbsp;</div>
+    <div class="span-1 last">&nbsp;</div>
 
 </form>
 

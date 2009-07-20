@@ -44,7 +44,6 @@ def template(request, name, mimetype=None, **kwd):
     page = render(name, messages=messages, user=user, **kwd)
     return response(page, mimetype=mimetype)
 
-
 def valid_ascii(text):
     """
     Translates text into onto a valid filename on all platforms
