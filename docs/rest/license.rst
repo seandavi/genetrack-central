@@ -1,0 +1,31 @@
+GeneTrack License with Funding Clause
+======================================
+
+Copyright (c) 2008, 2009 Istvan Albert (istvan.albert@gmail.com)
+Website: http://genetrack.bx.psu.edu
+
+You are free
+
+  - to copy, distribute and transmit the work
+  - to adapt and modify the work to fit your needs
+
+Under the following conditions:
+
+- You may not use this work for commercial purposes without permission. 
+
+- Any scientific grant/proposal that relies in part on the operation of this 
+  Software *must* include a $1000/year support for the software. These funds are 
+  used to improve the software and will also cover installation support 
+  and basic consulting for the software. Contact the team manager
+  for more information.
+
+- You must attribute the work in the manner specified by the author(s) or licensor(s)
+  (but not in any way that suggests that they endorse you or your use of the work).
+
+The conditions above may be relaxed one a case by case basis. Contact the team for more information.
+
+GeneTrack requires python2.5 or higher, numpy, pytables and chartdirector.
+This latter is installed automatically.
+
+
+

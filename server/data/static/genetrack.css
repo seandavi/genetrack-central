@@ -151,6 +151,11 @@ legend {
     margin: 5px;
 }
 
+.border{
+    background: #669966;
+    border: 1px solid #F4C03E;
+}
+
 .errorlist {padding-left:2em;margin-bottom:1em;border:2px solid #ddd;}
 .errorlist {background:#FBE3E4;color:#8a1f11;border-color:#FBC2C4;}
 
