@@ -29,9 +29,13 @@ def split(text, sep):
     return map(strip, text.split(sep))
 
 XY_STYLES = set(('BAR', 'LINE', 'STEPS', 'SCATTER'))
+STYLES = set( list(XY_STYLES) + "SEGMENT ARROW ORF ZONE MARK EXON".split() )
 
 def style_check(value):
-    return str(value).upper()
+    value = str(value).upper()
+    if value not in STYLES:
+        raise Exception('invalid style %s' % value)
+    return value
 
 def arrow_check(value):
     if value not in ARROWS:
@@ -71,15 +75,28 @@ def boolean(value):
         return 0
     raise Exception('invalid boolean value %s' % value)
 
+def int2(value):
+    try:
+        return int(value)
+    except:
+        raise Exception('value must be an integer -> %s' % value)
+
+def float2(value):
+    try:
+        return float(value)
+    except:
+        raise Exception('value must be a number -> %s' % value)
+
+
 # maps dictionary keys to validation functions
 validator = dict(
-    data=int, layer=int, style=style_check, color=color_check, 
-    height=int, topx=boolean, tpad=int, bpad=int, rpad=int, lpad=int,
-    h=int, w=int, arrow=arrow_check, lw=int,
-    label_offset=int, target=target_check, show_labels=boolean, rotate=float,
-    bgcolor=color_check, grid=boolean, spline=float,
-    scaling=float,
-    newaxis=int,
+    data=int2, style=style_check, color=color_check, 
+    height=int2, topx=boolean, tpad=int2, bpad=int2, rpad=int2, lpad=int2,
+    h=int2, w=int2, arrow=arrow_check, lw=int2,
+    label_offset=int2, target=target_check, show_labels=boolean, rotate=float2,
+    bgcolor=color_check, grid=boolean, spline=float2,
+    scaling=float2,
+    newaxis=int2,
     )
 
 # attributes that must be present

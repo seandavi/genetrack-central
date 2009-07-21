@@ -10,7 +10,7 @@ class LiveData(object):
     def bar(self, xvals):
         pass
 
-def test_bar():
+def test_xy():
     N1, N2, STEP = 100, 100, 10
     y1 = range(0, N1, STEP)
     y2 = [ random.randint(1,100) for x in range(0, N2, STEP) ]
@@ -18,16 +18,19 @@ def test_bar():
     x = y1 + [ N1 + x for x in range(0, N2, STEP) ]
     return (x, y)
 
-T = test_bar()
+# test xy data
+TEST_XY = test_xy()
 
 def populate(json):
     "Fetches the data and populates the json value"
     # make a copy to avoid possibly mutating a database object
     for row in json:
         if row['style'] in trackspec.XY_STYLES:
-            row['data'] = T
+            row['data'] = TEST_XY
+        elif row['style'] == 'EXON':
+            row['data'] = [ (148, 155, '1'), (160, 170, '2'), (175, 183, '3'), (189, 193, '4') ]
         else:
-            row['data'] = [(13, 22, 'Alpha'), (32, 57, 'Beta'), (112, 89, 'Delta'), (157, 193, 'Gamma')]
+            row['data'] = [(13, 22, 'Alpha'), (32, 57, 'Beta'), (112, 89, 'Delta'), (148, 193, 'Gamma')]
             
     return json
 
@@ -38,11 +41,13 @@ DRAW_FUNC = dict(
     ORF=tracks.draw_arrow,
     ARROW=tracks.draw_arrow,
     SEGMENT=tracks.draw_segments,
-    ZONES=tracks.draw_zones,
-    MARKS=tracks.draw_marks,
-    STEPS=tracks.draw_steps,
+    EXON=tracks.draw_segments,
+    ZONE=tracks.draw_zones,
+    MARK=tracks.draw_marks,
+    STEP=tracks.draw_steps,
     SCATTER=tracks.draw_scatter,
 )
+
 def preview(json, debug=None):
     "Generates a preview image"
         

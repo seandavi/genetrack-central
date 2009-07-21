@@ -150,7 +150,7 @@ class ChartOptions(Options):
         label_offset = 0,
         
         # arrow selection
-        arrow = ARROWS['5'],
+        arrow = ARROWS['10'],
     )
     
 class TrackOptions( ChartOptions ):
