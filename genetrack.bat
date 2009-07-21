@@ -70,7 +70,7 @@ echo     genetrack.bat init       (initializes the database)
 echo     genetrack.bat runserver  (runs server)
 echo     genetrack.bat test       (runs all tests)
 echo     genetrack.bat docs       (generates documentation)
-echo     genetrack.bat apidoc     (generates API html via epydoc)
+echo     genetrack.bat apidocs    (generates API html via epydoc)
 echo     genetrack.bat jobrunner  (executes the jobrunner)
 echo     genetrack.bat editor     (load the editor in the environment, win32)
 
@@ -82,7 +82,7 @@ echo *** Initializing the data ***
 echo.
 
 rem skipping delete
-if "%2" != "delete" goto :skipdelete
+if NOT "%2" == "delete" goto :skipdelete
 del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
 rmdir /Q /S %GENETRACK_SERVER_HOME%\data\storage
 rmdir /Q /S %GENETRACK_SERVER_HOME%\data\static\cache
@@ -126,9 +126,9 @@ echo.
 echo *** windows editor start ***
 echo.
 
-REM cmd /c "c:\Program Files\EditPlus 2\editplus.exe"
+cmd /c "c:\Program Files\EditPlus 2\editplus.exe"
 
-cmd /c "C:\Program Files\ActiveState Komodo Edit 5\komodo.exe"
+REM cmd /c "C:\Program Files\ActiveState Komodo Edit 5\komodo.exe"
 
 goto :eof
 

@@ -18,10 +18,11 @@ DATA_DIR = path_join( curr_dir, 'data')
 STATIC_DIR = path_join( DATA_DIR, 'static')
 STORAGE_DIR = path_join( DATA_DIR, 'storage')
 CACHE_DIR = path_join(STATIC_DIR, 'cache')
+THUMB_IMAGE_DIR = path_join(STATIC_DIR, 'thumbs')
 DATABASE_DIR = path_join(  DATA_DIR, 'db')
 
 # autocreate some directories
-for dirname in (STORAGE_DIR, CACHE_DIR, DATABASE_DIR):
+for dirname in (STORAGE_DIR, CACHE_DIR, DATABASE_DIR, THUMB_IMAGE_DIR):
     if not os.path.isdir(dirname):
         os.mkdir(dirname)        
 

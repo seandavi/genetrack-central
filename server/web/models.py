@@ -308,7 +308,7 @@ class Result(models.Model):
     @property
     def thumbpath(self):
         "Thumbnail image path"
-        return conf.path_join(settings.CACHE_DIR, self.thumbname)
+        return conf.path_join(settings.THUMB_IMAGE_DIR, self.thumbname)
 
 class Job(models.Model):
     """
