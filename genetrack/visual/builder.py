@@ -4,47 +4,35 @@ Builds a multiplot from a track specification file
 import trackspec, tracks
 from trackutil import *
 import random
+from genetrack import logger
 
 class LiveData(object):
     "A data object that returns values when asked for it"
     pass
-
-class PreviewData(LiveData):
-
-    def text_xy(self, lo, hi, skip=10):
-        xc = xrange(lo, hi, skip)
-        yc = [ 0 ] * len(xc)
-        # fill in some regions with random values, 
-        # attempts to emulate read distribution
-        func = lambda x: random.randint(1, 20)
-        for i in range(0, len(yc)-5, 20):
-            yc[i:i+5] = map(func, range(5))
-        return (xc, yc)
-
     
 def test_xy(seed):
+    "Generate real-looking but randomized dataset"
     random.seed(seed)
-    xc = range(0, 1000, 5)
+    xc = range(0, 2000, 30)
     yc = [ 0 ] * len(xc)
     # fill in some regions with random values, 
     # attempts to emulate read distribution
     func = lambda x: random.randint(1, 20)
     for i in range(0, len(yc)-5, 10):
         yc[i:i+5] = map(func, range(5))
-    print xc
-    print yc
     return (xc, yc)
 
-def populate_preview(json):
-    "Fetches the data and populates the json value"
-    # make a copy to avoid possibly mutating a database object
+def populate_preview(json, xscale=(0,2000)):
+    "Populates a json datastructure with preview data"
+    # make a copy to avoid possibly mutating a database object   
     for row in json:
+        row['xscale'] = xscale
         if row['style'] in trackspec.XY_STYLES:
             row['data'] = test_xy(hash(row['data']))
         elif row['style'] == 'EXON':
-            row['data'] = [ (148, 155, '1'), (160, 170, '2'), (175, 183, '3'), (189, 193, '4') ]
+            row['data'] = [ (1480, 1550, '1'), (1600, 1700, '2'), (1750, 1830, '3'), (1890, 1930, '4') ]
         else:
-            row['data'] = [(13, 22, 'Alpha'), (32, 57, 'Beta'), (112, 89, 'Delta'), (148, 193, 'Gamma')]
+            row['data'] = [(130, 220, 'A'), (320, 570, 'B'), (1120, 890, 'C'), (1480, 1930, 'D')]
             
     return json
 
@@ -62,11 +50,8 @@ DRAW_FUNC = dict(
     SCATTER=tracks.draw_scatter,
 )
 
-def build_tracks(json, debug=None):
+def build_tracks(json, debug=False):
     "Generates a preview image"
-        
-    
-    
     chart, opts, collect = None, None, []
     
     # collect globals
@@ -78,7 +63,7 @@ def build_tracks(json, debug=None):
         data   = row.get('data')
         color  = row.get('color', BLACK)
         xychart = style in trackspec.XY_STYLES
-        newtrack = (target is None)
+        newtrack = (target is None) or  (chart is None)
         
         # generate the proper options
         opts = ChartOptions(init=row) if xychart else TrackOptions(init=row)
@@ -92,14 +77,13 @@ def build_tracks(json, debug=None):
             collector.append( (draw, data, opts) )
         
         if chart is None:
-            print 'Invalid chart order, empty chart'
+            raise Exception('First chart target is set to ')
             continue
-        
         
         draw(track=chart, data=data, options=opts)
             
         if newtrack:
-            # draw global targets
+            # draw the global targets on new tracks
             for elem in collector:
                 (func, d, o) = elem
                 func(track=chart, data=d, options=o)
@@ -126,8 +110,9 @@ if __name__ == "__main__":
     #color=LIGHT_GREEN 80; style=ZONES; data= 34555; offset=2; target=global
     #color=PERU; style=ORF; data= 34555
     
+    
+    color=BLACK 50%; style=BAR; data=1; topx=1; tpad=40; grid=no; lw=5; scaling=1; newaxis=0
     color=olive 50%; style=ZONE; data=1; target=global
-    color=BLACK 50%; style=BAR; data=1; topx=1; tpad=40; grid=no; lw=10; scaling=1; newaxis=0
     color=NAVY; style=COVERAGE; data=1; tpad=0; lw=2; target=last
     color=RED; style=SCATTER; data=1; tpad=0; lw=10;  target=last; spline=1
 
@@ -135,15 +120,15 @@ if __name__ == "__main__":
     
    
     
-    #color=BLUE 10%; style=ORF; data=1; tpad=0; target=last; newaxis=-10; offset=10
+    #color=BLUE 10%; style=ORF; data=1; tpad=0;  newaxis=-10; offset=10
     
     
     
     #color=RED; style=SCATTER; data=15664; tpad=0; lw=10;  target=last; spline=1
 
-    #color=BLUE 20%; style=SEGMENT; data= 34555;bpad=1; grid=no
+    color=BLUE 50%; style=SEGMENT; data= 34555;bpad=1; grid=no
     
-    #color=BLUE 20%; style=SEGMENT; data=1;h=200; offset=-1; label_offset=-15; legend=Orf1 tracks for the win; bgcolor=GREY 80%; grid=no
+    color=BLUE 10%; style=EXON; data=1;h=200; label_offset=-15; target=last
     
     #color=RED 20%; style=ORF; data= 34555;  offset=2; arrow=10; rotate=-90; lw=50; target=last; show_labels=0; 
     

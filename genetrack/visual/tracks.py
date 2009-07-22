@@ -93,9 +93,9 @@ class Track(TrackBase):
         self.h = o.h - o.tpad - o.bpad
         self.w = o.w - o.lpad - o.rpad
         if o.grid:
-            self.area = self.c.setPlotArea(o.lpad, o.tpad, self.w, self.h, o.bgcolor, o.altBgColor, o.edgeColor, o.hGridColor, o.vGridColor)
+            self.area = self.c.setPlotArea(o.lpad, o.tpad, self.w, self.h, o.bgcolor, o.alt_bg_color, o.edge_color, o.h_grid_color, o.v_grid_color)
         else:
-            self.area = self.c.setPlotArea(o.lpad, o.tpad, self.w, self.h, o.bgcolor, o.altBgColor, o.edgeColor, TRANSPARENT)
+            self.area = self.c.setPlotArea(o.lpad, o.tpad, self.w, self.h, o.bgcolor, o.alt_bg_color, o.edge_color, TRANSPARENT)
             
     def init_axes(self):
         """
@@ -117,34 +117,37 @@ class Track(TrackBase):
         if o.yscale:
             self.c.yAxis().setLinearScale(*o.yscale)
             self.c.yAxis().setRounding(False, False);
-        
-        # apply a second (dual) y scale (on the right)
-        if o.yscale2:
-            self.c.yAxis2().setLinearScale(*o.yscale2)
-            self.c.yAxis2().setRounding(False, False);
-        
-        # set label, font and tick density for both y axes
-        hsize = o.fontSize/2
-        for axis in [ self.c.yAxis(), self.c.yAxis2() ]:
-            axis.setMargin(hsize, hsize)
-            axis.setTickDensity(o.h/10) 
-            axis.setLabelStyle(o.fontType, o.fontSize)
-            axis.setTickLength(-5)
-            axis.setColors(GREY, o.YTickColor, BLACK, BLACK)
 
-        # setting the titles
-        self.c.yAxis().setTitle(o.ylabel, '', o.fontSize)
-        self.c.yAxis2().setTitle(o.ylabel2, '', o.fontSize).setFontAngle(270)
-
-        # setting up the x-axis
+        # setting up the x-axis (there is only one)
         self.c.xAxis().setAutoScale(0, 0, 0)
         self.c.xAxis().setRounding(False, False);
-        self.c.xAxis().setLabelStyle(o.fontType, o.fontSize)
+        self.c.xAxis().setLabelStyle(o.font_type, o.font_size)
         self.c.xAxis().setTickDensity(o.w/20)
         self.c.xAxis().setTickLength(-5)
-        self.c.xAxis().setColors(GREY, o.XAxisColor, BLACK, TRANSPARENT)
+        self.c.xAxis().setColors(GREY, o.x_axis_color, BLACK, TRANSPARENT)
         self.c.setXAxisOnTop(o.topx)
-        
+
+        # may be multiple ones
+        self.setup_axis( self.c.yAxis() )
+
+    def setup_axis(self, axis):
+        "Sets up the axis"
+        o = self.o
+        hsize = o.font_size/2
+        axis.setMargin(hsize, hsize)
+        axis.setTickDensity(o.h/10) 
+        axis.setLabelStyle(o.font_type, o.font_size)
+        axis.setTickLength(-5)
+        axis.setColors(GREY, o.y_tick_color, BLACK, BLACK)
+        axis.setTitle(o.ylabel, '', o.font_size)
+
+    def add_axis(self, value):
+        "Adds and returns an axis"
+        pos  = pychartdir.Left if value > 0 else pychartdir.Right 
+        axis = self.c.addAxis(pos , abs(value))
+        self.setup_axis(axis)
+        return axis
+
     def show(self):
         "Draw itself on the screen requires PIL"
         show(self.c)
@@ -153,9 +156,9 @@ class Track(TrackBase):
         "Adds a legend to the chart."
         if legend:
             o = self.o
-            legend = self.c.addLegend(o.lpad, o.tpad, 0, None, o.fontSize)
+            legend = self.c.addLegend(o.lpad, o.tpad, 0, None, o.font_size)
             legend.setBackground(TRANSPARENT)
-            legend.setFontSize(o.fontSize)
+            legend.setFontSize(o.font_size)
 
 # Drawing functions take indentical parameters and operate on a data object
 # that have x,y attributes (labels for seqments)
@@ -179,18 +182,10 @@ def scaling(y, options):
 
 def get_axis(track, o):
     "Attempts to select a new axis"
-    print 'here', o.style, o.newaxis
     if o.newaxis is not None:
-        hsize = o.fontSize/2
-        pos = pychartdir.Left if o.newaxis > 0 else pychartdir.Right 
-        axis = track.c.addAxis(pos , abs(o.newaxis))
-        axis.setMargin(hsize, hsize)
-        axis.setTickDensity(o.h/10) 
-        axis.setLabelStyle(o.fontType, o.fontSize)
-        axis.setTickLength(-5)
-        axis.setColors(GREY, o.YTickColor, BLACK, BLACK)
+        axis = track.add_axis(o.newaxis)
     else:
-        axis = track.c.yAxis2() if o.yaxis2 else track.c.yAxis()
+        axis = track.c.yAxis()
     return axis
 
 
@@ -316,7 +311,7 @@ def draw_labels(track, x, y, labels, options):
     scatter = track.c.addScatterLayer(x, y, "", CIRCLESYMBOL, 0, 0xff3333, 0xff3333)
     scatter.addExtraField(labels)
     scatter.setDataLabelFormat("{field0}")
-    textbox = scatter.setDataLabelStyle(o.fontType, o.fontSize, o.color, o.rotate)
+    textbox = scatter.setDataLabelStyle(o.font_type, o.font_size, o.color, o.rotate)
     textbox.setAlignment(CENTER)
     if o.label_offset:
         textbox.setPos(0, -o.label_offset )

@@ -78,9 +78,8 @@ class ChartOptions(Options):
     """
     defaults = dict( 
         
-        # widht, height
-        w=800,
-        h=200, 
+        # widht, height of the plots
+        w=800, h=200, 
         
         # padding: top, bottom, right, left
         tpad=40, bpad=0, rpad=60, lpad=60, 
@@ -88,12 +87,13 @@ class ChartOptions(Options):
         # labels and axis position
         show_labels = True,
         
-        # label on the y axis
-        
+        # label on the x and y axes
         ylabel  = '', 
-        ylabel2 = '',
         xlabel  = '',
+
+        # legend text
         legend  = '',
+
         # location of the X axis
         topx = 1, 
 
@@ -103,12 +103,6 @@ class ChartOptions(Options):
         # sets the y scale
         yscale=[],
         
-        # sets the second y scale
-        yscale2=[],
-        
-        # sets the second y axis
-        yaxis2='',
-        
         # foreground colors
         color = BLACK,
         
@@ -117,10 +111,6 @@ class ChartOptions(Options):
         
         # grid presence
         grid = True,
-        
-        hGridColor=-1, vGridColor=GREY,
-        altBgColor=-1, edgeColor=GREY, 
-        XAxisColor=BLACK, YTickColor=BLACK, barColor=BLACK,
         
         # use spline fitting on scatter plots
         spline=0,
@@ -132,10 +122,10 @@ class ChartOptions(Options):
         newaxis=None,
         
         # fontsizes and linewidth
-        fontSize=13,
+        font_size=13,
         
         # font selection
-        fontType="arialbd.ttf",
+        font_type="arialbd.ttf",
         
         # line width
         lw=1,
@@ -151,6 +141,18 @@ class ChartOptions(Options):
         
         # arrow selection
         arrow = ARROWS['10'],
+
+        # sigma for fitting
+        sigma=20,
+
+        # exclusion zone
+        exclusion=147,
+
+        # colors for the grid, background, edge and axis colors
+        h_grid_color=-1, v_grid_color=GREY,
+        alt_bg_color=-1, edge_color=GREY, 
+        x_axis_color=BLACK, y_tick_color=BLACK, bar_color=BLACK,
+
     )
     
 class TrackOptions( ChartOptions ):
@@ -162,10 +164,11 @@ class TrackOptions( ChartOptions ):
     """
     custom = dict( 
         lw=12,
-        XAxisColor=TRANSPARENT, YTickColor=TRANSPARENT, 
+        x_axis_color=TRANSPARENT, y_tick_color=TRANSPARENT, 
         tpad=0, bpad=0, h=60,
-        yscale=[-10, 10],
-        xlabel=None
+        yscale=[-100, 100],
+        xlabel=None, 
+        ylabel=None,
     ) 
     defaults = dict(ChartOptions.defaults) 
     defaults.update(custom)
