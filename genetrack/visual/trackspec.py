@@ -3,6 +3,9 @@ Parses a chart specification from a text
 """
 import pyparsing
 from pyparsing import *
+from itertools import *
+from string import strip
+from trackutil import *
 
 test_input = """
 
@@ -12,39 +15,39 @@ test_input = """
 
 color=RED; style=BAR; data=8946; row=new;
 
-color=BLUE; style  =ORF; data= 34555; row=same
+color=blue; style  =ORF; data= 34555; row=same
 
 ;color=GOLD; style=ORF; data=15664;  arrow=10 ;     
 
-data=1; style=AAA; color=#DD0000 10%; topaxis=true
+data=1; style=COVERAGE; color=#DD0000 10%; topaxis=true
 
 """
 
-from itertools import *
-from string import strip
-from trackutil import *
+
 
 def split(text, sep):
     "Split and strip whitespace in one call"
     return map(strip, text.split(sep))
 
-XY_STYLES = set(('BAR', 'LINE', 'STEPS', 'SCATTER'))
+XY_STYLES = set(('BAR', 'LINE', 'COVERAGE', 'SCATTER'))
 STYLES = set( list(XY_STYLES) + "SEGMENT ARROW ORF ZONE MARK EXON".split() )
 
 def style_check(value):
-    value = str(value).upper()
-    if value not in STYLES:
-        raise Exception('invalid style %s' % value)
-    return value
+    "Validates styles"
+    if value.upper() not in STYLES:
+        raise Exception('style=%s -> unknown style value' % value)
+    return value.upper()
 
 def arrow_check(value):
-    if value not in ARROWS:
-        raise Exception('invalid arrow %s' % value)
-    return ARROWS[value]
+    "Validates arrows"
+    if value.upper() not in ARROWS:
+        raise Exception('arrow=%s -> unknown arrow value' % value)
+    return ARROWS[value.upper()]
 
 def target_check(value):
+    "Validates targets"
     if value.upper() not in ('GLOBAL', 'LAST'):
-        raise Exeption('invalid target %s' % value)
+        raise Exeption('target=%s -> unknown target' % value)
     return value.upper()
     
 def set_transparency(color, alpha):
@@ -56,37 +59,44 @@ def set_transparency(color, alpha):
 
 def color_check(value):
     "Gets a builtin color or hex value. Also applies transparency"
-    value = value.strip(' #%').upper()
-    elems = value.split() # optional second integer is the alpha channel
+    # remove markups for hexcode or percentage
+    value = value.strip(' #%')
+    # the optional second integer is the alpha channel
+    elems = value.split() 
     color = elems[0]
-    if color in COLORS:
-        color = COLORS[color]
+    if color.upper() in COLORS:
+        color = COLORS[color.upper()]
     else:    
-        color = int( "0x%s" % color, 16)
+        try:
+            # tries to parse a hexadecimal color value
+            color = int( "0x%s" % color, 16)
+        except:
+            raise Exception('color=%s -> unknown color value' % value)
     if len(elems)>1:
         color = set_transparency(color, int(elems[1]))        
     return color        
 
 def boolean(value):
-    value = value.upper()
-    if value in ('TRUE', 'T', '1', 'YES'):
+    "Validates boolean type values"
+    if value.upper() in ('TRUE', 'T', '1', 'YES'):
         return 1
-    elif value in ('FALSE', 'F', '0', 'NO'):
+    elif value.upper() in ('FALSE', 'F', '0', 'NO'):
         return 0
-    raise Exception('invalid boolean value %s' % value)
+    raise Exception('%s -> unknown boolean value (yes, no, true, false, 1, 0)' % value)
 
 def int2(value):
+    "Validates integers"
     try:
         return int(value)
     except:
-        raise Exception('value must be an integer -> %s' % value)
+        raise Exception('%s is not an integer' % value)
 
 def float2(value):
+    "Validates float numbers"
     try:
         return float(value)
     except:
-        raise Exception('value must be a number -> %s' % value)
-
+        raise Exception('%s is not a number' % value)
 
 # maps dictionary keys to validation functions
 validator = dict(
@@ -140,6 +150,7 @@ def parse(text):
         try:
             row = dict()
             for result in expr.parseString(line):
+                # attribute names are forced to lowercase
                 name  = result.name.lower()
                 value = result.value.strip()
                 func  = validator.get(name, str)

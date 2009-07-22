@@ -25,20 +25,24 @@
   <!-- main box left -->
   <div class="span-17 colborder" id="content">
     
-        <div id="data-info" class="pad10 box">
-            <div class="pad10">{{data.info|markdown }}</div>
-
+        <div class="pad10">
+                <a href="/project/view/{{data.project.id}}/">Project view</a>
+                {% sep %}
+                <a href="/data/download/{{data.id}}/">Download data</a>
+                {% sep %}
+                ID = {{data.id}} 
+                {% sep %} Status = <span class="status {{data.status}}">{{data.status}}</span>
+                {% sep %} Size = {{data.get_size}} 
+                {% sep %}
+                Created by {{data.owner.get_full_name}} on {{ data.tstamp}}
+        </div>
         
-            <div><a href="/data/download/{{data.id}}/">Download</a>
-            {% sep %}
-            ID = {{data.id}} {% sep %} Status = <span class="status {{data.status}}">{{data.status}}</span>
-            {% sep %} Size = {{data.get_size}} 
-            {% sep %}
-            Created by {{data.owner.get_full_name}} on {{ data.tstamp}}
-            </div>
-            {% if data.errors %}
+        {% if data.errors %}
                 <div class="error" style="margin:20px"><pre>{{data.errors}}</pre></div>
-            {% endif %}
+        {% endif %}
+
+        <div id="data-info" class="pad10 box">
+            {{data.info|markdown }}
         </div>
 
         <!-- Datafile results -->            
@@ -77,8 +81,6 @@
   
   <!-- left sidebar -->
   <div class="span-6 last" id="sidebar">
-
-    {% account_box 'data-view' %}
 
     {% data_actions_box %}
 
