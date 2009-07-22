@@ -29,7 +29,7 @@ def split(text, sep):
     "Split and strip whitespace in one call"
     return map(strip, text.split(sep))
 
-XY_STYLES = set(('BAR', 'LINE', 'COVERAGE', 'SCATTER'))
+XY_STYLES = set( 'BAR LINE STEP AREA SCATTER READS'.split() )
 STYLES = set( list(XY_STYLES) + "SEGMENT ARROW ORF ZONE MARK EXON".split() )
 
 def style_check(value):

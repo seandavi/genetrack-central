@@ -203,6 +203,19 @@ def draw_bars(track, data, options=None):
     layer.setXData(x)
     track.add_legend(o.legend)
 
+def draw_area(track, data, options=None):
+    "Draws bars data=(x,y)"
+    o = options or track.o
+    x, y = data
+    
+    y = scaling(y, options)
+    layer = track.c.addAreaLayer(y, color=o.color, name=o.legend)
+    axis = get_axis(track, options)
+    layer.setUseYAxis(axis)
+    layer.setXData(x)
+    track.add_legend(o.legend)
+
+
 def draw_scatter(track, data, options):
     "Draws lines data=(x,y)"
     o = options or track.o

@@ -148,6 +148,9 @@ class ChartOptions(Options):
         # exclusion zone
         exclusion=147,
 
+        # fitting enabled
+        fitting = True,
+
         # colors for the grid, background, edge and axis colors
         h_grid_color=-1, v_grid_color=GREY,
         alt_bg_color=-1, edge_color=GREY, 

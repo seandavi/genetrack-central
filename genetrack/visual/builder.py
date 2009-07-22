@@ -24,7 +24,7 @@ def test_xy(seed):
 
 def populate_preview(json, xscale=(0,2000)):
     "Populates a json datastructure with preview data"
-    # make a copy to avoid possibly mutating a database object   
+    # mutates elements in place
     for row in json:
         row['xscale'] = xscale
         if row['style'] in trackspec.XY_STYLES:
@@ -33,7 +33,6 @@ def populate_preview(json, xscale=(0,2000)):
             row['data'] = [ (1480, 1550, '1'), (1600, 1700, '2'), (1750, 1830, '3'), (1890, 1930, '4') ]
         else:
             row['data'] = [(130, 220, 'A'), (320, 570, 'B'), (1120, 890, 'C'), (1480, 1930, 'D')]
-            
     return json
 
 # drawing functions
@@ -46,9 +45,15 @@ DRAW_FUNC = dict(
     EXON=tracks.draw_segments,
     ZONE=tracks.draw_zones,
     MARK=tracks.draw_marks,
-    COVERAGE=tracks.draw_steps,
+    STEP=tracks.draw_steps,
+    AREA=tracks.draw_area,
     SCATTER=tracks.draw_scatter,
+    READS = tracks.draw_bars,
 )
+
+# sanity check to ensure all the spec functions have callbacks
+__style_diffs = trackspec.STYLES - set(DRAW_FUNC.keys())
+assert not __style_diffs, 'some styles were not defined -> %s' % ', '.join(__style_diffs)
 
 def build_tracks(json, debug=False):
     "Generates a preview image"
@@ -78,10 +83,9 @@ def build_tracks(json, debug=False):
         
         if chart is None:
             raise Exception('First chart target is set to ')
-            continue
         
         draw(track=chart, data=data, options=opts)
-            
+        
         if newtrack:
             # draw the global targets on new tracks
             for elem in collector:
@@ -113,12 +117,11 @@ if __name__ == "__main__":
     
     color=BLACK 50%; style=BAR; data=1; topx=1; tpad=40; grid=no; lw=5; scaling=1; newaxis=0
     color=olive 50%; style=ZONE; data=1; target=global
-    color=NAVY; style=COVERAGE; data=1; tpad=0; lw=2; target=last
+    color=NAVY; style=STEP; data=1; tpad=0; lw=2; target=last
     color=RED; style=SCATTER; data=1; tpad=0; lw=10;  target=last; spline=1
 
     #color=ORANGE; style=BAR; data=8946; topx=1; tpad=0; target=global
     
-   
     
     #color=BLUE 10%; style=ORF; data=1; tpad=0;  newaxis=-10; offset=10
     
@@ -126,10 +129,16 @@ if __name__ == "__main__":
     
     #color=RED; style=SCATTER; data=15664; tpad=0; lw=10;  target=last; spline=1
 
-    color=BLUE 50%; style=SEGMENT; data= 34555;bpad=1; grid=no
+    color=BLUE 50%; style=SEGMENT; data= 34555;bpad=0; grid=no
     
     color=BLUE 10%; style=EXON; data=1;h=200; label_offset=-15; target=last
     
+
+    color=BLACK 50%; style=AREA; data=1; topx=1; tpad=0; bpad=40; lw=10; topx=0
+    color=ORANGE 50%; style=AREA; data=2; target=last
+    
+    
+   
     #color=RED 20%; style=ORF; data= 34555;  offset=2; arrow=10; rotate=-90; lw=50; target=last; show_labels=0; 
     
     #color=ORANGE; style=BAR; data=8946; topx=1; tpad=0
