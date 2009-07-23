@@ -31,8 +31,13 @@ def normal_function( w, sigma ):
 
 def gaussian_smoothing(x, y, sigma=20, epsilon=0.1 ):
     """
-    Fits data represented by f(x)=y with a sum of normal curves.
-    Returns the new x, and y coordinates.
+    Fits data represented by f(x)=y by a sum of normal curves where
+    each curve corresponds to a normal function of variance=sigma and
+    height equal to the y coordinate.
+
+    Parameters x and y are lists.
+
+    Returns a tuple of with the new x, and y coordinates.
     """
 
     # this is a joyfully simple, marvelously elegant and superfast solution 
@@ -52,7 +57,7 @@ def gaussian_smoothing(x, y, sigma=20, epsilon=0.1 ):
     lo, hi, normal = normal_function( w=w, sigma=sigma )
 
     # shift the original vector by the first index, so that 
-    # the first index starts at the value abs(lo)
+    # the first index starts at the value lo
     # this copies the array
     zero_x = x - x[0] + lo
 
@@ -61,7 +66,7 @@ def gaussian_smoothing(x, y, sigma=20, epsilon=0.1 ):
     # uses around 100MB per 10 million size
     # on live displays there is no need to fit over large regions (over 100K)
     # as the features won't be visible by eye 
-    size  = zero_x[-1] + lo + hi + 1 
+    size  = zero_x[-1] + lo + hi
 
     # this will hold the new fitted values
     new_y = numpy.zeros( size, numpy.float )
@@ -83,72 +88,93 @@ def gaussian_smoothing(x, y, sigma=20, epsilon=0.1 ):
 
     return new_x, new_y
 
-def select_peaks( peaks, width, level=0):
+def detect_peaks( x, y ):
     """
-    Selects successive non-overlapping peaks 
-    with a given exclusion zone.
+    Detects peaks (local maxima) from an iterators x and y 
+    where f(x)=y. Will not propely detect plateus!
 
-    Takes as input a list of (index, value) tuples.
-
-    Returns a list of tuples = ( midpoint, maxima )
-    """
-     
-    # order by peak height
-    work  = [ (y, x) for x, y in peaks if y >= level and x > width ]
-    work.sort()
-    work.reverse()
-
-    # sanity check
-    if not work:
-        return []
-
-    #largest index        
-    xmax = max(work, key=operator.itemgetter(1) )[1]
+    Returns a list of tuples where the two
+    elements correspond to the peak index and peak value.
     
-    # selected peaks
-    selected = []
-
-    # keeps track of empty regions
-    empty = numpy.ones( xmax+width+1, numpy.int8 )
-    half  = width/2 + 1
-    for peaky, peakx in work:
-        if empty[peakx]:
-            left  = peakx - width
-            right = peakx + width
-            # store into output data
-            selected.append( ( peakx, peaky ) )
-            # block the region
-            empty[left:right] = numpy.zeros (right - left, numpy.int8)
-
-    selected.sort()
-    return selected
-
-def detect_peaks( index, data ):
-    """
-    Detects peaks (local maxima) from an iterator that returns 
-    float values. Input data is a list of tuples containing 
-    the index and the value at the index.
-    
-    Returns a generator yielding tuples that corresponds 
-    to the peak index and peak value.
-    
-    >>> data  = [ 0.0, 1.0, 2.5, 1.0, 3.5, 1.0, 0.0, 0.0, 10.5, 2.0, 1.0, 0.0 ]
-    >>> index = range(len(data))
-    >>> peaks = detect_peaks( index=index, data=data )
+    >>> y = [ 0.0, 1.0, 2.5, 1.0, 3.5, 1.0, 0.0, 0.0, 10.5, 2.0, 1.0, 0.0 ]
+    >>> x = range(len(y))
+    >>> peaks = detect_peaks( x=x, y=y )
     >>> peaks
     [(2, 2.5), (4, 3.5), (8, 10.5)]
-    >>> select_peaks( peaks, width=1)
+    >>> select_peaks( peaks, exclusion=1)
     [(2, 2.5), (4, 3.5), (8, 10.5)]
-    >>> select_peaks( peaks, width=2)
+    >>> select_peaks( peaks, exclusion=2)
     [(4, 3.5), (8, 10.5)]
     """
     peaks = []
-    indices = xrange(1, len(data)-1 )
-    for i in indices:
-        left, mid, right = data[i-1], data[i], data[i+1]
+    # finds local maxima 
+    for i in xrange(1, len(y)-1 ):
+        left, mid, right = y[i-1], y[i], y[i+1]
         if left < mid >= right:
-            peaks.append( (index[i], mid) )
+            peaks.append( (x[i], mid) )
     return peaks
+
+def select_peaks( peaks, exclusion, treshold=0):
+    """
+    Selects maximal non-overlapping peaks with a given exclusion zone 
+    and over a given treshold.
+
+    Takes as input a list of (index, value) tuples corresponding to
+    all local maxima. Returns a filtered list of tuples (index, value)
+    with the maxima that pass the conditions.
+
+    >>> peaks = [ (0, 20), (100, 19), (500, 4), (10**6, 2) ]
+    >>> select_peaks( peaks, exclusion=200)
+    [(0, 20), (500, 4), (1000000, 2)]
+    """
+
+    # zero exclusion allows all peaks to pass
+    if exclusion == 0:
+        return peaks
+
+    # sort by peak height
+    work  = [ (y, x) for x, y in peaks if y >= treshold ]
+    work.sort()
+    work.reverse()
+
+    # none of the values passed the treshold
+    if not work:
+        return []
+
+    # this will store the selected peaks
+    selected = []
+
+    # we assume that peaks are sorted already increasing order by x
+    xmin, xmax = peaks[0][0], peaks[-1][0]
+    
+    # we create an occupancy vector to keep track of empty regions 
+    size  = xmax - xmin + exclusion
+    shift = xmin - exclusion
+
+    # exclusion will be applied for both ends
+    # the size must fit into memory, int8 is fairly small though
+    # chop large chromosomes into chunks and predict on each
+    empty = numpy.ones(size + exclusion, numpy.int8)
+
+    # starting with the largest select from the existing peaks
+    for peaky, peakx in work:
+
+        # get the peak index as occupancy vector index
+        locind = peakx - shift
+        
+        # check region
+        if empty[locind]:
+            
+            # store this peak
+            selected.append( ( peakx, peaky ) )
+
+           # block the region
+            left  = locind - exclusion
+            right = locind + exclusion
+            empty[left:right] = numpy.zeros (right - left, numpy.int8)
+    
+    selected.sort()
+    return selected
 
 def fixed_width_predictor(index, data, params):   
     "Detects peaks in the data and returns them as intervals"
@@ -173,21 +199,26 @@ def test(verbose=0):
     """
     import doctest
     doctest.testmod( verbose=verbose )
-     
-if __name__ == '__main__':
-    test(verbose=0)
-    from pylab import *
 
-    x = [ 1, 100,  500, 1000, 1010, 2000, 2500 ]
-    y = [ 1,   1,    5,    1,  1,   2, 2.5  ]
+def test_plot():
+    "Visualize results via matplotlib"
+    from pylab import plot, show
 
-    nx, ny  = gaussian_smoothing(x, y, sigma=50)
+    x = [ 1, 101, 102, 103,  500, 503,  ]
+    y = [ 1,   1,   2,   3,    5,    1,  ]
 
-    print len(nx), nx
-    print len(ny), ny
+    nx, ny  = gaussian_smoothing(x, y, sigma=30)
 
     plot(nx, ny, 'bo-')
     show()
+
+if __name__ == '__main__':
+    test(verbose=0)
+   
+    peaks = [ (0, 20), (100, 19), (500, 4), (10**6, 2) ]
+    print select_peaks( peaks, exclusion=200)
+
+    #test_plot()
     
 
 
