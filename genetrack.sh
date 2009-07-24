@@ -69,13 +69,13 @@ if [ $1 == init ]
     echo
 
     if [ $2 == delete ]
-	then  rm $GENETRACK_SERVER_HOME/data/db/genetrack.db
+        then rm $GENETRACK_SERVER_HOME/data/db/genetrack.db
 	rm -rf $GENETRACK_SERVER_HOME/data/storage
 	rm -rf $GENETRACK_SERVER_HOME/data/static/cache
-    else
-	$PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py syncdb --noinput
-	$PYTHON_EXE -m server.scripts.initializer $GENETRACK_SERVER_HOME/data/init/initial-users.csv
     fi
+    $PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py syncdb --noinput
+    $PYTHON_EXE -m server.scripts.initializer $GENETRACK_SERVER_HOME/data/init/initial-users.csv
+
 fi
  
 if [ $1 == runserver ]
@@ -92,6 +92,7 @@ if [ $1 == test ]
     echo
     $PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py test
     
+    echo 
     echo '*** running server tests'
     echo
     $PYTHON_EXE $DEFAULT_HOME/tests/functional.py $2 $3 $4 $5 $6 $7 $8 $9
