@@ -1,32 +1,4 @@
-#!/bin/sh
- 
- 
-# check to see if genetrack.sh is in the path
-# if yes, then feed its path to MyHOME
-which genetrack.sh 1>_out 2>_err 
-MyHOME=`cat _out`
-
-if [ -s _err ]
-    then echo ' Did not find genetrack.sh in PATH: exit '
-    rm _out _err
-
-    exit
-else
-    echo 'genetrack.sh home = '$MyHOME
-fi
-
-rm _out _err
-
-# applications
-DefaultEditor=emacs
-SPHINX=sphinx-build
-EPYDOC=epydoc
-RSYNC=rsync
- 
- 
- 
- 
-################################# GeneTrack starts here
+#!/bin/bash
  
 echo '*********************'
 echo 'GeneTrack Run Manager'
@@ -38,7 +10,7 @@ echo
 #
 # set the python executable
 #
-export PYTHON_EXE=`which python`
+export PYTHON_EXE=python
 echo 'PYTHON='$PYTHON_EXE
  
 #
@@ -48,7 +20,7 @@ echo 'PYTHON='$PYTHON_EXE
 #
 # (the directory that contains this batch script)
 #
-export DEFAULT_HOME=$MyHOME
+export DEFAULT_HOME=`dirname $0`
  
 #
 # The default server home directory
@@ -72,14 +44,10 @@ export PYTHON_PATH_1=$DEFAULT_HOME:$GENETRACK_SERVER_HOME
 # Adding libraries to the python path
 export PYTHON_PATH_2=$DEFAULT_HOME/library:$DEFAULT_HOME/library/library.zip
  
-# Adding the development version of bx python
-# not needed if you have it already installed
-export PYTHON_PATH_3=$DEFAULT_HOME/../bx-dev/bx-python-psu/lib
- 
 #
 # Appends paths to the python import
 #
-export PYTHONPATH=$PYTHON_PATH_1:$PYTHON_PATH_2:$PYTHON_PATH_3
+export PYTHONPATH=$PYTHON_PATH_1:$PYTHON_PATH_2
  
 ############### if statements
 
@@ -92,8 +60,7 @@ if [ $# == 0 ]
     echo 'genetrack.bat docs (generates documentation)'
     echo 'genetrack.bat apidoc (generates API html via epydoc)'
     echo 'genetrack.bat jobrunner (executes the jobrunner)'
-    echo 'genetrack.bat editor (load the editor)'
-    exit
+    echo 'genetrack.bat editor (load the editor)'§
 fi
 
 if [ $1 == init ]
@@ -116,7 +83,7 @@ if [ $1 == runserver ]
     echo '*** Starting the test server ***'
     echo
     $PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py syncdb --noinput
-    %PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py runserver 127.0.0.1:8080
+    $PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py runserver 127.0.0.1:8080
 fi
  
 if [ $1 == test ]
@@ -127,7 +94,7 @@ if [ $1 == test ]
     
     echo '*** running server tests'
     echo
-    $PYTHON_EXE% $DEFAULT_HOME/tests/functional.py $2 $3 $4 $5 $6 $7 $8 $9
+    $PYTHON_EXE $DEFAULT_HOME/tests/functional.py $2 $3 $4 $5 $6 $7 $8 $9
 
     echo
     echo '*** running genetrack tests'
@@ -155,7 +122,6 @@ if [ $1 == docs ]
     fi
 fi
  
- 
 if [ $1 == jobrunner ]
     then echo
     echo '*** executes jobrunner ***'
@@ -171,4 +137,3 @@ if [ $1 == pushdoc ]
     $RSYNC docs/html/* rsync -zav --rsh=ssh webserver@atlas.bx.psu.edu:~/www/genetrack.bx.psu.edu
 fi
  
-############### End of if statements
