@@ -4,9 +4,9 @@ Project related views
 from django.conf import settings
 from django import forms
 from genetrack import logger
-from server.web import html, status
-from server.web import models, authorize
-from server.web import login_required, private_login_required
+from genetrack.server.web import html, status
+from genetrack.server.web import models, authorize
+from genetrack.server.web import login_required, private_login_required
 
 class ProjectForm(forms.Form):
     "For project editing"    

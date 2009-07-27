@@ -6,19 +6,19 @@ from django.contrib import admin
 admin.autodiscover()
 
 if not settings.DEBUG:
-    handler500 = 'web.views.error500'
+    handler500 = 'genetrack.server.web.views.error500'
 
 urlpatterns = patterns('',
 
     # index page
-    (r'^$', 'web.views.main.index'),
+    (r'^$', 'genetrack.server.web.views.main.index'),
     
     # login handlers
-    (r'^login/', 'web.views.login.index'),
-    (r'^logout/', 'web.views.login.logout'),
+    (r'^login/', 'genetrack.server.web.views.login.index'),
+    (r'^logout/', 'genetrack.server.web.views.login.logout'),
 
     # placeholder for pages that are not yet completed
-    (r'^todo/', 'web.views.main.todo'),
+    (r'^todo/', 'genetrack.server.web.views.main.todo'),
 
     # project related urls
     (r'^project/',  include('urls.project_urls')),

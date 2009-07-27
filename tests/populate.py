@@ -3,8 +3,8 @@ Populates the active server instance with various test datasets
 """
 import random
 from genetrack import conf, logger
-from server.web.models import *
-from server.web import authorize, status
+from genetrack.server.web.models import *
+from genetrack.server.web import authorize, status
 
 from django.contrib.auth.models import User
 

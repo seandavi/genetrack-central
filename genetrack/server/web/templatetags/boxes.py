@@ -1,6 +1,6 @@
 from django import template
 
-from server.web import html
+from genetrack.server.web import html
 
 register = template.Library()
 

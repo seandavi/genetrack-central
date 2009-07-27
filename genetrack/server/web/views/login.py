@@ -2,7 +2,7 @@
 import sys
 from django.conf import settings
 from genetrack import logger
-from server.web import html, models
+from genetrack.server.web import html, models
 from django.contrib import auth
 from django.contrib.auth.models import User
 from django import forms

@@ -1,7 +1,7 @@
 """
 Galaxy controller for GeneTrack.
 """
-from server.web.views import data
+from genetrack.server.web.views import data
 
 import simplejson as json
 from galaxy import web

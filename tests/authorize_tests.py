@@ -4,8 +4,8 @@ from django.test import utils
 from django.db import connection
 from django.conf import settings
 from genetrack import conf, util, logger
-from server.scripts import initializer
-from server.web import html
+from genetrack.server.scripts import initializer
+from genetrack.server.web import html
 from django.contrib.auth.models import User
 from django.core.files import File
 
@@ -34,7 +34,7 @@ class AuthorizeTest( unittest.TestCase ):
         """
         
         # it seems that importing it earlier messes up the test database setup
-        from server.web import authorize
+        from genetrack.server.web import authorize
 
         john = User.objects.get(username='johndoe')
         project = authorize.create_project(user=john, name="Test project")

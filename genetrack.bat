@@ -20,18 +20,19 @@ rem Default home directory of the genetrack installation
 rem
 rem (the directory that contains this batch script)
 rem
-set DEFAULT_HOME=%~dp0
+set GENETRACK_HOME=%~dp0
 
 rem
 rem The default server home directory
 rem
-set GENETRACK_SERVER_HOME=%DEFAULT_HOME%server
+set GENETRACK_SERVER_HOME=%GENETRACK_HOME%home
+echo GENETRACK_HOME=%GENETRACK_HOME%
 echo GENETRACK_SERVER_HOME=%GENETRACK_SERVER_HOME%
 
 rem
 rem This is only required when running it with django_admin.py
 rem 
-set DJANGO_SETTINGS_MODULE=server.settings
+set DJANGO_SETTINGS_MODULE=settings
 echo DJANGO_SETTINGS_MODULE=%DJANGO_SETTINGS_MODULE%
 
 echo.
@@ -39,14 +40,14 @@ echo *********************
 echo.
 
 rem Adding genetrack and the server apps to the python path
-set PYTHON_PATH_1=%DEFAULT_HOME%;%GENETRACK_SERVER_HOME%
+set PYTHON_PATH_1=%GENETRACK_HOME%;%GENETRACK_SERVER_HOME%
 
 rem Adding libraries to the python path
-set PYTHON_PATH_2=%DEFAULT_HOME%\library;%DEFAULT_HOME%\library\library.zip
+set PYTHON_PATH_2=%GENETRACK_HOME%\library;%GENETRACK_HOME%\library\library.zip
 
 rem Adding the development version of bx python 
 rem not needed if you have it already installed
-set PYTHON_PATH_3=%DEFAULT_HOME%\..\bx-dev\bx-python-psu\lib
+set PYTHON_PATH_3=%GENETRACK_HOME%\..\bx-dev\bx-python-psu\lib
 
 rem
 rem Appends paths to the python import
@@ -96,25 +97,25 @@ goto :eof
 echo.
 echo *** Starting the test server ***
 echo.
-%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
-%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py runserver 127.0.0.1:8080
+%PYTHON_EXE% %GENETRACK_HOME%\genetrack\server\manage.py syncdb --noinput
+%PYTHON_EXE% %GENETRACK_HOME%\genetrack\server\manage.py runserver 127.0.0.1:8080
 goto :eof
 
 :test
 echo.
 echo *** running django tests
 echo.
-%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py test
+%PYTHON_EXE% %GENETRACK_HOME%\genetrack\server\manage.py test
 
 echo.
 echo *** running server tests
 echo.
-%PYTHON_EXE% %DEFAULT_HOME%\tests\functional.py %2 %3 %4 %5 %6 %7 %8 %9
+%PYTHON_EXE% %GENETRACK_HOME%\tests\functional.py %2 %3 %4 %5 %6 %7 %8 %9
 
 echo.
 echo *** running genetrack tests
 echo.
-%PYTHON_EXE% %DEFAULT_HOME%\tests\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
+%PYTHON_EXE% %GENETRACK_HOME%\tests\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 
 :editor

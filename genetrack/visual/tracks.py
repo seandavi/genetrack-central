@@ -400,7 +400,7 @@ class MultiTrack(object):
         save(self.c, fname)
         
 def test():
-    from server.web import models
+    from genetrack.server.web import models
     data_id = 1
     data_path = models.Data.objects.get(id=data_id).content.path
     
@@ -447,7 +447,7 @@ def test():
     m = MultiTrack(options=opts, tracks=tracks)
     
     m.show()
-    m.save('a.png')
+    #m.save('a.png')
     
 if __name__ == '__main__':
     import time

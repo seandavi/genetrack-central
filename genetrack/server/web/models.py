@@ -3,7 +3,7 @@ List of GeneTrack models
 """
 import os
 from genetrack import logger, util, conf
-from server.web import status, jobs
+from genetrack.server.web import status, jobs
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist

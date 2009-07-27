@@ -1,6 +1,6 @@
 import os, mimetypes
 from genetrack import logger, util
-from server.web import models, status, html
+from genetrack.server.web import models, status, html
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 

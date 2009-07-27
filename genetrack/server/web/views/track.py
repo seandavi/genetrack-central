@@ -5,9 +5,9 @@ import os, mimetypes, string
 from django.conf import settings
 from django import forms
 from genetrack import logger, conf
-from server.web import html, status, webutil
-from server.web import models, authorize
-from server.web import login_required, private_login_required
+from genetrack.server.web import html, status, webutil
+from genetrack.server.web import models, authorize
+from genetrack.server.web import login_required, private_login_required
 from genetrack.visual import trackspec, builder
 
 def fixup_paths(json):
@@ -95,7 +95,8 @@ def edit_track(request, pid, tid):
             
             if preview:
                 imgname, imgpath = webutil.cache_file(name=user.id, ext='png')
-                multi = builder.preview(json)
+                json = builder.populate_preview(json)
+                multi = builder.build_tracks(json)
                 multi.save(imgpath)
                 param.imgname = imgname
                 return html.template( request=request, name='track-edit.html', param=param, form=form )

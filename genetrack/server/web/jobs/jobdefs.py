@@ -1,5 +1,5 @@
 from genetrack import hdflib, logger
-from server.web import status
+from genetrack.server.web import status
 
 def set_status(obj, status, errmsg=''):
     "Sets the status on an object that has status and errors fields."

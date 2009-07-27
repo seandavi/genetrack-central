@@ -59,6 +59,18 @@ class BaseTest( TwillTest ):
         tc.go( testlib.BASE_URL )
         tc.go( "./nosuchurl" )
         tc.code(404)
+
+        tc.go( testlib.BASE_URL )
+        tc.follow('Log in now')
+        tc.find("Please log in") 
+        tc.code(200)
+        
+        # logs in on every test
+        tc.fv("1", "email", 'admin')
+        tc.fv("1", "password", '1')
+        tc.submit('0')
+        tc.code(200)
+        tc.find("Logged in as")
         
 class ServerTest( TwillTest ):
     """

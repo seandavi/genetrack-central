@@ -2,7 +2,7 @@
 import sys
 from django.conf import settings
 from genetrack import logger
-from server.web import html, authorize
+from genetrack.server.web import html, authorize
 from django.template import RequestContext
 
 if not settings.DEBUG:

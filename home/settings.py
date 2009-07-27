@@ -13,15 +13,15 @@ DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 # set up the data specific directories relative to this file's location
-TEMPLATE_PATH = path_join( curr_dir, 'data', 'templates')
-DATA_DIR = path_join( curr_dir, 'data')
-STATIC_DIR = path_join( DATA_DIR, 'static')
-STORAGE_DIR = path_join( DATA_DIR, 'storage')
-CACHE_DIR = path_join(STATIC_DIR, 'cache')
+HOME_DIR        = path_join(curr_dir)
+TEMPLATE_PATH   = path_join(HOME_DIR, 'templates')
+STATIC_DIR      = path_join(HOME_DIR, 'static')
+STORAGE_DIR     = path_join(HOME_DIR, 'storage')
+DATABASE_DIR    = path_join(HOME_DIR, 'db')
+CACHE_DIR       = path_join(STATIC_DIR, 'cache')
 THUMB_IMAGE_DIR = path_join(STATIC_DIR, 'thumbs')
-DATABASE_DIR = path_join(  DATA_DIR, 'db')
 
-# autocreate some directories
+# create some directories if missing
 for dirname in (STORAGE_DIR, CACHE_DIR, DATABASE_DIR, THUMB_IMAGE_DIR):
     if not os.path.isdir(dirname):
         os.mkdir(dirname)        
@@ -49,10 +49,9 @@ DATABASE_HOST = ''             # Set to empty string for localhost. Not used wit
 DATABASE_PORT = ''             # Set to empty string for default. Not used with sqlite3.
 
 # Allows setting the secret key externally
-# generates a secret key on first run if is missing
-# Make it long and unique, and don't share it with anybody.
-# it will be used as the admin password
-secret_fname = path_join(curr_dir, 'SECRET-KEY')
+# It generates a secret key on first run if is missing 
+# that is used as the admin password
+secret_fname = path_join(HOME_DIR, 'SECRET-KEY')
 if not os.path.isfile(secret_fname):
     value = str(random.getrandbits(128))
     value = hashlib.md5(value).hexdigest()
@@ -113,7 +112,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 )
 
-ROOT_URLCONF = 'server.urls.urlconf'
+ROOT_URLCONF = 'genetrack.server.urls.urlconf'
 
 TEMPLATE_DIRS = (
     TEMPLATE_PATH,
@@ -146,5 +145,5 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'django.contrib.markup',
-    'server.web',
+    'genetrack.server.web',
 )
