@@ -16,7 +16,7 @@ Or in other python scripts::
 
 >>>
 >>> from genetrack.scripts import bed2genetrack
->>> bed2genetrack( input_name, output_name, shift=0)
+>>> bed2genetrack.transform( inpname, outname, shift=0)
 >>>
 
 Run the script with no parameters to see the options that it takes.
@@ -151,7 +151,8 @@ def transform(inpname, outname, shift=0):
         logger.debug("removing temporary file '%s'" % name )
         os.remove(name)
 
-if __name__ == '__main__':
+def option_parser():
+    "The option parser may be constructed in other tools invoking this script"
     import optparse
 
     usage = "usage: %prog -i inputfile -o outputfile"
@@ -185,6 +186,12 @@ if __name__ == '__main__':
         dest="shift", type="int", default=0, 
         help="shift for the 5' end on each strand (default=0)",
     )
+    
+    return parser
+
+if __name__ == '__main__':
+    
+    parser = option_parser()
 
     options, args = parser.parse_args()
 

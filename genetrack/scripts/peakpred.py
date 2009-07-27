@@ -1,36 +1,36 @@
 """
-Genetrack file transformer. 
+Genetrack default smoothing and peak predictions. 
 
 The program may be invoked in multiple ways. As a standalone script::
 
-    python hdf_loader.py
+    python peakpred.py
 
 As a python module::
 
-    python -m genetrack.scripts.hdf_loader
+    python -m genetrack.scripts.peakpred
 
 Or in other python scripts::
 
 >>>
->>> from genetrack.scripts import hdf_loader
->>> hdf_loader.transform(inpname)
+>>> from genetrack.scripts import peakpred
+>>> peakpred.smooth(x, y, sigma)
 >>>
 
 Run the script with no parameters to see the options that it takes.
 
-**Observed runtime**: insertion rate of 6 million lines per minute
+**Observed runtime**: 
 
 """
 import os, sys, csv
 from genetrack import logger, conf, util, hdflib
 
-
-def transform(inpname, workdir=None, update=False):
+def smooth(x, y, sigma):
     """
-    Creates a transform from a genetrack input file
+    Smooths the x,y data and returns two larger arrays with 
+    containing the averaged data. Uses a gaussina kernel to
+    average neighbouring points.
     """
-    hdflib.PositionalData(fname=inpname, workdir=workdir, update=update)        
-
+    
 if __name__ == '__main__':
     import optparse
 
