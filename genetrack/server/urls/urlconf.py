@@ -21,16 +21,16 @@ urlpatterns = patterns('',
     (r'^todo/', 'genetrack.server.web.views.main.todo'),
 
     # project related urls
-    (r'^project/',  include('urls.project_urls')),
+    (r'^project/',  include('genetrack.server.urls.project_urls')),
 
     # data related urls
-    (r'^data/',  include('urls.data_urls')),
+    (r'^data/',  include('genetrack.server.urls.data_urls')),
 
     # track related urls
-    (r'^track/',  include('urls.track_urls')),
+    (r'^track/',  include('genetrack.server.urls.track_urls')),
 
     # password reset related urls
-    (r'^password/',  include('urls.password_urls')),
+    (r'^password/',  include('genetrack.server.urls.password_urls')),
     
 
     # (r'^server/', include('server.foo.urls')),

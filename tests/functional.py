@@ -69,6 +69,8 @@ class BaseTest( TwillTest ):
         tc.fv("1", "email", 'admin')
         tc.fv("1", "password", '1')
         tc.submit('0')
+        #print tc.show()
+
         tc.code(200)
         tc.find("Logged in as")
         
