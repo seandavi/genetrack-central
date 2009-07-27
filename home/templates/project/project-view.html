@@ -53,7 +53,7 @@
             <div id="tabs-data"> 
 
                 <div align="center" style="padding:5px;">
-                    To upload more datasets <a href="{% url web.views.data.upload_start project.id %}">click here</a>
+                    To upload more datasets <a href="{% url genetrack.server.web.views.data.upload_start project.id %}">click here</a>
                 </div>
 
                 <form action="/data/action/{{project.id}}/" method="POST">
@@ -61,7 +61,7 @@
                 {% for data in project.data_list %}
                     <div class="data name row ">
                         <input type="checkbox" name="did" value="{{data.id}}" class="middle">                       
-                        <a href="{% url web.views.data.view data.id %}" class="status {{data.status}}">{{data.name}}</a>
+                        <a href="{% url genetrack.server.web.views.data.view data.id %}" class="status {{data.status}}">{{data.name}}</a>
                         {% if data.result_count %}
                             {% sep %} {{data.result_count}} results
                         {% endif %}
@@ -88,23 +88,23 @@
             <div id="tabs-show-tracks">
                 
                 <div align="center" style="padding:5px;">
-                    To create new tracks please <a href="{% url web.views.track.edit_track project.id 0 %}">click here</a>
+                    To create new tracks please <a href="{% url genetrack.server.web.views.track.edit_track project.id 0 %}">click here</a>
                 </div>
 
                 <div>
                 {% for track in project.tracks.all %}
                     <div class="data name row ">
                         
-                        <div width="20px" style="float:right;margin-left:20px;"><a href="{% url web.views.track.delete_track track.id %}" border="0"><span class="ui-icon ui-icon-trash">&nbsp;</a>
+                        <div width="20px" style="float:right;margin-left:20px;"><a href="{% url genetrack.server.web.views.track.delete_track track.id %}" border="0"><span class="ui-icon ui-icon-trash">&nbsp;</a>
                             </span>
                         </div>
                         
-                        <div width="20px" style="float:right"><a href="{% url web.views.track.edit_track project.id track.id %}" border="0"><span class="ui-icon ui-icon-folder-open">&nbsp;</a>
+                        <div width="20px" style="float:right"><a href="{% url genetrack.server.web.views.track.edit_track project.id track.id %}" border="0"><span class="ui-icon ui-icon-folder-open">&nbsp;</a>
                             </span>
                         </div>
 
                         <div>
-                            {% sep %} <a href="{% url web.views.track.edit_track project.id track.id %}">
+                            {% sep %} <a href="{% url genetrack.server.web.views.track.edit_track project.id track.id %}">
                             Track: {{track.name}}</a>
                         </div>
                     
