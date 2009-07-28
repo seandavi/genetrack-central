@@ -24,5 +24,5 @@ urlpatterns = patterns('',
     (r'^result/delete/(?P<rid>(\d+))/$', data.result_delete),
 
     # the simple browser
-    (r'^view/(?P<did>(\d+))/$', track.browser_view),
+    (r'^browser/(?P<did>(\d+))/$', track.browser_view),
 )
