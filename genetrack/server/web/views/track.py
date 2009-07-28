@@ -8,7 +8,7 @@ from genetrack import logger, conf
 from genetrack.server.web import html, status, webutil
 from genetrack.server.web import models, authorize
 from genetrack.server.web import login_required, private_login_required
-from genetrack.visual import trackspec, builder
+from genetrack.visual import parsing, builder
 
 def fixup_paths(json):
     "Adds path information for known data attribute fields"
@@ -122,6 +122,15 @@ def view_track(request, did):
     data = authorize.get_data(user=user, did=did)    
     param = html.Params(file_list=data.file_list(), image_list= data.image_list())
     return html.template( request=request, name='data-view.html', data=data, param=param)
+
+
+@login_required
+def browser_view(request, did):
+    "Renders a simple view page"
+    user = request.user
+    data = authorize.get_data(user=user, did=did)    
+    param = html.Params()
+    return html.template( request=request, name='data-browse.html', data=data, param=param)
 
 if __name__ == '__main__':
     pass

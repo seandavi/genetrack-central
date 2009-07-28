@@ -1,7 +1,7 @@
 """
 Builds a multiplot from a track specification file
 """
-import trackspec, tracks
+import parsing, trackdef
 from trackutil import *
 import random
 from genetrack import logger
@@ -27,7 +27,7 @@ def populate_preview(json, xscale=(0,2000)):
     # mutates elements in place
     for row in json:
         row['xscale'] = xscale
-        if row['style'] in trackspec.XY_STYLES:
+        if row['style'] in parsing.XY_STYLES:
             row['data'] = test_xy(hash(row['data']))
         elif row['style'] == 'EXON':
             row['data'] = [ (1480, 1550, '1'), (1600, 1700, '2'), (1750, 1830, '3'), (1890, 1930, '4') ]
@@ -37,25 +37,25 @@ def populate_preview(json, xscale=(0,2000)):
 
 # drawing functions
 DRAW_FUNC = dict(
-    BAR=tracks.draw_bars,
-    LINE=tracks.draw_line,
-    ORF=tracks.draw_arrow,
-    ARROW=tracks.draw_arrow,
-    SEGMENT=tracks.draw_segments,
-    EXON=tracks.draw_segments,
-    ZONE=tracks.draw_zones,
-    MARK=tracks.draw_marks,
-    STEP=tracks.draw_steps,
-    AREA=tracks.draw_area,
-    SCATTER=tracks.draw_scatter,
-    READS = tracks.draw_bars,
+    BAR=trackdef.draw_bars,
+    LINE=trackdef.draw_line,
+    ORF=trackdef.draw_arrow,
+    ARROW=trackdef.draw_arrow,
+    SEGMENT=trackdef.draw_segments,
+    EXON=trackdef.draw_segments,
+    ZONE=trackdef.draw_zones,
+    MARK=trackdef.draw_marks,
+    STEP=trackdef.draw_steps,
+    AREA=trackdef.draw_area,
+    SCATTER=trackdef.draw_scatter,
+    READS = trackdef.draw_bars,
 )
 
 # sanity check to ensure all the spec functions have callbacks
-__style_diffs = trackspec.STYLES - set(DRAW_FUNC.keys())
+__style_diffs = parsing.STYLES - set(DRAW_FUNC.keys())
 assert not __style_diffs, 'some styles were not defined -> %s' % ', '.join(__style_diffs)
 
-def build_tracks(json, debug=False):
+def build_trackdef(json, debug=False):
     "Generates a preview image"
     chart, opts, collect = None, None, []
     
@@ -67,14 +67,14 @@ def build_tracks(json, debug=False):
         style  = row.get('style')
         data   = row.get('data')
         color  = row.get('color', BLACK)
-        xychart = style in trackspec.XY_STYLES
+        xychart = style in parsing.XY_STYLES
         newtrack = (target is None) or  (chart is None)
         
         # generate the proper options
         opts = ChartOptions(init=row) if xychart else TrackOptions(init=row)
         
         # reuse last track
-        chart = tracks.Track(options=opts) if newtrack else chart
+        chart = trackdef.Track(options=opts) if newtrack else chart
         draw = DRAW_FUNC[style]
         
         # add global functions to the span
@@ -87,7 +87,7 @@ def build_tracks(json, debug=False):
         draw(track=chart, data=data, options=opts)
         
         if newtrack:
-            # draw the global targets on new tracks
+            # draw the global targets on new trackdef
             for elem in collector:
                 (func, d, o) = elem
                 func(track=chart, data=d, options=o)
@@ -95,7 +95,7 @@ def build_tracks(json, debug=False):
             
     # general options
     collect = filter(None, collect)
-    m = tracks.MultiTrack(tracks=collect)
+    m = trackdef.MultiTrack(tracks=collect)
     if debug:
         m.show()
     return m
@@ -152,11 +152,11 @@ if __name__ == "__main__":
     #color=SKY 10%; style=LINE; data=15664; topx=0; target=last; 
     """
     
-    json = trackspec.parse(text)
+    json = parsing.parse(text)
 
     json = populate_preview(json)
 
-    build_tracks(json, debug=True)
+    build_trackdef(json, debug=True)
 
 
 

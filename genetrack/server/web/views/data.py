@@ -127,12 +127,12 @@ def upload_simple(request, pid):
     return html.template( request=request, name='data-upload-simple.html', project=project)
 
 @login_required
-def view(request, did):
+def details(request, did):
     "Renders the data view page"
     user = request.user
     data = authorize.get_data(user=user, did=did)    
     param = html.Params(file_list=data.file_list(), image_list= data.image_list())
-    return html.template( request=request, name='data-view.html', data=data, param=param)
+    return html.template( request=request, name='data-details.html', data=data, param=param)
 
 @login_required
 def result_get(request, rid, target):

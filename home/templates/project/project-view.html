@@ -52,8 +52,9 @@
             <!-- DATA tab -->
             <div id="tabs-data"> 
 
-                <div align="center" style="padding:5px;">
-                    To upload more datasets <a href="{% url genetrack.server.web.views.data.upload_start project.id %}">click here</a>
+                <!-- Upload bar -->
+                <div align="center">
+                   <a href="{% url genetrack.server.web.views.data.upload_start project.id %}">Upload more datasets</a>
                 </div>
 
                 <form action="/data/action/{{project.id}}/" method="POST">
@@ -61,7 +62,7 @@
                 {% for data in project.data_list %}
                     <div class="data name row ">
                         <input type="checkbox" name="did" value="{{data.id}}" class="middle">                       
-                        <a href="{% url genetrack.server.web.views.data.view data.id %}" class="status {{data.status}}">{{data.name}}</a>
+                        <a href="{% url genetrack.server.web.views.data.details data.id %}" class="status {{data.status}}">{{data.name}}</a>
                         {% if data.result_count %}
                             {% sep %} {{data.result_count}} results
                         {% endif %}

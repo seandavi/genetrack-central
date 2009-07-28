@@ -26,10 +26,15 @@
   <div class="span-17 colborder" id="content">
     
         <div class="pad10">
-                <a href="/project/view/{{data.project.id}}/">Project view</a>
+                <a href="/project/view/{{data.project.id}}/">Back to Project</a>
                 {% sep %}
-                <a href="/data/download/{{data.id}}/">Download data</a>
+
+                <a href="/data/download/{{data.id}}/">Download</a>
                 {% sep %}
+
+                <a href="/data/browser/{{data.id}}/">View</a>
+                {% sep %}
+
                 ID = {{data.id}} 
                 {% sep %} Status = <span class="status {{data.status}}">{{data.status}}</span>
                 {% sep %} Size = {{data.get_size}} 
