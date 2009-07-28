@@ -3,7 +3,7 @@ Data url mapper
 """
 from django.conf.urls.defaults import patterns
 
-from genetrack.server.web.views import data, track
+from genetrack.server.web.views import data, browser
 
 urlpatterns = patterns('',
     #
@@ -24,5 +24,5 @@ urlpatterns = patterns('',
     (r'^result/delete/(?P<rid>(\d+))/$', data.result_delete),
 
     # the simple browser
-    (r'^browser/(?P<did>(\d+))/$', track.browser_view),
+    (r'^browser/(?P<did>(\d+))/$', browser.data_view),
 )
