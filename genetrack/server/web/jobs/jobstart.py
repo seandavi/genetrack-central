@@ -1,3 +1,6 @@
+"""
+Job starters
+"""
 from genetrack.server.web import status
 
 def detect(data, ext, JobClass ):

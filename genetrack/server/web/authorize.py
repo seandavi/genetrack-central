@@ -1,3 +1,6 @@
+"""
+Access authorization.
+"""
 import os, mimetypes
 from genetrack import logger, util
 from genetrack.server.web import models, status, html

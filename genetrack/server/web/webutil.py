@@ -1,3 +1,6 @@
+"""
+Various utility functions
+"""
 from django.conf import settings
 import os, random, hashlib, time, glob, stat
 

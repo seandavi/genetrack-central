@@ -1,4 +1,6 @@
-# Create your views here.
+"""
+Main index and non authenticated views
+"""
 import sys
 from django.conf import settings
 from genetrack import logger

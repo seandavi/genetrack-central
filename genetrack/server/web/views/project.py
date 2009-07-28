@@ -101,5 +101,8 @@ def view(request, pid):
     return html.template( request=request, name='project-view.html', project=project)
 
 
+def test():
+    pass
+
 if __name__ == '__main__':
-    pass    
+    test()

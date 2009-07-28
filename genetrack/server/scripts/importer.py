@@ -23,7 +23,7 @@ Run the script with no parameters to see the options that it takes.
 """
 import os, sys, csv
 from genetrack import logger
-from server.web import models
+from genetrack.server.web import models
 from django.conf import settings
 
 def execute(options):

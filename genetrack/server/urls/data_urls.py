@@ -1,3 +1,6 @@
+"""
+Data url mapper
+"""
 from django.conf.urls.defaults import patterns
 
 from genetrack.server.web.views import data

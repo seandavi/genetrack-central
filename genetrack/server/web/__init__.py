@@ -1,4 +1,6 @@
-
+"""
+Main web application
+"""
 # create a a custom decorator here
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.decorators import user_passes_test, login_required

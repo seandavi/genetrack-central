@@ -184,4 +184,4 @@ def result_delete(request, rid):
     return html.redirect("/data/view/%s/" % result.data.id)
 
 if __name__ == '__main__':
-    pass    
+    pass

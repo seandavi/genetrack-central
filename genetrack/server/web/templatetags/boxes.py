@@ -1,3 +1,6 @@
+"""
+Creates navigation bars on each page
+"""
 from django import template
 
 from genetrack.server.web import html

@@ -1,4 +1,6 @@
-
+"""
+Project url mapper
+"""
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('genetrack.server.web.views',

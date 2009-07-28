@@ -1,8 +1,8 @@
 import time
 from functools import partial
 from genetrack import logger
-from server.web import models, status
-from server.web.jobs import jobdefs
+from genetrack.server.web import models, status
+from genetrack.server.web.jobs import jobdefs
 
 def get_data(job, attr='data_id'):
     "Returns a data"

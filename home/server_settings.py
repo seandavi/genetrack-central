@@ -1,3 +1,7 @@
+"""
+A copy of this settings file may be customized and loaded via 
+DJANGO_SETTINGS_MODULE or the --settings parameter
+"""
 # Django settings for server project.
 import sys, os, random, hashlib
 

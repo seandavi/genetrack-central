@@ -1,3 +1,6 @@
+"""
+Job definitions
+"""
 from genetrack import hdflib, logger
 from genetrack.server.web import status
 

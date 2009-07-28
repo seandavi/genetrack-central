@@ -1,4 +1,6 @@
-
+"""
+Password url mapper
+"""
 from django.conf.urls.defaults import patterns
 
 import django.contrib.auth.views

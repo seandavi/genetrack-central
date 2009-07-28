@@ -1,5 +1,5 @@
 """
-Html specific utility functions.
+Html utility functions.
 """
 import string, mimetypes, os
 from django.template import Context, loader

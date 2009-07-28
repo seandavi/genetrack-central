@@ -1,5 +1,5 @@
 """
-List of GeneTrack models
+GeneTrack database models
 """
 import os
 from genetrack import logger, util, conf

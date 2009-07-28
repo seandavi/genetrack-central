@@ -18,13 +18,14 @@ rem Setting environment variables
 rem
 rem Default home directory of the genetrack installation
 rem
-rem (the directory that contains this batch script)
+rem (extracts the directory name that contains this batch script)
 rem
 set GENETRACK_HOME=%~dp0
 
 rem
 rem The default server home directory
 rem
+
 set GENETRACK_SERVER_HOME=%GENETRACK_HOME%home
 echo GENETRACK_HOME=%GENETRACK_HOME%
 echo GENETRACK_SERVER_HOME=%GENETRACK_SERVER_HOME%
@@ -32,8 +33,15 @@ echo GENETRACK_SERVER_HOME=%GENETRACK_SERVER_HOME%
 rem
 rem This is only required when running it with django_admin.py
 rem 
-set DJANGO_SETTINGS_MODULE=settings
+set DJANGO_SETTINGS_MODULE=server_settings
 echo DJANGO_SETTINGS_MODULE=%DJANGO_SETTINGS_MODULE%
+
+rem
+rem setting some handy shortcuts
+rem
+set DJANGO_MANAGER=%GENETRACK_HOME%genetrack\server\manage.py
+set GENETRACK_JOBRUNNER=%GENETRACK_HOME%genetrack\server\scripts\jobrunner.py
+set GENETRACK_TESTDIR=%GENETRACK_HOME%tests
 
 echo.
 echo *********************
@@ -43,11 +51,11 @@ rem Adding genetrack and the server apps to the python path
 set PYTHON_PATH_1=%GENETRACK_HOME%;%GENETRACK_SERVER_HOME%
 
 rem Adding libraries to the python path
-set PYTHON_PATH_2=%GENETRACK_HOME%\library;%GENETRACK_HOME%\library\library.zip
+set PYTHON_PATH_2=%GENETRACK_HOME%library;%GENETRACK_HOME%library\library.zip
 
 rem Adding the development version of bx python 
 rem not needed if you have it already installed
-set PYTHON_PATH_3=%GENETRACK_HOME%\..\bx-dev\bx-python-psu\lib
+set PYTHON_PATH_3=%GENETRACK_HOME%..\bx-dev\bx-python-psu\lib
 
 rem
 rem Appends paths to the python import
@@ -84,38 +92,39 @@ echo.
 
 rem skipping delete
 if NOT "%2" == "delete" goto :skipdelete
-del %GENETRACK_SERVER_HOME%\data\db\genetrack.db
-rmdir /Q /S %GENETRACK_SERVER_HOME%\data\storage
-rmdir /Q /S %GENETRACK_SERVER_HOME%\data\static\cache
+echo *** Deleting existing data ***
+del %GENETRACK_SERVER_HOME%\db\genetrack.db
+rmdir /Q /S %GENETRACK_SERVER_HOME%\storage
+rmdir /Q /S %GENETRACK_SERVER_HOME%\static\cache
 
 : skipdelete
-%PYTHON_EXE% %GENETRACK_SERVER_HOME%\manage.py syncdb --noinput
-%PYTHON_EXE% -m server.scripts.initializer %GENETRACK_SERVER_HOME%\data\init\initial-users.csv
+%PYTHON_EXE% %DJANGO_MANAGER% syncdb --noinput --settings=%DJANGO_SETTINGS_MODULE%
+%PYTHON_EXE% -m genetrack.server.scripts.initializer %GENETRACK_SERVER_HOME%\init\initial-users.csv
 goto :eof
 
 :runserver
 echo.
 echo *** Starting the test server ***
 echo.
-%PYTHON_EXE% %GENETRACK_HOME%\genetrack\server\manage.py syncdb --noinput
-%PYTHON_EXE% %GENETRACK_HOME%\genetrack\server\manage.py runserver 127.0.0.1:8080
+%PYTHON_EXE% %DJANGO_MANAGER% syncdb --noinput --settings=%DJANGO_SETTINGS_MODULE%
+%PYTHON_EXE% %DJANGO_MANAGER% runserver 127.0.0.1:8080 --settings=%DJANGO_SETTINGS_MODULE%
 goto :eof
 
 :test
 echo.
 echo *** running django tests
 echo.
-%PYTHON_EXE% %GENETRACK_HOME%\genetrack\server\manage.py test
+%PYTHON_EXE% %DJANGO_MANAGER% test --settings=server_settings
 
 echo.
 echo *** running server tests
 echo.
-%PYTHON_EXE% %GENETRACK_HOME%\tests\functional.py %2 %3 %4 %5 %6 %7 %8 %9
+%PYTHON_EXE% %GENETRACK_TESTDIR%\functional.py %2 %3 %4 %5 %6 %7 %8 %9
 
 echo.
 echo *** running genetrack tests
 echo.
-%PYTHON_EXE% %GENETRACK_HOME%\tests\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
+%PYTHON_EXE% %GENETRACK_TESTDIR%\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 
 :editor
@@ -137,8 +146,8 @@ goto :eof
 echo.
 echo *** documentation generation ***
 echo.
-set DOC_DIR=%DEFAULT_HOME%\docs\rest
-set BUILD_DIR=%DEFAULT_HOME%\docs\html
+set DOC_DIR=%GENETRACK_HOME%\docs\rest
+set BUILD_DIR=%GENETRACK_HOME%\docs\html
 set EPYDOC_DIR=%BUILD_DIR%\epydoc
 sphinx-build -b html %DOC_DIR% %BUILD_DIR%
 if "%1"=="apidocs" epydoc %2 %3 %4 %5 %6 %7 %8 %9 --docformat restructuredtext genetrack -o %EPYDOC_DIR% 
@@ -148,7 +157,7 @@ goto :eof
 echo.
 echo *** executes jobrunner ***
 echo.
-%PYTHON_EXE% %DEFAULT_HOME%\server\scripts\jobrunner.py %$
+%PYTHON_EXE% %GENETRACK_JOBRUNNER% %$
 goto :eof
 
 :pushdoc
