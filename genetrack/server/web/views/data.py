@@ -86,7 +86,7 @@ def edit(request, did):
         data.name = get('name')
         data.info = get('info')
         data.save()
-        return html.redirect("/data/view/%s/" % data.id)
+        return html.redirect("/data/details/%s/" % data.id)
     else:    
         return html.template( request=request, name='data-edit.html', did=did, form=form )
 
@@ -165,7 +165,7 @@ def result_upload(request, did):
     if form.is_valid():
         get = form.cleaned_data.get   
         authorize.create_result(user=user, data=data, content=get('content'), image=get('image'))        
-        return html.redirect("/data/view/%s/" % data.id)
+        return html.redirect("/data/details/%s/" % data.id)
     else:    
         # error messages will be generated
         user.message_set.create(message="Some form fields could NOT be validated.")
@@ -181,7 +181,7 @@ def result_delete(request, rid):
     project = authorize.get_project(user=user, pid=result.data.project.id, write=True)
     result.delete()
     user.message_set.create(message="Result %s deleted" % result.name)
-    return html.redirect("/data/view/%s/" % result.data.id)
+    return html.redirect("/data/details/%s/" % result.data.id)
 
 if __name__ == '__main__':
     pass

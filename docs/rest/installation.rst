@@ -1,40 +1,54 @@
 GeneTrack Installation
 ======================
 
-For **Windows** all packages are available as binaries, no compilation is necessary.
-Download and double click each package. Some of them need to moved to the ``library`` folder.
+On **Windows** the installation is very straightforward. All packages are available 
+as binary installers, no compilation is necessary. Download then double click each package. 
+Some of them need to be unpacked and copied to the ``library`` folder.
 
-On **Unix** type systems we recommend that you use a package manager 
-to install the proper dependecies for the **python** instance that you wish to use.
-You may need to add the ``HDF library`` to the library load path like so ::
+On **Unix** type systems we recommend that you use a *package manager* (``apt-get``, ``yum`` on Linux 
+or ``ports`` for MaxOSX) to install the proper dependecies for 
+the **python** instance that you wish to use. When compiled separately 
+you may need to add the ``HDF`` to the library load path like so ::
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ialbert/usr/hdf5
 
 Installation
 ------------
 
-#. You will need to install `python <http://www.python.org/>`_ version 2.5 or higher
+#. You will need to install the `Python <http://www.python.org/>`_ programming language of version *2.5* or higher.
 
-#. Install `numpy <http://numpy.scipy.org/>`_. Make sure it matches the python version you have installed
+#. Install `numpy <http://numpy.scipy.org/>`_. Make sure it matches the python version you have installed.
 
-#. Install `pytables <http://www.pytables.org>`_. Make sure it matches the python version you have installed
+#. Install `pytables <http://www.pytables.org>`_. Make sure it matches the python version you have installed.
 
-#. Install git and check out the repository::
+#. Install `git <http://git-scm.com/>`_ and check out the repository::
 
       git clone git://github.com/ialbert/genetrack-central.git
+   
+   We will provide downloadable packages later.
 
 #. Install `django <http://www.djangoproject.com/>`_. 
    It is sufficent to download the compressed archive, unpack it then 
-   place the ``django`` folder in ``library`` folder of ``genetrack`` (see below)
+   place the ``django`` folder in ``library`` folder of the ``genetrack``
+   distribution (installed above)
 
 #. Install `chartdirector <http://www.advsofteng.com/download.html>`_ . You will need to 
    download the package that corresponds to your python version, 
-   then unpack the library into the library folder of GeneTrack. The ``library`` folder
-   will need to contain the file called ``pychardir.py``
-
+   then move the library modules into the library folder of **GeneTrack**. When done the ``library`` folder
+   will need to contain the file called ``pychardir.py`` (and a few others like ``chardir.dll`` or ``chardir.so`` etc).
+   For ``Unix`` type systems you will need to unpack the content of this
+   :download:`fonts.tar.gz <static/fonts.tar.gz>` file in the ``library`` directory.
+   
 Running Genetrack
 -----------------
 
+The **GeneTrack** manager is called ``genetrack.bat`` on Windows and ``genetrack.sh`` on Unix type systems
+and is located it the main directory. You will need to run the following commands from a
+command shell (terminal). Invoke it to see all the options::
+
+     genetrack.bat
+
+First one should run the tests to ensure that the installation is correct.
 In a command shell navigate to the genetrack distribution and type::
 
      genetrack.bat test
@@ -48,26 +62,29 @@ To populate the system with some data run (*this should be run from genetrack.ba
 
      python tests/populate.py
 
-If you want to delete all data and reset the system's content run::
+If you want to delete all data and reset the system's content run ::
 
      genetrack.bat init delete
 
-Now run::
+.. warning:: The command above deletes all data stored in **GeneTrack**
+
+To start the server run::
      
-     genetrack runserver
+     genetrack.bat runserver
 
-Go to http://127.0.0.1:8080 and log in as `admin`. The password has been generated for you and 
-is located in the ``home/SECRET-KEY`` file.
+Visit http://127.0.0.1:8080 and log in as `admin`. A password has been generated for you and 
+is located in the ``home/SECRET-KEY`` file. You may edit and replace the content of this file 
+with something easier to remember then delete the content and repopulate.
 
-To run jobs scheduled by GeneTrack execute::
+To run jobs scheduled by **GeneTrack** execute::
 
-     genetrack jobrunner
+     genetrack.bat jobrunner
 
 
 Mac OSX tips:
 -------------
 
-GeneTrack runs well on OS-X, the task is not complicated
+**GeneTrack** runs well on OS-X, the task is not complicated
 but several steps need to be followed:
 
   1. Install XCode on your Mac (these are developer tools created by Apple)

@@ -6,7 +6,7 @@
 
 {% block mainbody %}
 
-<form method="post" action="/data/edit/{{data.id}}/">
+<form method="post" action="{% url genetrack.server.web.views.data.edit data.id %}">
 
     <!-- left sidebar -->
     <div class="span-4">&nbsp;</div>
