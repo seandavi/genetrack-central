@@ -4,19 +4,80 @@ Track related views
 import os, mimetypes, string
 from django.conf import settings
 from django import forms
-from genetrack import logger, conf
+from genetrack.visual import builder
+from genetrack import logger, conf, hdflib, util, fitlib
 from genetrack.server.web import html, status, webutil
 from genetrack.server.web import models, authorize
 from genetrack.server.web import login_required, private_login_required
 from genetrack.visual import parsing, builder
+
+def dataview_populate(json, results, params):
+    """
+    Populates the data view with the results
+    """
+    data = map(list, (results.idx,results.val))
+    xscale = (params.start, params.end)
+    for row in json:
+        if row['style'] == 'FIT':
+            data = fitlib.gaussian_smoothing(data[0], data[1], sigma=20, epsilon=0.1 )
+            data = map(list, data)
+            row['data'] = data
+        else:
+            row['data'] = data
+        row['xscale'] = xscale
+
+    return json
+
+def dataview_json(data, params, debug=False):
+    "Generates a  dataview based on data id"
+
+    # the file that contains the data, index should already exist
+    fname = data.content.path
+
+    # will keep track of performance
+    timer = util.Timer()
+    
+    # no index building allowed here
+    index  = hdflib.PositionalData(fname=fname, nobuild=True)
+    results = index.query(start=params.start, end=params.end, label=params.chrom)
+    
+    # this creates the json
+    text = """
+    color=BLACK; style=BAR; data=1; h=300; ylabel=Read count; legend=Reads; bpad=1
+    """
+
+    if params.sigma:
+        text += "color=PURPLE; style=FIT; lw=2; data=1; target=last; newaxis=0; ylabel=Read count; legend=Fit"
+
+    json = parsing.parse(text)
+    
+    # populates the dataview with actual data
+    json = dataview_populate(json=json, results=results, params=params)
+
+    # timing the query lenght
+    query_elapsed = timer.stop()
+
+    
+    multi = builder.get_multiplot(json, debug=debug)
+
+    # timing the query lenght
+    draw_elapsed = timer.stop()
+
+
+    return multi
 
 @login_required
 def data_view(request, did):
     "Renders a simple view page"
     user = request.user
     data = authorize.get_data(user=user, did=did)    
-    param = html.Params()
+    param = html.Params(start=100, end=10000, chrom='chr1')
     return html.template( request=request, name='data-browse.html', data=data, param=param)
 
+
 if __name__ == '__main__':
-    pass
+    from genetrack.server.web import models
+    data = models.Data.objects.get(id=3)
+    params = html.Params(start=100, end=2000, chrom='chr1', sigma=1)
+
+    json = dataview_json(data=data, params=params, debug=True)

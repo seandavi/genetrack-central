@@ -111,7 +111,7 @@ class PositionalData(object):
     `genetrack.scripts' module.
     """
 
-    def __init__(self, fname, workdir=None, update=False ):
+    def __init__(self, fname, workdir=None, update=False, nobuild=False, index=None ):
         """
         Create the PositionalData
         """
@@ -125,12 +125,16 @@ class PositionalData(object):
         basedir = workdir or basedir
 
         # this is the HDF index name that the file operates on
-        self.index = conf.path_join(basedir, '%s.hdf' % basename)
+        self.index = index or conf.path_join(basedir, '%s.hdf' % basename)
 
         # debug messages
         logger.debug('file path %s' % self.fname)
         logger.debug('index path %s' % self.index)
 
+        # no building permitted
+        if nobuild and missing(self.index):
+            raise Exception('No autbuild allowed and no index found at %s' % self.index)
+        
         # creating indices if these are missing or an update is forced
         if update or missing(self.index):
             self.build()
@@ -182,7 +186,7 @@ class PositionalData(object):
         collect = []
         for linec, row in izip(count(1), reader):
 
-            # prints progress on processing
+            # prints progress on processing, also flushes to periodically
             if (linec % CHUNK) == 0:
                logger.info("... processed %s lines" % util.commify(linec))    
                flush( table=table, collect=collect, name=last_chrom )
@@ -198,6 +202,9 @@ class PositionalData(object):
                 if table is not None:
                     flush( table=table, collect=collect, name=last_chrom )
                     collect = []
+                
+                # remap chromosome to standardized form
+                chrom = util.chromosome_remap(chrom)
 
                 # creates the new HDF table here
                 table = db.createTable(  "/", chrom, PositionalSchema, 'label %s' % chrom )
@@ -270,6 +277,14 @@ class PositionalData(object):
         
     def table(self, label):
         return getattr( self.root, label )
+
+    def chromosome(self, label):
+        """
+        Attempts to get a chromosome when specified by either
+        the label or chr1, chr01, chrom01, chrI
+        """
+        return getattr( self.root, label )
+
 
     def close(self):
         if self.db is not None:

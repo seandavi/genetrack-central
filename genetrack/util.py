@@ -3,6 +3,7 @@ Utility functions.
 
 
 """
+import roman
 import logger, conf
 import os, sys, random, hashlib, re, string, csv, gc
 import tempfile, os, random, glob, time
@@ -10,6 +11,33 @@ import tempfile, os, random, glob, time
 def path_join(*args):
     "Builds absolute path"
     return os.path.abspath(os.path.join(*args))
+
+def chromosome_remap(text):
+    """
+    Attempts to produce the standardized chromosome from 
+    multiple possible inputs::
+        
+        chr5, chr05, chrV, chrom5, chrom05, chromV -> chr5
+
+    >>>
+    >>> map(chromosome_remap, 'chr1 chr06 chrIX chrom02 chrom12 chromV'.split())
+    ['chr1', 'chr6', 'chr9', 'chr2', 'chr12', 'chr5']
+    >>>
+    """
+    text = text.replace('chrom','')
+    text = text.replace('chr','')
+    
+    try:
+        # cast to integer
+        text = int(text)
+    except ValueError, exc:
+        try:
+            # cast to roman numerals
+            text = roman.fromRoman(text)
+        except Exception, exc:
+            pass
+
+    return 'chr%s' % text
 
 class Params(object):
     """

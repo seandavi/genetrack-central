@@ -32,7 +32,7 @@ class AttributeField(forms.Field):
         # check format then fixup the paths
         try:
             # parse it into a json
-            value = trackspec.parse(value)
+            value = parsing.parse(value)
             # add paths to data
             value = fixup_paths(value)
         except Exception, exc:
@@ -96,7 +96,7 @@ def edit_track(request, pid, tid):
             if preview:
                 imgname, imgpath = webutil.cache_file(name=user.id, ext='png')
                 json = builder.populate_preview(json)
-                multi = builder.build_tracks(json)
+                multi = builder.get_multiplot(json)
                 multi.save(imgpath)
                 param.imgname = imgname
                 return html.template( request=request, name='track-edit.html', param=param, form=form )

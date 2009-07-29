@@ -49,14 +49,15 @@ DRAW_FUNC = dict(
     AREA=trackdef.draw_area,
     SCATTER=trackdef.draw_scatter,
     READS = trackdef.draw_bars,
+    FIT = trackdef.draw_line,
 )
 
 # sanity check to ensure all the spec functions have callbacks
 __style_diffs = parsing.STYLES - set(DRAW_FUNC.keys())
 assert not __style_diffs, 'some styles were not defined -> %s' % ', '.join(__style_diffs)
 
-def build_trackdef(json, debug=False):
-    "Generates a preview image"
+def get_multiplot(json, debug=False):
+    "Generates a multiplot based on a json"
     chart, opts, collect = None, None, []
     
     # collect globals
@@ -156,7 +157,7 @@ if __name__ == "__main__":
 
     json = populate_preview(json)
 
-    build_trackdef(json, debug=True)
+    get_multiplot(json, debug=True)
 
 
 
