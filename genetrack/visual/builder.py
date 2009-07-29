@@ -49,7 +49,8 @@ DRAW_FUNC = dict(
     AREA=trackdef.draw_area,
     SCATTER=trackdef.draw_scatter,
     READS = trackdef.draw_bars,
-    FIT = trackdef.draw_line,
+    FIT_LINE = trackdef.draw_line,
+    FIT_AREA = trackdef.draw_area,
 )
 
 # sanity check to ensure all the spec functions have callbacks
@@ -135,7 +136,7 @@ if __name__ == "__main__":
     color=BLUE 10%; style=EXON; data=1;h=200; label_offset=-15; target=last
     
 
-    color=BLACK 50%; style=AREA; data=1; topx=1; tpad=0; bpad=40; lw=10; topx=0
+    color=BLACK 50%; style=AREA; data=1; topx=1; tpad=0; bpad=40; lw=1; topx=0
     color=ORANGE 50%; style=AREA; data=2; target=last
     
     

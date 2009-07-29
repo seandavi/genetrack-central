@@ -128,11 +128,12 @@ class Track(TrackBase):
         self.c.setXAxisOnTop(o.topx)
 
         # may be multiple ones
-        self.setup_axis( self.c.yAxis() )
+        self.yaxis = self.c.yAxis()
+        self.setup_axis( self.yaxis )
 
-    def setup_axis(self, axis):
+    def setup_axis(self, axis, options=None):
         "Sets up the axis"
-        o = self.o
+        o = options or self.o
         hsize = o.font_size/2
         axis.setMargin(hsize, hsize)
         axis.setTickDensity(o.h/10) 
@@ -141,12 +142,13 @@ class Track(TrackBase):
         axis.setColors(GREY, o.y_tick_color, BLACK, BLACK)
         axis.setTitle(o.ylabel, '', o.font_size)
 
-    def add_axis(self, value):
+    def add_axis(self, value, options=None):
         "Adds and returns an axis"
         pos  = pychartdir.Left if value > 0 else pychartdir.Right 
         axis = self.c.addAxis(pos , abs(value))
-        self.setup_axis(axis)
-        return axis
+        self.setup_axis(axis, options=options)
+        self.yaxis = axis
+        return self.yaxis
 
     def show(self):
         "Draw itself on the screen requires PIL"
@@ -183,11 +185,8 @@ def scaling(y, options):
 def get_axis(track, o):
     "Attempts to select a new axis"
     if o.newaxis is not None:
-        axis = track.add_axis(o.newaxis)
-    else:
-        axis = track.c.yAxis()
-    return axis
-
+        track.add_axis(o.newaxis, options=o)
+    return track.yaxis
 
 def draw_bars(track, data, options=None):
     "Draws bars data=(x,y)"
@@ -211,10 +210,12 @@ def draw_area(track, data, options=None):
     y = scaling(y, options)
     layer = track.c.addAreaLayer(y, color=o.color, name=o.legend)
     axis = get_axis(track, options)
+    layer.setLineWidth(o.lw)
+    if o.color2:
+        layer.setBorderColor(o.color2)
     layer.setUseYAxis(axis)
     layer.setXData(x)
     track.add_legend(o.legend)
-
 
 def draw_scatter(track, data, options):
     "Draws lines data=(x,y)"
@@ -251,6 +252,18 @@ def draw_linelayer(track, data, options, func):
     axis = get_axis(track, options)
     
     layer.setUseYAxis(axis)
+
+    if o.threshold is not None:
+        color2 = o.color2 or o.color
+        color  = track.c.dashLineColor(color2, pychartdir.DotLine) 
+        layer2 = track.c.addLineLayer2()
+        layer2.setUseYAxis(axis)
+        layer2.addDataSet( [o.threshold, o.threshold], color, "Threshold %4.1f" % o.threshold)
+        layer2.setXData( list(o.xscale) )
+        layer2.setLineWidth(o.lw)
+        track.c.addInterLineLayer(layer.getLine(0), layer2.getLine(0), color2, TRANSPARENT)
+
+    
     layer.setXData(x)
     track.add_legend(o.legend)
     

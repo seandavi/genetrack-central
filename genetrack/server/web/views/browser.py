@@ -18,8 +18,8 @@ def dataview_populate(json, results, params):
     data = map(list, (results.idx,results.val))
     xscale = (params.start, params.end)
     for row in json:
-        if row['style'] == 'FIT':
-            data = fitlib.gaussian_smoothing(data[0], data[1], sigma=20, epsilon=0.1 )
+        if row['style'].startswith('FIT'):
+            data = fitlib.gaussian_smoothing(data[0], data[1], sigma=params.sigma, epsilon=0.01 )
             data = map(list, data)
             row['data'] = data
         else:
@@ -47,7 +47,9 @@ def dataview_json(data, params, debug=False):
     """
 
     if params.sigma:
-        text += "color=PURPLE; style=FIT; lw=2; data=1; target=last; newaxis=0; ylabel=Read count; legend=Fit"
+        text += """
+        color=PURPLE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%; threshold=2.5
+        """ 
 
     json = parsing.parse(text)
     
@@ -57,12 +59,12 @@ def dataview_json(data, params, debug=False):
     # timing the query lenght
     query_elapsed = timer.stop()
 
-    
     multi = builder.get_multiplot(json, debug=debug)
 
     # timing the query lenght
     draw_elapsed = timer.stop()
 
+    print draw_elapsed
 
     return multi
 
@@ -71,13 +73,13 @@ def data_view(request, did):
     "Renders a simple view page"
     user = request.user
     data = authorize.get_data(user=user, did=did)    
-    param = html.Params(start=100, end=10000, chrom='chr1')
+    param = html.Params(start=100, end=200, chrom='chr1')
     return html.template( request=request, name='data-browse.html', data=data, param=param)
 
 
 if __name__ == '__main__':
     from genetrack.server.web import models
     data = models.Data.objects.get(id=3)
-    params = html.Params(start=100, end=2000, chrom='chr1', sigma=1)
+    params = html.Params(start=100, end=1500, chrom='chr1', sigma=20)
 
     json = dataview_json(data=data, params=params, debug=True)

@@ -29,7 +29,7 @@ def split(text, sep):
     "Split and strip whitespace in one call"
     return map(strip, text.split(sep))
 
-XY_STYLES = set( 'BAR LINE STEP AREA SCATTER READS FIT'.split() )
+XY_STYLES = set( 'BAR LINE STEP AREA SCATTER READS FIT_LINE FIT_AREA'.split() )
 STYLES = set( list(XY_STYLES) + "SEGMENT ARROW ORF ZONE MARK EXON".split() )
 
 def style_check(value):
@@ -100,12 +100,13 @@ def float2(value):
 
 # maps dictionary keys to validation functions
 validator = dict(
-    data=int2, style=style_check, color=color_check, 
+    data=int2, style=style_check, 
+    color=color_check, color2=color_check,
     height=int2, topx=boolean, tpad=int2, bpad=int2, rpad=int2, lpad=int2,
     h=int2, w=int2, arrow=arrow_check, lw=int2,
     label_offset=int2, target=target_check, show_labels=boolean, rotate=float2,
     bgcolor=color_check, grid=boolean, spline=float2,
-    scaling=float2,
+    scaling=float2, threshold=float2,
     newaxis=int2,
     )
 

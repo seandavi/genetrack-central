@@ -104,8 +104,9 @@ class ChartOptions(Options):
         yscale=[],
         
         # foreground colors
-        color = BLACK,
-        
+        color  = BLACK,
+        color2 = None,
+
         # background color
         bgcolor=WHITE,
         
@@ -136,6 +137,8 @@ class ChartOptions(Options):
         # arrow rotations
         rotate=0,
         
+        threshold=None,
+
         # label offset
         label_offset = 0,
         
