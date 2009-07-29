@@ -12,6 +12,8 @@ you may need to add the ``HDF`` to the library load path like so ::
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ialbert/usr/hdf5
 
+See bottom of the page for :ref:`os-x-tips`.
+
 Installation
 ------------
 
@@ -80,36 +82,37 @@ To run jobs scheduled by **GeneTrack** execute::
 
      genetrack.bat jobrunner
 
+.. _os-x-tips:
 
-Mac OSX tips:
--------------
+Mac OSX tips
+------------
 
-**GeneTrack** runs well on OS-X, the task is not complicated
-but several steps need to be followed:
+**GeneTrack** runs well on OSX. Set up is not complicated
+but somewhat tedious as several steps need to be followed in order and 
+familiarity with basic system administration may be necessary:
 
-  1. Install XCode on your Mac (these are developer tools created by Apple)
-  2. Install Macports from:
+  1. Install `XCode <http://developer.apple.com/tools/xcode/index.html>`_ on your Mac. 
+     These are developer tools created by Apple you will need to register (free).
+
+  2. Install `Macports <http://www.macports.org/>`_
   
-  3. The following is using Macports to install binaries. From
-     a terminal install python2.6, numpy, setuptools and hdf5-18 like so::
+  3. The following is using ``Macports`` to install binaries. From
+     a terminal install ``python2.6``, ``numpy``, ``setuptools`` like so::
         
-        sudo port install python26
-        sudo port install py26-setuptools
-        sudo port install py26-numpy
+        $ sudo port install python26
+        $ sudo port install py26-setuptools
+        $ sudo port install py26-numpy
            
-  4. Now we need to install hdf then pytables and the latter needs us to specify the location of
-     the location of the HDF libraries. For that we need to write::
+  4. Install ``hdf`` then ``pytables`` and the latter will ask us to 
+     specify the location of the location of the HDF libraries. For that we need to write::
      
-        sudo port install hdf5-18
-        export HDF5_DIR=/opt/local
-        easy_install-2.6 tables
+        $ sudo port install hdf5-18
+        $ export HDF5_DIR=/opt/local
+        $ easy_install-2.6 tables
   
   5. install django and bx-python::
   
-        easy_install django
-        easy_install genetrack
+        $ easy_install django
         
-Navigate to a folder and verify that everything works::
-    
-    genetrack.sh test
+See above for details on running **GeneTrack**    
 
