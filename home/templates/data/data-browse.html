@@ -3,13 +3,27 @@
 {% load boxes %}
 {% block title %}Simple Browser{% endblock %}
 
-{% block header %}<h2 align="center">{{data.name}} back {% sep %} <a href="/data/details/{{data.id}}/">back</h2>{% endblock %}
+{% block header %}<h2 align="center">{{data.name}} back {% sep %} <a href="/data/details/{{data.id}}/">back</a></h2>{% endblock %}
 
 {% block mainbody %}
 
     <div class="span-1">&nbsp;</div>
 
     <div class="span-22">
+        <!-- main body -->
+        
+        <div align="center">
+            Chrom: {{forms.search.chrom}}&nbsp;
+            Locus: {{forms.search.feature}}&nbsp;
+            Zoom:  {{forms.search.zoom_value}}&nbsp;
+            Plot:  {{forms.search.strand}}&nbsp;
+            Features: {{forms.search.build}}&nbsp;
+        </div>
+
+        <div>
+            <img src="/static/cache/{{params.imgname}}" />
+        </div>
+
     </div>
 
     <div class="span-1 last">&nbsp;</div>
