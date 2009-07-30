@@ -25,7 +25,7 @@ Software requirements
 
 #. Install `git <http://git-scm.com/>`_ and check out the repository::
 
-      git clone git://github.com/ialbert/genetrack-central.git
+      > git clone git://github.com/ialbert/genetrack-central.git
    
    We will provide downloadable packages later.
 
@@ -48,34 +48,43 @@ The **GeneTrack** manager is called ``genetrack.bat`` on Windows and ``genetrack
 and is located it the main directory. You will need to run all the following commands from a
 command shell (terminal). Invoke the manager to see all the options::
 
-     genetrack.bat (or genetrack.sh)
+     > genetrack.bat (or genetrack.sh)
 
-First one should run the tests to ensure that the installation is correct.
-In a command shell navigate to the genetrack distribution and type::
+First run the tests to ensure that the installation is correct.
+In a command shell type::
 
-     genetrack.bat test
+     > genetrack.bat test
 
 Three types of tests must pass. Django tests, functional tests and genetrack internal tests. 
-Verify that all of them pass. You may pass multiple commands to the manager. 
-To initialize your **Gentrack** server and populate it with some data you'll
+Verify that all of them pass. 
+
+You may pass multiple commands to the manager. 
+To initialize your **Genetrack** server and populate it with some data you'll
 have to write::
 
-     genetrack.bat init populate 
+     > genetrack.bat init populate 
+
+This initializes **GeneTrack** with the content of the comma separated file stored in
+``home/init/initial-users.csv``. You may edit this file and add or remove users from it.
+It is used to maintain an initial set of users. At any time you may add a 
+new user to this list and rerun ``init`` command. You can also add users from
+the administration interface. When you log into an account that has 
+administration access you will see links that point to administration tasks.
 
 If you want to delete all data and reset the system's content run ::
 
-     genetrack.bat delete
+     > genetrack.bat delete
 
-.. warning:: The ``delete`` command removes all data/files/results stored in **GeneTrack**
+.. warning:: The ``delete`` command removes all data and users stored in **GeneTrack**
 
 To completely reset your instance run the code below. Note that this 
 also runs the jobserver and indexes the files that were populated before::
 
-     genetrack delete init populate jobs
+     > genetrack.bat delete init populate jobs
 
 To start the server run::
      
-     genetrack.bat run
+     > genetrack.bat run
 
 Visit http://127.0.0.1:8080 and log in as `admin`. A password has been generated for you and 
 is located in the ``home/SECRET-KEY`` file. You may edit and replace the content of this file 
@@ -84,7 +93,7 @@ adds project to the ``admin`` user.
 
 To run jobs scheduled by **GeneTrack** execute::
 
-     genetrack.bat jobs
+     > genetrack.bat jobs
 
 .. _os-x-tips:
 
