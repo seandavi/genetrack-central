@@ -32,7 +32,7 @@ class StatusUpdate:
 @StatusUpdate
 def indexing_job(data):
     from genetrack.scripts import hdf_loader
-    hdf_loader.transform(inpname=data.content.path)
+    index = hdf_loader.transform(inpname=data.content.path)
 
 def chromosome_coverage(data):
     pass

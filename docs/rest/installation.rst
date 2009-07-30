@@ -45,10 +45,10 @@ Running Genetrack
 -----------------
 
 The **GeneTrack** manager is called ``genetrack.bat`` on Windows and ``genetrack.sh`` on Unix type systems
-and is located it the main directory. You will need to run the following commands from a
-command shell (terminal). Invoke it to see all the options::
+and is located it the main directory. You will need to run all the following commands from a
+command shell (terminal). Invoke the manager to see all the options::
 
-     genetrack.bat
+     genetrack.bat (or genetrack.sh)
 
 First one should run the tests to ensure that the installation is correct.
 In a command shell navigate to the genetrack distribution and type::
@@ -56,31 +56,35 @@ In a command shell navigate to the genetrack distribution and type::
      genetrack.bat test
 
 Three types of tests must pass. Django tests, functional tests and genetrack internal tests. 
-Verify that all of them pass. Now run::
+Verify that all of them pass. You may pass multiple commands to the manager. 
+To initialize your **Gentrack** server and populate it with some data you'll
+have to write::
 
-     genetrack.bat init
-
-To populate the system with some data run (*this should be run from genetrack.bat*) make sure the environment is set up properly)::
-
-     python tests/populate.py
+     genetrack.bat init populate 
 
 If you want to delete all data and reset the system's content run ::
 
-     genetrack.bat init delete
+     genetrack.bat delete
 
-.. warning:: The command above deletes all data stored in **GeneTrack**
+.. warning:: The ``delete`` command removes all data/files/results stored in **GeneTrack**
+
+To completely reset your instance run the code below. Note that this 
+also runs the jobserver and indexes the files that were populated before::
+
+     genetrack delete init populate jobs
 
 To start the server run::
      
-     genetrack.bat runserver
+     genetrack.bat run
 
 Visit http://127.0.0.1:8080 and log in as `admin`. A password has been generated for you and 
 is located in the ``home/SECRET-KEY`` file. You may edit and replace the content of this file 
-with something easier to remember then delete the content and repopulate.
+with something easier to remember then delete the content and repopulate. The ``populate`` command
+adds project to the ``admin`` user.
 
 To run jobs scheduled by **GeneTrack** execute::
 
-     genetrack.bat jobrunner
+     genetrack.bat jobs
 
 .. _os-x-tips:
 

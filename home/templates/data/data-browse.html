@@ -7,6 +7,8 @@
 
 {% block mainbody %}
 
+<form action="/data/browser/{{data.id}}/" method="post" id="mainform">
+
     <div class="span-1">&nbsp;</div>
 
     <div class="span-22">
@@ -17,7 +19,7 @@
             Locus: {{forms.search.feature}}&nbsp;
             Zoom:  {{forms.search.zoom_value}}&nbsp;
             Plot:  {{forms.search.strand}}&nbsp;
-            Features: {{forms.search.build}}&nbsp;
+            <input type="submit" id="id_submit_display" name="submit" value="Display!">
         </div>
 
         <div>

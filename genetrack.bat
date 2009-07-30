@@ -62,26 +62,49 @@ rem Appends paths to the python import
 rem
 set PYTHONPATH=%PYTHON_PATH_1%;%PYTHON_PATH_2%;%PYTHON_PATH_3%
 
-if "%1"=="runserver" goto :runserver
-if "%1"=="init" goto :init
-if "%1"=="test" goto :test
-if "%1"=="editor" goto :editor
-if "%1"=="docs" goto :docs
-if "%1"=="apidocs" goto :docs
-if "%1"=="jobrunner" goto :jobrunner
+if (%1)==() goto :usage
+
+:top
+   if (%1)==() goto :eof
+   if "%1"=="run" goto :run
+   if "%1"=="init" goto :init
+   if "%1"=="delete" goto :delete
+   if "%1"=="populate" goto :populate
+   if "%1"=="test" goto :test
+   if "%1"=="editor" goto :editor
+   if "%1"=="doc" goto :doc
+   if "%1"=="api" goto :api
+   if "%1"=="jobs" goto :jobs
+   if "%1"=="push" goto :push
+   goto :usage
+   :back
+   shift
+goto :top
 
 rem  internal use, pushes the docs to the public server
 if "%1" == "pushdoc" goto :pushdoc
 
+:usage
+
 echo USAGE:
 echo.
-echo     genetrack.bat init       (initializes the database)
-echo     genetrack.bat runserver  (runs server)
-echo     genetrack.bat test       (runs all tests)
-echo     genetrack.bat docs       (generates documentation)
-echo     genetrack.bat apidocs    (generates API html via epydoc)
-echo     genetrack.bat jobrunner  (executes the jobrunner)
-echo     genetrack.bat editor     (load the editor in the environment, win32)
+echo     genetrack.bat command
+echo.
+echo Where command can be any of:
+echo     init, docs, api, test, jobrunner, runserver
+echo.
+echo Multiple commands may be used in the same line:
+echo     genetrack.bat init populate jobrunner
+echo.
+echo Commands:
+echo     init      initializes the database
+echo     test      runs all tests
+echo     docs      generates documentation
+echo     api       generates API html via epydoc
+echo     jobs      executes the jobrunner
+echo     run       runs server
+echo     delete    deletes all data in GeneTrack
+echo     populate  populates the system with test data
 
 goto :eof
 
@@ -89,20 +112,34 @@ goto :eof
 echo.
 echo *** Initializing the data ***
 echo.
+%PYTHON_EXE% %DJANGO_MANAGER% syncdb --noinput --settings=%DJANGO_SETTINGS_MODULE%
+%PYTHON_EXE% -m genetrack.server.scripts.initializer %GENETRACK_SERVER_HOME%\init\initial-users.csv
+goto :back
 
-rem skipping delete
-if NOT "%2" == "delete" goto :skipdelete
-echo *** Deleting existing data ***
+:delete
+echo.
+echo *** Deleting all data ***
+echo.
 del %GENETRACK_SERVER_HOME%\db\genetrack.db
 rmdir /Q /S %GENETRACK_SERVER_HOME%\storage
 rmdir /Q /S %GENETRACK_SERVER_HOME%\static\cache
+goto :back
 
-: skipdelete
-%PYTHON_EXE% %DJANGO_MANAGER% syncdb --noinput --settings=%DJANGO_SETTINGS_MODULE%
-%PYTHON_EXE% -m genetrack.server.scripts.initializer %GENETRACK_SERVER_HOME%\init\initial-users.csv
-goto :eof
+:populate
+echo.
+echo *** Populating all data ***
+echo.
+%PYTHON_EXE% tests/populate.py
+goto :back
 
-:runserver
+:jobs
+echo.
+echo *** Executes jobrunner ***
+echo.
+%PYTHON_EXE% %GENETRACK_JOBRUNNER% %$
+goto :back
+
+:run
 echo.
 echo *** Starting the test server ***
 echo.
@@ -112,20 +149,20 @@ goto :eof
 
 :test
 echo.
-echo *** running django tests
+echo *** Running django tests
 echo.
 %PYTHON_EXE% %DJANGO_MANAGER% test --settings=server_settings
 
 echo.
-echo *** running server tests
+echo *** Running server tests
 echo.
 %PYTHON_EXE% %GENETRACK_TESTDIR%\functional.py %2 %3 %4 %5 %6 %7 %8 %9
 
 echo.
-echo *** running genetrack tests
+echo *** Running genetrack tests
 echo.
 %PYTHON_EXE% %GENETRACK_TESTDIR%\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
-goto :eof
+goto :back
 
 :editor
 rem 
@@ -142,27 +179,30 @@ REM cmd /c "C:\Program Files\ActiveState Komodo Edit 5\komodo.exe"
 
 goto :eof
 
-:docs
+:doc
 echo.
-echo *** documentation generation ***
+echo *** Main documentation generation ***
 echo.
 set DOC_DIR=%GENETRACK_HOME%\docs\rest
 set BUILD_DIR=%GENETRACK_HOME%\docs\html
 set EPYDOC_DIR=%BUILD_DIR%\epydoc
 sphinx-build -b html %DOC_DIR% %BUILD_DIR%
 if "%1"=="apidocs" epydoc %2 %3 %4 %5 %6 %7 %8 %9 --docformat restructuredtext genetrack -o %EPYDOC_DIR% 
-goto :eof
+goto :back
 
-:jobrunner
+:api
 echo.
-echo *** executes jobrunner ***
+echo *** API documentation generation ***
 echo.
-%PYTHON_EXE% %GENETRACK_JOBRUNNER% %$
-goto :eof
+set DOC_DIR=%GENETRACK_HOME%\docs\rest
+set BUILD_DIR=%GENETRACK_HOME%\docs\html
+set EPYDOC_DIR=%BUILD_DIR%\epydoc
+epydoc %2 %3 %4 %5 %6 %7 %8 %9 --docformat restructuredtext genetrack -o %EPYDOC_DIR% 
+goto :back
 
-:pushdoc
+:push
 echo.
-echo *** pushing docs to webserver ***
+echo *** Pushing docs to webserver ***
 echo.
 rsync docs/html/* rsync -zav --rsh=ssh webserver@atlas.bx.psu.edu:~/www/genetrack.bx.psu.edu
 goto :eof

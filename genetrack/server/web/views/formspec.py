@@ -58,7 +58,9 @@ class NavbarForm( forms.Form ):
     """
     Encodes the navigation bar
     
-    >>> n = NavbarForm()
+    >>> n = NavbarForm(NAVBAR_DEFAULTS)
+    >>> n.is_valid()
+    True
     """
     move_left  = forms.CharField( widget=ButtonWidget, initial='<< Move left'  , required=False )
     move_right = forms.CharField( widget=ButtonWidget, initial='Move right >>' , required=False )
@@ -72,6 +74,11 @@ class FitForm( forms.Form ):
     Encodes fitting parameters
     
     >>> f = FitForm()
+    >>> f.is_valid()
+    False
+    >>> f = FitForm(FIT_DEFAULTS)
+    >>> f.is_valid()
+    True
     """
     use_smoothing = forms.BooleanField( initial=False, required=False )
     sigma = forms.FloatField( initial=20, max_value=1000, min_value=0, widget=ImageWidget )
@@ -83,7 +90,9 @@ class PeakForm( forms.Form ):
     """
     Displays the navigation bar
     
-    >>> p = PeakForm()
+    >>> p = PeakForm(PEAK_DEFAULTS)
+    >>> p.is_valid()
+    True
     """
     use_predictor = forms.BooleanField( initial=False, required=False )
     feature_width = forms.IntegerField( initial=147, max_value=2000, min_value=0, widget=ImageWidget )
@@ -97,6 +106,12 @@ def make_form( chroms ):
     Form class factory. 
     Creates a custom form bound to the chromosomal labels in the parameters
     Returns a form class that needs to be instantiated.
+    
+    >>> FormClass = make_form( [ 'chr1'] )
+    >>> form = FormClass()
+    >>> defaults = get_defaults( form )
+    >>> defaults['chrom']
+    'chr1'
     """
 
     chrom_choices  = [ (x,x) for x in chroms ]
@@ -105,9 +120,6 @@ def make_form( chroms ):
     class SearchForm( forms.Form ):
         """
         The search form that gets displayed on each page
-        >>> # s = SearchForm( SearchForm.defaults() )
-        >>> # s.is_valid()
-        # True
         """
         feature = forms.CharField( widget=FeatureWidget, initial=10000 )
         image_width = forms.IntegerField( initial=5000, max_value=20000, min_value=150, widget=ImageWidget )
@@ -119,7 +131,12 @@ def make_form( chroms ):
     return SearchForm
 
 # default search form
-SEARCH_DEFAULTS = get_defaults( make_form(["chrom1"])() )
+SEARCH_DEFAULTS = get_defaults( make_form(["chr1"])() )
+
+ALL_DEFAULTS = dict( SEARCH_DEFAULTS )
+ALL_DEFAULTS.update( FIT_DEFAULTS )
+ALL_DEFAULTS.update( PEAK_DEFAULTS )
+
 
 def test():
     "Module level testing"

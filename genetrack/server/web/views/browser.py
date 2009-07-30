@@ -8,6 +8,7 @@ from genetrack.visual import builder
 from genetrack import logger, conf, hdflib, util, fitlib
 from genetrack.server.web import html, status, webutil
 from genetrack.server.web import models, authorize
+from genetrack.server.web.views import formspec
 from genetrack.server.web import login_required, private_login_required
 from genetrack.visual import parsing, builder
 
@@ -25,7 +26,7 @@ def dataview_populate(json, data, params):
     results = index.query(start=params.start, end=params.end, label=params.chrom)
     
     # this provides a namespace for data properties
-    dataprop = html.Params(chromlist=index.labels)
+    dataprop = html.Params(chroms=index.labels)
     
     data = map(list, (results.idx,results.val))
     xscale = (params.start, params.end)
@@ -88,7 +89,27 @@ def dataview_multiplot(data, params, debug=False):
 
     print draw_elapsed
     
-    return multi
+    return multi, dataprop
+
+def form_render(request, dataprop):
+    
+    submit = 'submit' in request.REQUEST
+    search = formspec.make_form(dataprop.chroms)( request.REQUEST )
+
+    # decide on submit action
+    if submit and search.is_valid():
+        # valid submission
+        pass
+
+    elif submit and not search.is_valid():
+        # not a valid submission
+        pass
+
+    elif not submit:
+        # initial view
+        pass
+
+    return search
 
 @login_required
 def data_view(request, did):
@@ -96,11 +117,17 @@ def data_view(request, did):
     user = request.user
     data = authorize.get_data(user=user, did=did)    
     
+   
+
     params = html.Params(start=100, end=1500, chrom='chr1', sigma=20, w=800)
 
     # creates the multiplot
-    multi = dataview_multiplot(data=data, params=params, debug=False)
+    multi, dataprop = dataview_multiplot(data=data, params=params, debug=False)
     
+    search = form_render(request=request, dataprop=dataprop)
+    
+    forms  = html.Params(search=search)
+
     # trigger the occasional cache cleaning
     webutil.cache_clean(age=1, chance=10)
 
@@ -111,7 +138,7 @@ def data_view(request, did):
     multi.save(imgpath)
     params.imgname = imgname
 
-    return html.template( request=request, name='data-browse.html', data=data, params=params)
+    return html.template( request=request, name='data-browse.html', forms=forms, data=data, params=params)
 
 if __name__ == '__main__':
     from genetrack.server.web import models

@@ -29,7 +29,8 @@ def transform(inpname, workdir=None, update=False):
     """
     Creates a transform from a genetrack input file
     """
-    hdflib.PositionalData(fname=inpname, workdir=workdir, update=update)        
+    index = hdflib.PositionalData(fname=inpname, workdir=workdir, update=update)        
+    return index
 
 if __name__ == '__main__':
     import optparse
