@@ -1,7 +1,7 @@
 GeneTrack Installation
 ======================
 
-On **Windows** the installation is very straightforward. All packages are available 
+On **Windows** installation is very straightforward. All packages are available 
 as binary installers, no compilation is necessary. Download then double click each package. 
 Some of them need to be unpacked and copied to the ``library`` folder.
 
@@ -14,8 +14,8 @@ you may need to add the ``HDF`` to the library load path like so ::
 
 See bottom of the page for :ref:`os-x-tips`.
 
-Installation
-------------
+Software requirements
+---------------------
 
 #. You will need to install the `Python <http://www.python.org/>`_ programming language of version *2.5* or higher.
 
@@ -37,7 +37,7 @@ Installation
 #. Install `chartdirector <http://www.advsofteng.com/download.html>`_ . You will need to 
    download the package that corresponds to your python version, 
    then move the library modules into the library folder of **GeneTrack**. When done the ``library`` folder
-   will need to contain the file called ``pychardir.py`` (and a few others like ``chardir.dll`` or ``chardir.so`` etc).
+   will need to contain the file called ``pychartdir.py`` (and a few others like ``chartdir.dll`` or ``chartdir.so`` etc).
    For ``Unix`` type systems you will need to unpack the content of this
    :download:`fonts.tar.gz <static/fonts.tar.gz>` file in the ``library`` directory.
    

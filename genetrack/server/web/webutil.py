@@ -16,13 +16,15 @@ def uuid(KEY_SIZE=128):
 
 def cache_file(name=None, ext=None):
     "Generates a path to the cache directory"
-    name = str(name) or util.uuid()
+    name = name or uuid()
     name = '%s.%s' % (name, ext) if ext else name
     path = path_join(settings.CACHE_DIR, name  )
     return name, path
 
-def cache_clean(name=None, age=1):
+def cache_clean(name=None, age=1, chance=1):
     "Cleans the cache directory. Chance to trigger, file age in seconds"
+    if chance < random.randint(1, 100):
+        return
     expiration = time.time()
     fpatt = path_join(settings.CACHE_DIR, '*')
     for fname in glob.glob(fpatt):
