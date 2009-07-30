@@ -15,7 +15,7 @@ class SubmitWidget( forms.widgets.Input) :
 
 # custom widgets
 ButtonWidget   = SubmitWidget( attrs={'class': 'nav_btn'} ) 
-LocusWidget    = forms.TextInput( attrs={'size': '10', 'id': 'locus'}) 
+FeatureWidget  = forms.TextInput( attrs={'size': '10', 'id': 'locus'}) 
 ImageWidget    = forms.TextInput( attrs={'size': '4'}) 
 
 # generate zoom levels with user friendly numbers
@@ -45,6 +45,81 @@ def zoom_in(value):
 
 def zoom_out(value):
     return zoom_change(value, +1)
+
+def get_defaults( form ):
+    "Extracts the initial values from a form"
+    # not sure why this is not offered by Django forms right away
+    store = {}
+    for name, field in form.fields.items() :
+        store[ name ] = field.initial
+    return store
+
+class NavbarForm( forms.Form ):
+    """
+    Encodes the navigation bar
+    
+    >>> n = NavbarForm()
+    """
+    move_left  = forms.CharField( widget=ButtonWidget, initial='<< Move left'  , required=False )
+    move_right = forms.CharField( widget=ButtonWidget, initial='Move right >>' , required=False )
+    zoom_in    = forms.CharField( widget=ButtonWidget, initial='Zoom in +' , required=False )
+    zoom_out   = forms.CharField( widget=ButtonWidget, initial='Zoom out -', required=False )
+
+NAVBAR_DEFAULTS = get_defaults( NavbarForm() )
+
+class FitForm( forms.Form ):
+    """
+    Encodes fitting parameters
+    
+    >>> f = FitForm()
+    """
+    use_smoothing = forms.BooleanField( initial=False, required=False )
+    sigma = forms.FloatField( initial=20, max_value=1000, min_value=0, widget=ImageWidget )
+    smoothing_func = forms.ChoiceField( initial='GK', choices=[ ('GK', 'Gaussian kernel') ] )
+
+FIT_DEFAULTS = get_defaults( FitForm() )
+
+class PeakForm( forms.Form ):
+    """
+    Displays the navigation bar
+    
+    >>> p = PeakForm()
+    """
+    use_predictor = forms.BooleanField( initial=False, required=False )
+    feature_width = forms.IntegerField( initial=147, max_value=2000, min_value=0, widget=ImageWidget )
+    minimum_peak = forms.IntegerField( initial=0, max_value=1000, min_value=0, widget=ImageWidget )
+    pred_func = forms.ChoiceField( initial='FIX', choices=[ ('FIX', 'Fixed width'), ('TRS', 'Above threshold'), ('ALL', 'All maxima') ] )
+
+PEAK_DEFAULTS = get_defaults( PeakForm() )
+
+def make_form( chroms ):
+    """
+    Form class factory. 
+    Creates a custom form bound to the chromosomal labels in the parameters
+    Returns a form class that needs to be instantiated.
+    """
+
+    chrom_choices  = [ (x,x) for x in chroms ]
+    start_chrom = chroms[0]
+    
+    class SearchForm( forms.Form ):
+        """
+        The search form that gets displayed on each page
+        >>> # s = SearchForm( SearchForm.defaults() )
+        >>> # s.is_valid()
+        # True
+        """
+        feature = forms.CharField( widget=FeatureWidget, initial=10000 )
+        image_width = forms.IntegerField( initial=5000, max_value=20000, min_value=150, widget=ImageWidget )
+        viewport_width = forms.IntegerField( initial=800, max_value=5000, min_value=100, widget=ImageWidget )
+        zoom_value = forms.ChoiceField( initial=5000, choices=ZOOM_CHOICES )
+        chrom  = forms.ChoiceField( initial=start_chrom , choices=chrom_choices )
+        strand = forms.ChoiceField( initial='ALL', choices=[ ('ALL', 'Both strands'), ('SEP', 'Separate strands') ] )
+
+    return SearchForm
+
+# default search form
+SEARCH_DEFAULTS = get_defaults( make_form(["chrom1"])() )
 
 def test():
     "Module level testing"
