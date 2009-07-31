@@ -122,6 +122,9 @@ class ChartOptions(Options):
         # adding a new axis
         newaxis=None,
         
+        # enable logscale
+        logscale=None,
+
         # fontsizes and linewidth
         font_size=13,
         

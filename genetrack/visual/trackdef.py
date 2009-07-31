@@ -141,6 +141,8 @@ class Track(TrackBase):
         axis.setTickLength(-5)
         axis.setColors(GREY, o.y_tick_color, BLACK, BLACK)
         axis.setTitle(o.ylabel, '', o.font_size)
+        if o.logscale:
+            axis.setLogScale3()
 
     def add_axis(self, value, options=None):
         "Adds and returns an axis"
