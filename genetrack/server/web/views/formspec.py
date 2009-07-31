@@ -15,7 +15,7 @@ class SubmitWidget( forms.widgets.Input) :
 
 # custom widgets
 ButtonWidget   = SubmitWidget( attrs={'class': 'nav_btn'} ) 
-FeatureWidget  = forms.TextInput( attrs={'size': '10', 'id': 'locus'}) 
+FeatureWidget  = forms.TextInput( attrs={'size': '10', 'id': 'feature'}) 
 ImageWidget    = forms.TextInput( attrs={'size': '4'}) 
 
 # generate zoom levels with user friendly numbers

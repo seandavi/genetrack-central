@@ -39,12 +39,12 @@
         $('#loading').hide()
         
         var image = $("#image")
-        setup_image(image)
+        var base_offset = setup_image(image)
 
         $(image).draggable({
             'axis':'x',
             'drag':function(e, ui){       
-                //set_offset(); 
+                set_location(base_offset, image)
             },
             'stop':function(e, ui){
                 //zoomarrow.fadeOut("medium");

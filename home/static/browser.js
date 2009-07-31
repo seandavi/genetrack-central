@@ -24,29 +24,34 @@ function setup_image(image){
     feature     = parseInt( $('#feature').val() )
 
     set_position(image, base_offset);
+    return base_offset
 }
 
-function set_offset(){
-    offset = BASE_OFFSET - get_image_position()
-	
-	$('#offset').text( offset );
-	$('#width').text( IMAGE_W );
-	
-	feature = FEATURE + offset * PIXEL_SCALE
-	
-	$('#feature').val( parseInt(feature) )
-	
-	pos = get_image_position( )
+function set_location(base_offset, image){
+    // also autoloads when hitting the next page
+    
+    var image_w = parseInt( image.attr('width') );
+    var feature = parseInt( $('#feature').val() )
+    var pixel_scale = parseFloat( image.attr('pixelscale') )
 
-	lower = 300
-    upper = -( IMAGE_W - 500 )
-	
-	if ( (pos > lower) | ( pos<upper) ) {
-		$('#loading').show();
-		$('#id_submit_display').click(); 	
-	}
+    // finding the new coordinate based on the offset
+    offset = base_offset - get_position(image)
+    
+    feature = feature + offset * pixel_scale
+    
+    //fill in the new coordinate
+    $('#feature').val( parseInt(feature) )
 
-	//$('#temp').text( pos );
-	
-	return 
+    // when to trigger a page reload
+
+    position = get_position(image)
+
+    lower = 300
+    upper = -( image_w - 500 )
+
+    if ( (position > lower) | ( position < upper) ) {
+        $('#loading').show();
+        //$('#id_submit_display').click(); 	
+    }
+
 }
