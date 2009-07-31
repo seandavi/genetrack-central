@@ -70,6 +70,12 @@ textarea#json {
     background-color: #FAE3A8;
 }
 
+.formbar {
+    background-color: #EFEFEF;
+    border: 1px solid #CCCCCC; 
+    padding: 3px;
+}
+
 img {
     vertical-align: middle;
 }
@@ -207,4 +213,13 @@ textarea, select {margin:0.0em 0;}
 
 .status.running{ 
 	background: transparent url(/static/icons/status/running.gif) no-repeat center right;   
+}
+
+#viewport{
+	position: relative;
+	overflow: hidden;
+}
+
+#image{
+	position: relative;
 }

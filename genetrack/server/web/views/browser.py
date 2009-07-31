@@ -76,7 +76,7 @@ def dataview_multiplot(index, params, debug=False):
     query_elapsed = timer.stop()
     
     # build the actual multiplot
-    multi = builder.get_multiplot(json, debug=debug)
+    multi = builder.get_multiplot(json, debug=debug, w=params.image_width)
 
     # timing the query lenght
     draw_elapsed = timer.stop()
@@ -209,16 +209,22 @@ def data_view(request, did):
 
     # creates the multiplot
     multi = dataview_multiplot(index=index, params=params, debug=False)
+    params.image_height = multi.h
     
+    # close the data
+    index.close()
+
     # trigger the occasional cache cleaning
     webutil.cache_clean(age=1, chance=10)
 
     # creates a file representation and a name
-    imgname, imgpath = webutil.cache_file(ext='png')
+    image_name, image_path = webutil.cache_file(ext='png')
 
     # saves the multiplot
-    multi.save(imgpath)
-    params.imgname = imgname
+    multi.save(image_path)
+    params.image_name = image_name
+    
+    
 
     return html.template( request=request, name='data-browse.html', forms=forms, data=data, params=params)
 

@@ -388,8 +388,9 @@ def draw_marks(track, data, options):
     
 class MultiTrack(object):
     "Represents multiple tracks merged into a single image"
-    def __init__(self, options=None, tracks=[]):
+    def __init__(self, options=None, tracks=[], w=None):
         self.o = options or ChartOptions()
+        self.o.w = w or self.o.w
         self.tracks = []
         self.w = self.o.lpad + self.o.w + self.o.rpad
         self.h = self.o.tpad + sum([ t.o.h for t in tracks ]) + self.o.bpad

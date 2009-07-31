@@ -57,7 +57,7 @@ DRAW_FUNC = dict(
 __style_diffs = parsing.STYLES - set(DRAW_FUNC.keys())
 assert not __style_diffs, 'some styles were not defined -> %s' % ', '.join(__style_diffs)
 
-def get_multiplot(json, debug=False):
+def get_multiplot(json, debug=False, w=800):
     "Generates a multiplot based on a json"
     chart, opts, collect = None, None, []
     
@@ -97,7 +97,7 @@ def get_multiplot(json, debug=False):
             
     # general options
     collect = filter(None, collect)
-    m = trackdef.MultiTrack(tracks=collect)
+    m = trackdef.MultiTrack(tracks=collect, w=w)
     if debug:
         m.show()
     return m
