@@ -3,10 +3,6 @@
 echo '*********************'
 echo 'GeneTrack Run Manager'
 echo '*********************'
- 
-echo
-echo 'Environment variables:'
-echo
 #
 # set the python executable
 #
@@ -20,25 +16,24 @@ echo 'PYTHON='$PYTHON_EXE
 #
 # (the directory that contains this batch script)
 #
-export GENETRACK_HOME=`dirname $0`
- 
-export GENETRACK_HOME="`cd $GENETRACK_HOME; pwd`"
+if [ -z "$GENETRACK_HOME" ]; then
+   export GENETRACK_HOME=`dirname $0`
+fi
 
+#
 # The default server home directory
 #
 export GENETRACK_SERVER_HOME=$GENETRACK_HOME/home
 echo GENETRACK_SERVER_HOME=$GENETRACK_SERVER_HOME
  
 export DJANGO_ADMIN=$GENETRACK_HOME/genetrack/server/manage.py
+export TEST_DIR=$GENETRACK_HOME/tests
 #
 # This is only required when running it with django_admin.py
 #
 export DJANGO_SETTINGS_MODULE=server_settings
 echo DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
- 
-echo
 echo '*********************'
-echo
  
 # Adding genetrack and the server apps to the python path
 export PYTHON_PATH_1=$GENETRACK_HOME:$GENETRACK_SERVER_HOME
@@ -54,20 +49,13 @@ export PYTHONPATH=$PYTHON_PATH_1:$PYTHON_PATH_2
 ############### if statements
 
 if [ $# == 0 ]; then
-echo USAGE:
-	echo ''
+        echo Usage:
 	echo '   $ genetrack.sh <command>'
 	echo ''
-	echo 'Where <command> can be any of:'
-	echo ''
-	echo '   init, docs, api, test, jobs, run'
-	echo ''
 	echo 'Multiple commands may be used in the same line:'
-	echo ''
 	echo '    $ genetrack.sh init populate jobs'
 	echo ''
 	echo 'Commands:'
-	echo ''
 	echo '    init      initializes the database'
 	echo '    test      runs all tests'
 	echo '    docs      generates documentation'
@@ -76,8 +64,6 @@ echo USAGE:
 	echo '    run       runs server'
 	echo '    delete    deletes all data in GeneTrack'
 	echo '    populate  populates the system with test data'
-	echo ''
-	echo $PYTHONPATH
 fi
 
 while (( "$#" )); do
@@ -103,7 +89,7 @@ if [ "$1" = "populate" ]; then
     echo
     echo '*** Populating GeneTrack ***'
     echo
-    $PYTHON_EXE tests/populate.py
+    $PYTHON_EXE $TEST_DIR/populate.py
 fi
 
 if [ "$1" = "jobs" ]; then 
@@ -149,7 +135,7 @@ if [ "$1" = "test" ]; then
     echo ''
     echo '*** Running functional tests ***'
     echo ''
-    $PYTHON_EXE tests/functional.py
+    $PYTHON_EXE $TEST_DIR/functional.py
 fi
 
 shift
