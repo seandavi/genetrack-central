@@ -19,6 +19,9 @@ class Params(object):
         self.__dict__.update(kwds)
         self.__dict__.update(incoming)
 
+    def update(self, data):
+        self.__dict__.update(data)
+
     def __repr__(self):
         return 'Params: %s' % self.__dict__
 

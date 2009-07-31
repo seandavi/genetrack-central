@@ -96,7 +96,7 @@ class PeakForm( forms.Form ):
     """
     use_predictor = forms.BooleanField( initial=False, required=False )
     feature_width = forms.IntegerField( initial=147, max_value=2000, min_value=0, widget=ImageWidget )
-    minimum_peak = forms.IntegerField( initial=0, max_value=1000, min_value=0, widget=ImageWidget )
+    minimum_peak = forms.IntegerField( initial=2, max_value=1000, min_value=0, widget=ImageWidget )
     pred_func = forms.ChoiceField( initial='FIX', choices=[ ('FIX', 'Fixed width'), ('TRS', 'Above threshold'), ('ALL', 'All maxima') ] )
 
 PEAK_DEFAULTS = get_defaults( PeakForm() )
@@ -122,9 +122,9 @@ def make_form( chroms ):
         The search form that gets displayed on each page
         """
         feature = forms.CharField( widget=FeatureWidget, initial=10000 )
-        image_width = forms.IntegerField( initial=5000, max_value=20000, min_value=150, widget=ImageWidget )
+        image_width = forms.IntegerField( initial=800, max_value=20000, min_value=150, widget=ImageWidget )
         viewport_width = forms.IntegerField( initial=800, max_value=5000, min_value=100, widget=ImageWidget )
-        zoom_value = forms.ChoiceField( initial=5000, choices=ZOOM_CHOICES )
+        zoom_value = forms.ChoiceField( initial=10000, choices=ZOOM_CHOICES )
         chrom  = forms.ChoiceField( initial=start_chrom , choices=chrom_choices )
         strand = forms.ChoiceField( initial='ALL', choices=[ ('ALL', 'Both strands'), ('SEP', 'Separate strands') ] )
 

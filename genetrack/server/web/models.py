@@ -211,6 +211,12 @@ class Data( models.Model ):
         else:
             return None
 
+    def index(self):
+        "Returns the underlying representation of the data"
+        from genetrack import hdflib
+        index = hdflib.PositionalData(fname=self.content.path, nobuild=True)
+        return index
+
     def result_count(self):
         return len(self.results.all())
 

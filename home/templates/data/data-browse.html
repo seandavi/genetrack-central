@@ -5,31 +5,115 @@
 
 {% block header %}<h2 align="center">{{data.name}} back {% sep %} <a href="/data/details/{{data.id}}/">back</a></h2>{% endblock %}
 
+{% block local-headers%}
+<link rel="stylesheet" type="text/css" href="/static/tabs/tabs.css" />
+
+<script>
+   $(document).ready(function(){
+        
+        // expand info field
+        $("#more").click(function(){
+            $("#navbar").toggle('slow')
+            $("#viewport").toggle('slow')
+        });
+
+        // removes messages that may be present
+        remove_messages()
+
+        $("#navbar").hide()
+        $("#viewport").hide()
+    });
+</script>
+{% endblock %}
+
 {% block mainbody %}
 
 <form action="/data/browser/{{data.id}}/" method="post" id="mainform">
 
-    <div class="span-1">&nbsp;</div>
-
-    <div class="span-22">
-        <!-- main body -->
-        
-        <div align="center">
-            Chrom: {{forms.search.chrom}}&nbsp;
-            Locus: {{forms.search.feature}}&nbsp;
-            Zoom:  {{forms.search.zoom_value}}&nbsp;
-            Plot:  {{forms.search.strand}}&nbsp;
-            <input type="submit" id="id_submit_display" name="submit" value="Display!">
-        </div>
-
-        <div>
-            <img src="/static/cache/{{params.imgname}}" />
-        </div>
-
+<div class="container showgrid">
+<div class="span-22 prepend-1 append-1">
+   <div align="center">
+        <a href="#" id="more">More</a> &bull;
+        Chrom: {{forms.search.chrom}}&nbsp;
+        Locus: {{forms.search.feature}}&nbsp;
+        Zoom:  {{forms.search.zoom_value}}&nbsp;
+        Plot:  {{forms.search.strand}}&nbsp;
+        <input type="submit" id="id_submit_display" name="submit" value="Display!">
     </div>
+</div>
 
-    <div class="span-1 last">&nbsp;</div>
+<div class="span-22 prepend-1 append-1" id="navbar">
+    <div align="center" style="padding: 10px;">
+        {{forms.navbar.move_left}} &nbsp;&nbsp;
+        {{forms.navbar.zoom_in}} &nbsp;&nbsp;
+        {{forms.navbar.zoom_out}} &nbsp;&nbsp;
+        {{forms.navbar.move_right}}
+    </div>
+</div>
 
+<div class="span-22 prepend-1 append-1" id="viewport">
+    <div align="center" style="padding: 10px;">
+        Viewport width: {{forms.search.viewport_width}} &nbsp;&nbsp;
+        Image width: {{forms.search.image_width}} &nbsp;&nbsp;
+    </div>
+</div>
+
+<div class="span-24 last">
+    <div align="center"><img src="/static/cache/{{params.imgname}}" /></div>
+</div>
+
+<div class="span-11">
+    
+    <fieldset>
+        <legend>Smoothing</legend>
+        
+        <div>
+            <label>Use: </label>{{forms.fitting.use_smoothing}}
+            <label>Sigma: </label>{{forms.fitting.sigma}}
+            <label>Function: </label>{{forms.fitting.smoothing_func}}
+        </div>
+
+    </fieldset>
+
+</div>
+
+<div class="span-13 last">
+    
+     <fieldset>
+        <legend>Peak predictions</legend>
+        
+        <div>
+            <div>
+                <label>Use: </label>{{forms.peaks.use_predictor}}
+                <label>Width: </label>{{forms.peaks.feature_width}}
+                <label>Function: </label>{{forms.peaks.pred_func}}
+                <label>Threshold: </label>{{forms.peaks.minimum_peak}}
+            </div>
+        </div>
+        <div></div>
+
+    </fieldset>
+</div>
+
+<div class="span-11">
+    <div align="center">
+        <input type="submit" id="id_submit_display" name="submit" value="Show smoothing">
+        &bull;
+        <input type="submit" id="id_submit_display" name="submit" value="Genomewide smoothing">
+    </div>
+</div>
+<div class="span-13 last">
+    <div align="center">
+        <input type="submit" id="id_submit_display" name="submit" value="Show peaks">
+        &bull;
+        <input type="submit" id="id_submit_display" name="submit" value="Genomewide peaks">
+    </div>
+</div>
+
+
+
+</div>
 </form>
+
 
 {% endblock %}

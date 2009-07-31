@@ -72,7 +72,7 @@ if (%1)==() goto :usage
    if "%1"=="populate" goto :populate
    if "%1"=="test" goto :test
    if "%1"=="editor" goto :editor
-   if "%1"=="doc" goto :doc
+   if "%1"=="docs" goto :docs
    if "%1"=="api" goto :api
    if "%1"=="jobs" goto :jobs
    if "%1"=="push" goto :push
@@ -179,7 +179,7 @@ REM cmd /c "C:\Program Files\ActiveState Komodo Edit 5\komodo.exe"
 
 goto :eof
 
-:doc
+:docs
 echo.
 echo *** Main documentation generation ***
 echo.
