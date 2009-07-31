@@ -8,7 +8,10 @@ from genetrack import logger, conf
 from genetrack.server.web import html, status, webutil
 from genetrack.server.web import models, authorize
 from genetrack.server.web import login_required, private_login_required
-from genetrack.visual import parsing, builder
+try:
+    from genetrack.visual import parsing, builder
+except ImportError, exc:
+    logger.error('import error %s' % exc)
 
 def fixup_paths(json):
     "Adds path information for known data attribute fields"

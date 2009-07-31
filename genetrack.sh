@@ -20,18 +20,20 @@ echo 'PYTHON='$PYTHON_EXE
 #
 # (the directory that contains this batch script)
 #
-export DEFAULT_HOME=`dirname $0`
+export GENETRACK_HOME=`dirname $0`
  
-#
+export GENETRACK_HOME="`cd $GENETRACK_HOME; pwd`"
+
 # The default server home directory
 #
-export GENETRACK_SERVER_HOME=$DEFAULT_HOME/server
+export GENETRACK_SERVER_HOME=$GENETRACK_HOME/home
 echo GENETRACK_SERVER_HOME=$GENETRACK_SERVER_HOME
  
+export DJANGO_ADMIN=$GENETRACK_HOME/genetrack/server/manage.py
 #
 # This is only required when running it with django_admin.py
 #
-export DJANGO_SETTINGS_MODULE=server.settings
+export DJANGO_SETTINGS_MODULE=server_settings
 echo DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
  
 echo
@@ -39,10 +41,10 @@ echo '*********************'
 echo
  
 # Adding genetrack and the server apps to the python path
-export PYTHON_PATH_1=$DEFAULT_HOME:$GENETRACK_SERVER_HOME
+export PYTHON_PATH_1=$GENETRACK_HOME:$GENETRACK_SERVER_HOME
  
 # Adding libraries to the python path
-export PYTHON_PATH_2=$DEFAULT_HOME/library:$DEFAULT_HOME/library/library.zip
+export PYTHON_PATH_2=$GENETRACK_HOME/library:$GENETRACK_HOME/library/library.zip
  
 #
 # Appends paths to the python import
@@ -51,90 +53,106 @@ export PYTHONPATH=$PYTHON_PATH_1:$PYTHON_PATH_2
  
 ############### if statements
 
-if [ $# == 0 ]
-    then echo 'USAGE:'
-    echo
-    echo 'genetrack.bat init (initializes the database)'
-    echo 'genetrack.bat runserver (runs server)'
-    echo 'genetrack.bat test (runs all tests)'
-    echo 'genetrack.bat docs (generates documentation)'
-    echo 'genetrack.bat apidoc (generates API html via epydoc)'
-    echo 'genetrack.bat jobrunner (executes the jobrunner)'
-    echo 'genetrack.bat editor (load the editor)'§
+if [ $# == 0 ]; then
+echo USAGE:
+	echo ''
+	echo '   $ genetrack.sh <command>'
+	echo ''
+	echo 'Where <command> can be any of:'
+	echo ''
+	echo '   init, docs, api, test, jobs, run'
+	echo ''
+	echo 'Multiple commands may be used in the same line:'
+	echo ''
+	echo '    $ genetrack.sh init populate jobs'
+	echo ''
+	echo 'Commands:'
+	echo ''
+	echo '    init      initializes the database'
+	echo '    test      runs all tests'
+	echo '    docs      generates documentation'
+	echo '    api       generates API html via epydoc'
+	echo '    jobs      executes the jobrunner'
+	echo '    run       runs server'
+	echo '    delete    deletes all data in GeneTrack'
+	echo '    populate  populates the system with test data'
+	echo ''
+	echo $PYTHONPATH
 fi
 
-if [ $1 == init ]
-    then echo
+while (( "$#" )); do
+
+if [ "$1" = "delete" ]; then 
+    echo
+    echo '*** Deleting all data ***'
+    echo
+    rm -f  $GENETRACK_SERVER_HOME/db/genetrack.db
+    rm -rf $GENETRACK_SERVER_HOME/storage
+    rm -rf $GENETRACK_SERVER_HOME/static/cache
+fi
+
+if [ "$1" = "init" ]; then 
+    echo
     echo '*** Initializing the data ***'
     echo
+    $PYTHON_EXE $DJANGO_ADMIN syncdb --noinput --settings=server_settings
+    $PYTHON_EXE -m server.scripts.initializer $GENETRACK_SERVER_HOME/init/initial-users.csv
+fi
 
-    if [ $2 == delete ]
-        then rm $GENETRACK_SERVER_HOME/data/db/genetrack.db
-	rm -rf $GENETRACK_SERVER_HOME/data/storage
-	rm -rf $GENETRACK_SERVER_HOME/data/static/cache
-    fi
-    $PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py syncdb --noinput
-    $PYTHON_EXE -m server.scripts.initializer $GENETRACK_SERVER_HOME/data/init/initial-users.csv
+if [ "$1" = "populate" ]; then 
+    echo
+    echo '*** Populating GeneTrack ***'
+    echo
+    $PYTHON_EXE tests/populate.py
+fi
 
+if [ "$1" = "jobs" ]; then 
+    echo
+    echo '*** Running the jobs ***'
+    echo
+    $PYTHON_EXE genetrack/server/scripts/jobrunner.py
 fi
- 
-if [ $1 == runserver ]
-    then echo
-    echo '*** Starting the test server ***'
-    echo
-    $PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py syncdb --noinput
-    $PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py runserver 127.0.0.1:8080
-fi
- 
-if [ $1 == test ]
-    then echo
-    echo '*** running django tests'
-    echo
-    $PYTHON_EXE $GENETRACK_SERVER_HOME/manage.py test
-    
-    echo 
-    echo '*** running server tests'
-    echo
-    $PYTHON_EXE $DEFAULT_HOME/tests/functional.py $2 $3 $4 $5 $6 $7 $8 $9
 
-    echo
-    echo '*** running genetrack tests'
-    echo
-    $PYTHON_EXE $DEFAULT_HOME/tests/runtest.py $2 $3 $4 $5 $6 $7 $8 $9
-fi
- 
-if [ $1 == editor ]
-    then echo
-    echo '*** Default editor start ***'
-    echo
-    $DefaultEditor &
-fi
- 
-if [ $1 == docs ]
-    then echo
-    echo '*** documentation generation ***'
-    echo
-    export DOC_DIR=$DEFAULT_HOME/docs/rest
-    export BUILD_DIR=$DEFAULT_HOME/docs/html
+if [ "$1" = "docs" ]; then 
+    echo ''
+    echo '*** Generating main documentation ***'
+    echo ''
+    export DOC_DIR=$GENETRACK_HOME/docs/rest
+    export BUILD_DIR=$GENETRACK_HOME/docs/html
     export EPYDOC_DIR=$BUILD_DIR/epydoc
-    $SPHINX -b html $DOC_DIR $BUILD_DIR
-    if [ $1 == apidocs ];
-	then $EPYDOC $2 $3 $4 $5 $6 $7 $8 $9 --docformat restructuredtext genetrack -o $EPYDOC_DIR
-    fi
+	sphinx-build -b html $DOC_DIR $BUILD_DIR
 fi
- 
-if [ $1 == jobrunner ]
-    then echo
-    echo '*** executes jobrunner ***'
-    echo
-    $PYTHON_EXE $DEFAULT_HOME/server/scripts/jobrunner.py
+
+if [ "$1" = "api" ]; then 
+    echo ''
+    echo '*** Generating api documentation ***'
+    echo ''
+    export BUILD_DIR=$GENETRACK_HOME/docs/html
+    export EPYDOC_DIR=$BUILD_DIR/epydoc
+	epydoc --parse-only --docformat restructuredtext genetrack -o $EPYDOC_DIR
 fi
- 
- 
-if [ $1 == pushdoc ] 
-    then echo
-    echo '*** pushing docs to webserver ***'
-    echo
-    $RSYNC docs/html/* rsync -zav --rsh=ssh webserver@atlas.bx.psu.edu:~/www/genetrack.bx.psu.edu
+
+if [ "$1" = "run" ]; then 
+    echo ''
+    echo '*** Running webserver ***'
+    echo ''
+    $PYTHON_EXE $DJANGO_ADMIN syncdb --noinput --settings=$DJANGO_SETTINGS_MODULE
+    $PYTHON_EXE $DJANGO_ADMIN runserver 127.0.0.1:8080 --settings=$DJANGO_SETTINGS_MODULE
 fi
- 
+
+if [ "$1" = "test" ]; then 
+    echo ''
+    echo '*** Running django tests ***'
+    echo ''
+    $PYTHON_EXE $DJANGO_ADMIN test --settings=$DJANGO_SETTINGS_MODULE
+
+    echo ''
+    echo '*** Running functional tests ***'
+    echo ''
+    $PYTHON_EXE tests/functional.py
+fi
+
+shift
+done
+
+

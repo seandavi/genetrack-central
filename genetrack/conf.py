@@ -28,19 +28,12 @@ def module_check():
 
     # required modules
     try:
-        import numpy, tables, django
+        import numpy, tables, django, pychartdir, Image
     except ImportError, exc:
-        logger.error('software requirements not met: %s' % exc)
-        logger.error('see http://genetrack.bx.psu.edu for installation instructions')
+        logger.error('Software requirements not met!')
+        logger.error('ImportError: %s' % exc)
+        logger.error('See http://genetrack.bx.psu.edu for installation instructions')
         sys.exit()
-
-    # optional modules
-    try:
-        import pychartdir
-    except ImportError, exc:
-        logger.error('software requirements not met: %s' % exc)
-        logger.error('charting module missing, some visualizations may not work')
-        logger.error('see http://genetrack.bx.psu.edu for installation instructions')
 
 #perform the module check    
 module_check()
