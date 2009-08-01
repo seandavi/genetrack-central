@@ -1,46 +1,38 @@
 // browser related functionality
 
-function get_position(image) {
-    return parseInt($(image).css('left').slice(0,-2))
+function get_position(obj) {
+    // gets the position of the object
+    return parseInt($(obj).css('left').slice(0,-2))
 }
 
-function set_position( image, x ) {
-    $(image).css({'left':x});
+function set_position( obj, x ) {
+    // sets the position of the object
+    $(obj).css({'left':x});
 }
 
-function setup_image(image){
+function center_image(image){
+    // centers the image on the viewport
     var image_w = parseInt( image.attr('width') );
-    var wport_w  = $('#viewport').width();
-    
-    // image should not be smaller than the viewport
-    if (image_w < wport_w) {
-        image_w = wport_w
-    }
-
-    base_offset = -(image_w - wport_w)/2;
-    pixel_scale = parseFloat( image.attr('pixelscale') )
-
-    // the genomic location in the feature marker
-    feature     = parseInt( $('#feature').val() )
-
-    set_position(image, base_offset);
-    return base_offset
+    var wport_w = $('#viewport').width();
+    var offset  = -(image_w - wport_w)/2;
+    set_position(image, offset);
+    return offset
 }
 
-function set_location(base_offset, image){
-    // also autoloads when hitting the next page
+function set_feature(image, offset, feature){
+    // autoloads when hitting the next page
     
     var image_w = parseInt( image.attr('width') );
-    var feature = parseInt( $('#feature').val() )
     var pixel_scale = parseFloat( image.attr('pixelscale') )
-
-    // finding the new coordinate based on the offset
-    offset = base_offset - get_position(image)
     
-    feature = feature + offset * pixel_scale
+    // finding the new offset based on image position
+    var newoffset = offset - get_position(image)
+    
+    //feature = feature + (offset * pixel_scale)
+    var newfeature = feature + newoffset * pixel_scale
     
     //fill in the new coordinate
-    $('#feature').val( parseInt(feature) )
+    $('#feature').val( parseInt(newfeature) )
 
     // when to trigger a page reload
 
@@ -51,7 +43,7 @@ function set_location(base_offset, image){
 
     if ( (position > lower) | ( position < upper) ) {
         $('#loading').show();
-        //$('#id_submit_display').click(); 	
+        $('#id_submit_display').click(); 	
     }
 
 }

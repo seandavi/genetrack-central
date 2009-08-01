@@ -122,8 +122,8 @@ def make_form( chroms ):
         The search form that gets displayed on each page
         """
         feature = forms.CharField( widget=FeatureWidget, initial=10000 )
-        image_width = forms.IntegerField( initial=800, max_value=20000, min_value=150, widget=ImageWidget )
-        viewport_width = forms.IntegerField( initial=800, max_value=5000, min_value=100, widget=ImageWidget )
+        image_width = forms.IntegerField( initial=5000, max_value=20000, min_value=150, widget=ImageWidget )
+        viewport_width = forms.IntegerField( initial=920, max_value=5000, min_value=100, widget=ImageWidget )
         zoom_value = forms.ChoiceField( initial=10000, choices=ZOOM_CHOICES )
         chrom  = forms.ChoiceField( initial=start_chrom , choices=chrom_choices )
         strand = forms.ChoiceField( initial='ALL', choices=[ ('ALL', 'Both strands'), ('SEP', 'Separate strands') ] )

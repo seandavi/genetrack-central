@@ -12,15 +12,14 @@
    $(document).ready(function(){
         var navopt = "navopt"
         var prefs = $.cookie(navopt)
-
+         
         // expand info field
-        $("#more").click(function(){
+        $("#more").click( function(){
             $("#nav-bar").toggle('slow')
             $("#viewport-bar").toggle('slow')
-
             // store status in the cookie
             if (prefs)  {
-                $.cookie(navopt, null);
+               $.cookie(navopt, null);
             } else {
                $.cookie(navopt, 'open');
             }
@@ -36,15 +35,15 @@
         }
 
         // hide loading marker
-        $('#loading').hide()
+        $("#loading").hide()
         
-        var image = $("#image")
-        var base_offset = setup_image(image)
-
-        $(image).draggable({
+        var image   = $("#image")
+        var offset  = center_image(image)
+        var feature = parseInt($("#feature").val())
+        image.draggable({
             'axis':'x',
             'drag':function(e, ui){       
-                set_location(base_offset, image)
+                set_feature(image, offset, feature)
             },
             'stop':function(e, ui){
                 //zoomarrow.fadeOut("medium");
@@ -52,7 +51,26 @@
             'start':function(e, ui){
                 //zoomarrow.show();
             }
-        });
+         });
+        
+         var start_pos = 0
+         // bind drag as zooming
+         image.bind('mousedown', function(e){
+	    start_pos = e.pageY
+	    //$('#id_zoom_in').click(); 
+	 });
+
+         image.bind('mouseup', function(e){
+	    var diff = start_pos - e.pageY
+	    if (diff > 20){
+               $('#loading').show();
+               $('#id_zoom_in').click();
+            } else if (diff < -20) {
+               $('#loading').show();
+               $('#id_zoom_out').click();
+            }
+            start_pos = 0
+	 });
     });
 </script>
 {% endblock %}
@@ -61,11 +79,11 @@
 
 <form action="/data/browser/{{data.id}}/" method="post" id="mainform">
 
-<div class="container showgrid">
+<div class="container">
 
 <div class="span-24 last">
    <div align="center" class="formbar">
-        <a href="#" id="more">More</a> &bull;
+        <a href="javascript:void(0);" id="more">More</a> &bull;
         Chrom: {{forms.search.chrom}}&nbsp;
         Locus: {{forms.search.feature}}&nbsp;
         Zoom:  {{forms.search.zoom_value}}&nbsp;
@@ -94,13 +112,13 @@
 </div>
 
 <div class="span-24 last">
-    <div id="viewport" style="width:{{params.viewport_width}}px; height: {{params.image_height}}px;">
-
+    <div id="viewport" style="width:{{params.viewport_width}}; height: {{params.image_height}}px;">
+        <input type="hidden" id="feature-store" value="0"/>
         <!-- main browser image -->
         <img id="image" src="/static/cache/{{params.image_name}}" width="{{params.actual_size}}" pixelscale="{{params.pixelscale}}"/>
         
         <!-- big loading symbol -->
-        <div id="loading" style="position: absolute; left:100px; top:100px;"><img src="/static/icons/big-loader.gif" /></div>
+        <div id="loading" style="position: absolute; left:425px; top:150px;"><img src="/static/icons/big-loader.gif" /></div>
 
     </div>
 </div>
