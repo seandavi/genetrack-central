@@ -44,14 +44,12 @@ function set_feature(image, offset, feature){
     if (position > padding) {
         // panning view to the left
         $('#loading').show();
-        $('#pan-left').show();
         $('#id_submit_display').click(); 
     }
     
     if (position < (2*offset)-padding ) {
         // pan view to the right
         $('#loading').show();
-        $('#pan-right').show();
         $('#id_submit_display').click(); 
     }
     

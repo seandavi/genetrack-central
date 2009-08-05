@@ -12,8 +12,6 @@
 // hides all markers
 function hideall () {
     $("#loading").hide()
-    $("#pan-left").hide()
-    $("#pan-right").hide()
     $("#zoom-in").hide()
     $("#zoom-out").hide()
 }
@@ -164,11 +162,9 @@ $(document).ready(function(){
         <img id="image" src="/static/cache/{{params.image_name}}" width="{{params.actual_size}}" pixelscale="{{params.pixelscale}}"/>
         
         <!-- marker symbols -->
-        <div id="loading"   style="position: absolute; left:425px; top:150px;"><img src="/static/icons/big-loader.gif" /></div>
-        <div id="pan-right" style="position: absolute; left:780px; top:150px;"><img src="/static/icons/2rightarrow.png" /></div>
-        <div id="pan-left"  style="position: absolute; top:150px;"><img src="/static/icons/2leftarrow.png" /></div>
-        <div id="zoom-in"   style="position: absolute; left:425px; top:150px;"><img src="/static/icons/2uparrow.png" /></div>
-        <div id="zoom-out"  style="position: absolute; left:425px; top:150px;"><img src="/static/icons/2downarrow.png" /></div>
+        <div id="loading"   style="display:none; position: absolute; left:425px; top:150px;"><img src="/static/icons/big-loader.gif" /></div>
+        <div id="zoom-in"   style="display:none; position: absolute; left:425px; top:150px;"><img src="/static/icons/2uparrow.png" /></div>
+        <div id="zoom-out"  style="display:none; position: absolute; left:425px; top:150px;"><img src="/static/icons/2downarrow.png" /></div>
 
 
     </div>
