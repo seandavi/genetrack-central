@@ -48,7 +48,7 @@ def dataview_trackdef(params):
         "color=BLACK; style=BAR; data=1; h=400; ylabel=Read count; legend=Reads; bpad=1"
     ]
     
-    if params.sigma>0:
+    if params.use_smoothing and params.sigma > 0:
         # fitting is on
         lines.append(
             "color=PURPLE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%; threshold=2.5"
@@ -85,16 +85,10 @@ def dataview_multiplot(index, params, debug=False):
     
     return multi
 
-def get_incoming(request, defaults):
+def alter_incoming(incoming, defaults):
     """
     Alters the incoming parameters based on user actions
     """
-    # shortcut to user messages
-    msg = request.user.message_set.create
-
-    # incoming paramters
-    incoming = dict( request.POST.items() )
-    
     # return with defaults if nothing was sent
     if not incoming:
         return defaults
@@ -104,7 +98,6 @@ def get_incoming(request, defaults):
         center = int( incoming.get('feature', 10000) )
     except ValueError:
         # non numeric feature, search for feature location
-        msg( message='Feature search not available')
         center = 10000
 
     try:
@@ -133,31 +126,25 @@ def get_incoming(request, defaults):
 
     # turn off smoothing for large zoom levels 
     # may be slow to do it live, and user may not be able to see anything useful anyhow
-    if zoom_value > 25000 and incoming['use_smoothing']:
+    if zoom_value > 5000 and incoming['use_smoothing']:
         incoming['use_smoothing'] = incoming['use_predictor'] = False
-        msg( message='Range too large for live predictions (maximum 25,000)' )
-
     
     return incoming
 
-def get_params(request, forms):
+def extract_parameters(forms):
     "Extracts search parameters from the forms"
-    # shortcut to user messages
-    msg = request.user.message_set.create
 
     params = html.Params()
     params.update( formspec.ALL_DEFAULTS )
     for form in (forms.search, forms.fitting, forms.peaks):
         if form.is_valid():
             params.update( form.cleaned_data )
-        else:
-            msg( message=str(form.errors) ) 
     
     # now add the start and end regions
     center = int(params.feature)
     zoom_value = int( params.zoom_value )
     
-    # the viewport may be different from the size of the image
+    # the viewport is different from the size of the image
     # the visible region has to cover the zoom level
     zoom_factor = float(params.image_width)/params.viewport_width
     zoom_value *= zoom_factor
@@ -176,10 +163,6 @@ def get_params(request, forms):
     # todo generate automatically
     params.actual_size = params.image_width + 120
 
-    # the zoom arrows will appear on this line
-    # todo generate automatically
-    params.arrow_line = 170 if params.strand=='WC' else 302
-
     return params
 
 @login_required
@@ -192,7 +175,10 @@ def data_view(request, did):
     data = authorize.get_data(user=user, did=did)
 
     # incoming parameters cast into a dictionary
-    incoming = get_incoming(request, FORM_DEFAULTS)
+    incoming = dict( request.POST.items() )
+
+    # alters the incoming parameters based on user interaction
+    incoming = alter_incoming(incoming, FORM_DEFAULTS)
 
     # get the data representation
     index = data.index()
@@ -205,7 +191,7 @@ def data_view(request, did):
     forms.peaks   = formspec.PeakForm( incoming )
 
     # extract the search parameters
-    params = get_params(request=request, forms=forms)
+    params = extract_parameters(forms=forms)
 
     # creates the multiplot
     multi = dataview_multiplot(index=index, params=params, debug=False)
@@ -223,8 +209,6 @@ def data_view(request, did):
     # saves the multiplot
     multi.save(image_path)
     params.image_name = image_name
-    
-    
 
     return html.template( request=request, name='data-browse.html', forms=forms, data=data, params=params)
 
