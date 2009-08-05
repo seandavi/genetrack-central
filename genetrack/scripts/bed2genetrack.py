@@ -128,7 +128,7 @@ def transform(inpname, outname, shift=0):
             fwd, rev, val = 0, 0, 1
 
         # it is essential be able to sort the index as a string! 
-        fp.write('%s\t%09d\t%s\t%s\t%s\n' % (chrom, idx, fwd, rev, val))
+        fp.write('%s\t%012d\t%s\t%s\t%s\n' % (chrom, idx, fwd, rev, val))
 
     fp.close()
     linet = util.commify(linec)

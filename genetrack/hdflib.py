@@ -200,11 +200,9 @@ class PositionalData(object):
             if chrom != last_chrom:
                 # table==None at the beginning
                 if table is not None:
+                    #logger.debug("... flushing at line %s" % row)   
                     flush( table=table, collect=collect, name=last_chrom )
                     collect = []
-                
-                # remap chromosome to standardized form
-                chrom = util.chromosome_remap(chrom)
 
                 # creates the new HDF table here
                 table = db.createTable(  "/", chrom, PositionalSchema, 'label %s' % chrom )
