@@ -23,6 +23,7 @@ function set_feature(image, offset, feature){
     // autoloads when hitting the next page
     
     var image_w = parseInt( image.attr('width') );
+    var wport_w = $('#viewport').width();
     var pixel_scale = parseFloat( image.attr('pixelscale') )
     
     // finding the new offset based on image position
@@ -38,12 +39,25 @@ function set_feature(image, offset, feature){
 
     position = get_position(image)
 
-    lower = 300
-    upper = -( image_w - 500 )
+    var padding = 100 // size of the padding before reload next page
 
-    if ( (position > lower) | ( position < upper) ) {
+    if (position > padding) {
+        // panning view to the left
         $('#loading').show();
-        $('#id_submit_display').click(); 	
+        $('#pan-left').show();
+        $('#id_submit_display').click(); 
     }
-
+    
+    if (position < (2*offset)-padding ) {
+        // pan view to the right
+        $('#loading').show();
+        $('#pan-right').show();
+        $('#id_submit_display').click(); 
+    }
+    
+    /*
+    $("#info1").text(offset)
+    $("#info2").text(position)
+    $("#info3").text(2 * offset)
+    */
 }
