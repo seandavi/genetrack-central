@@ -39,7 +39,7 @@ function set_feature(image, offset, feature){
 
     position = get_position(image)
 
-    var padding = 100 // size of the padding before reload next page
+    var padding = 250 // size of the padding before reload next page
 
     if (position > padding) {
         // panning view to the left

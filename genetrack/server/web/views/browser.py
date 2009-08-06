@@ -16,23 +16,32 @@ FORM_DEFAULTS = formspec.ALL_DEFAULTS
 
 def dataview_populate(json, index, params):
     """
-    Populates the data view with the results.
-    This operates on a single data and populates the data in the json from it.
+    Populates a data view.
+    Operates on a single data and populates the data in the json from it.
     """
 
     results = index.query(start=params.start, end=params.end, label=params.chrom)
     
+    fitdata = []
     data = map(list, (results.idx,results.val))
     xscale = (params.start, params.end)
+    
     for row in json:
-
-        if row['style'].startswith('FIT'):
+        style = row['style']
+        if style.startswith('FIT'):
             # fit the data
-            data = fitlib.gaussian_smoothing(data[0], data[1], sigma=params.sigma, epsilon=0.01 )
-            data = map(list, data)
-            row['data'] = data
+            fitdata = fitlib.gaussian_smoothing(data[0], data[1], sigma=params.sigma, epsilon=0.01 )
+            fitdata = map(list, fitdata)
+            row['data'] = fitdata
+        elif  style.startswith('SEGMENT'):
+            assert fitdata, 'smoothing must be applied first'
+            peaks = fitlib.detect_peaks( x=fitdata[0], y=fitdata[1] )
+            peakdata = fitlib.select_peaks(peaks=peaks, exclusion=params.feature_width)
+             
+            row['data'] = peakdata
         else:
             row['data'] = data
+        
         row['xscale'] = xscale
         row['w'] = params.image_width
 
@@ -51,7 +60,13 @@ def dataview_trackdef(params):
     if params.use_smoothing and params.sigma > 0:
         # fitting is on
         lines.append(
-            "color=PURPLE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%; threshold=2.5"
+            "color=PURPLE 50%%; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%%; threshold=%f" % params.minimum_peak
+        )
+
+    if params.use_predictor and params.sigma > 0:
+        # fitting is on
+        lines.append(
+            "color=BLUE 50%; style=SEGMENT; lw=2; data=1; legend=Prediction;"
         )
 
     return "\n".join(lines)
@@ -126,7 +141,7 @@ def alter_incoming(incoming, defaults):
 
     # turn off smoothing for large zoom levels 
     # may be slow to do it live, and user may not be able to see anything useful anyhow
-    if zoom_value > 5000 and incoming['use_smoothing']:
+    if zoom_value > 50000 and incoming['use_smoothing']:
         incoming['use_smoothing'] = incoming['use_predictor'] = False
     
     return incoming
