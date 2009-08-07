@@ -35,9 +35,7 @@ def dataview_populate(json, index, params):
             row['data'] = fitdata
         elif  style.startswith('SEGMENT'):
             assert fitdata, 'smoothing must be applied first'
-            peaks = fitlib.detect_peaks( x=fitdata[0], y=fitdata[1] )
-            peakdata = fitlib.select_peaks(peaks=peaks, exclusion=params.feature_width)
-             
+            peakdata = fitlib.fixed_width_predictor( x=fitdata[0], y=fitdata[1], params=params )
             row['data'] = peakdata
         else:
             row['data'] = data
@@ -60,13 +58,13 @@ def dataview_trackdef(params):
     if params.use_smoothing and params.sigma > 0:
         # fitting is on
         lines.append(
-            "color=PURPLE 50%%; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%%; threshold=%f" % params.minimum_peak
+            "color=PURPLE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%%; threshold=%f" % params.minimum_peak
         )
 
     if params.use_predictor and params.sigma > 0:
         # fitting is on
         lines.append(
-            "color=BLUE 50%; style=SEGMENT; lw=2; data=1; legend=Prediction;"
+            "color=PURPLE 10%; style=SEGMENT; data=1; bpad=1; legend=Prediction;"
         )
 
     return "\n".join(lines)
@@ -232,5 +230,9 @@ if __name__ == '__main__':
     data = models.Data.objects.get(id=1)
     index = data.index()
 
-    params = html.Params(start=100, end=1500, chrom='chr1', sigma=20, image_width=800)
+    params = html.Params(
+        start=100, end=1500, chrom='chr1',
+        )
+    params.update(FORM_DEFAULTS)
+    params.image_width=800
     json = dataview_multiplot(index=index, params=params, debug=True)

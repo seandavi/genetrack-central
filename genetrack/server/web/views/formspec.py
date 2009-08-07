@@ -96,7 +96,7 @@ class PeakForm( forms.Form ):
     """
     use_predictor = forms.BooleanField( initial=False, required=False )
     feature_width = forms.IntegerField( initial=147, max_value=2000, min_value=0, widget=ImageWidget )
-    minimum_peak = forms.IntegerField( initial=2, max_value=1000, min_value=0, widget=ImageWidget )
+    minimum_peak = forms.FloatField( initial=2, max_value=1000, min_value=0, widget=ImageWidget )
     pred_func = forms.ChoiceField( initial='FIX', choices=[ ('FIX', 'Fixed width'), ('TRS', 'Above threshold'), ('ALL', 'All maxima') ] )
 
 PEAK_DEFAULTS = get_defaults( PeakForm() )

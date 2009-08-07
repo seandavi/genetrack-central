@@ -115,7 +115,7 @@ def detect_peaks( x, y ):
             peaks.append( (x[i], mid) )
     return peaks
 
-def select_peaks( peaks, exclusion, treshold=0):
+def select_peaks( peaks, exclusion, threshold=0):
     """
     Selects maximal non-overlapping peaks with a given exclusion zone 
     and over a given treshold.
@@ -134,7 +134,7 @@ def select_peaks( peaks, exclusion, treshold=0):
         return peaks
 
     # sort by peak height
-    work  = [ (y, x) for x, y in peaks if y >= treshold ]
+    work  = [ (y, x) for x, y in peaks if y >= threshold ]
     work.sort()
     work.reverse()
 
@@ -177,20 +177,36 @@ def select_peaks( peaks, exclusion, treshold=0):
     selected.sort()
     return selected
 
-def fixed_width_predictor(index, data, params):   
-    "Detects peaks in the data and returns them as intervals"
-    width = params.feature_width        
-    level = params.minimum_peak
-    allpeaks = detect_peaks(index, data)
+def fixed_width_predictor(x, y, params):   
+    """
+    Generates peaks from a x,y dataset.
 
-    peaks = select_peaks( allpeaks, width=width, level=level)
+    >>> from genetrack import util
+    >>>
+    >>> y = [ 0.0, 1.0, 2.5, 1.0, 3.5, 1.0, 0.0, 0.0, 10.5, 2.0, 1.0, 0.0 ]
+    >>> x = range(len(y))
+    >>>
+    >>> params = util.Params(feature_width=1, minimum_peak=0, zoom_value=1)
+    >>> fixed_width_predictor(x, y, params=params)
+    [(2, 2, '2.5'), (4, 4, '3.5'), (8, 8, '10.5')]
+    >>>
+    >>> params = util.Params(feature_width=2, minimum_peak=3, zoom_value=1)
+    >>> fixed_width_predictor(x, y, params=params)
+    [(3, 5, '3.5'), (7, 9, '10.5')]
+    """
 
-    results = []
-    half = width/2
-    for x, y in peaks:
-        start = x - half
-        end   = x + half
-        results.append( (start, end, y) )
+    width = params.feature_width
+    all_peaks = detect_peaks(x=x, y=y )
+    sel_peaks = select_peaks(peaks=all_peaks, exclusion=width, threshold=params.minimum_peak)
+
+    #print params
+    #print sel_peaks
+    # generate the fixed lenght intervals with open 
+    h = width/2
+    if int(params.zoom_value)> 5000:
+        results = [ (m - h, m + h, '' ) for m, v in sel_peaks ]    
+    else:
+        results = [ (m - h, m + h, '%.1f' % v ) for m, v in sel_peaks ]
 
     return results
 
