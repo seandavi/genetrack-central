@@ -22,8 +22,8 @@ Or in other python scripts::
 Run the script with no parameters to see the options that it takes.
 
 A genetrack input file format is a tab delimited text file
-described in the API documentation of the LinearData 
-class: `genetrack.hdflib.LinearData`
+described in the API documentation of the PositionalData 
+class: `genetrack.hdflib.PositionalData`
 The transformation is a three step process, *transform*, 
 *sort* and *consolidate*. It will create files in the 
 genetrack temporary data directory and it will remove the intermediate files 

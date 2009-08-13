@@ -133,7 +133,7 @@ class PositionalData(object):
 
         # no building permitted
         if nobuild and missing(self.index):
-            raise Exception('No autbuild allowed and no index found at %s' % self.index)
+            raise Exception('No autobuild allowed and no index found at %s' % self.index)
         
         # creating indices if these are missing or an update is forced
         if update or missing(self.index):
