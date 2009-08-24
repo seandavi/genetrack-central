@@ -27,12 +27,20 @@ def module_check():
     "Verifies that required modules are present"
 
     # required modules
+    errflag = False
     try:
         import numpy, tables, django, pychartdir, Image
     except ImportError, exc:
-        logger.error('Software requirements not met!')
+        if not errflag:
+            logger.error('Software requirements not met!')
+        else:
+            logger.error('-' * 20)
         logger.error('ImportError: %s' % exc)
         logger.error('See http://genetrack.bx.psu.edu for installation instructions')
+
+        errflag = True
+
+    if errflag:
         sys.exit()
 
 #perform the module check    
