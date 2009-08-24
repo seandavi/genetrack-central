@@ -1,22 +1,23 @@
 """
-Bed file transformer. Requires the presence of 
-at least 6 bed columns to access the strand.
+File transformer. Takes a tabuolar file (bed or gff) and 
+transforms them to a file used as genetrack input.
 Optional parameters may be used to shift the 5' ends with 
-a specified amount. This is useful if the bed file corresponds to data with fixed fragment 
-widths you can move each fragment to the center location. 
-The program may be invoked in multiple ways. As a standalone script::
+a specified amount. This is useful if the file corresponds to data 
+with fixed fragment widths you can move each fragment to the 
+center location. The program may be invoked in multiple ways. 
+As a standalone script::
 
-    python bed2genetrack.py
+    python tabs2genetrack.py
 
 As a python module::
 
-    python -m genetrack.scripts.bed2genetrack
+    python -m genetrack.scripts.tabs2genetrack
 
 Or in other python scripts::
 
 >>>
->>> from genetrack.scripts import bed2genetrack
->>> bed2genetrack.transform( inpname, outname, shift=0)
+>>> from genetrack.scripts import tabs2genetrack
+>>> tabs2genetrack.transform( inpname, outname, format='bed', shift=0)
 >>>
 
 Run the script with no parameters to see the options that it takes.
@@ -36,9 +37,10 @@ that is substantially faster under Unix than Windows.
 
 """
 import os, sys, csv
+from itertools import *
 from genetrack import logger, conf, util
 
-def consolidate( inpname, outname):
+def consolidate( inpname, outname, format):
     """
     Consolidates an input file. 
     Merges multiple indentical indices into one line
@@ -49,8 +51,8 @@ def consolidate( inpname, outname):
     basename = os.path.basename(inpname).replace('.sorted', '')
 
     # create a few information headers
-    fp.write("#\n# created with bed2genetrack\n")
-    fp.write("# source: %s\n#\n" % basename)
+    fp.write("#\n# created with tabs2genetrack\n")
+    fp.write("# source: %s, format %s\n#\n" % (basename, format) )
     fp.write("chrom\tindex\tforward\treverse\tvalue\n")
     
     # the main reader
@@ -76,11 +78,25 @@ def consolidate( inpname, outname):
 
     fp.close()
 
-def transform(inpname, outname, shift=0):
+def transform(inpname, outname, format, shift=0,):
     """
     Transforms reads stored in bedfile to a genetrack input file.
     Requires at least 6 bed columns to access the strand.
     """
+
+    # detect file formats
+    if format == "BED":
+        CHROM, START, END, STRAND = 0, 1, 2, 5
+    elif format == "GFF":
+        CHROM, START, END, STRAND = 0, 3, 4, 6
+    else:
+        raise Exception('Invalid file format' % format)
+
+    # two sanity checks, one day someone will thank me
+    if format == 'BED' and inpname.endswith('gff'):
+        raise Exception('BED format on a gff file?')
+    if format == 'GFF' and inpname.endswith('bed'):
+        raise Exception('GFF format on a bed file?')
 
     # find the basename of the outputname
     basename = os.path.basename(outname)
@@ -102,6 +118,9 @@ def transform(inpname, outname, shift=0):
     if first.startswith == 'track':
         reader.next()
 
+    # unwind the comments
+    list(takewhile(lambda x: x[0].startswith('#'), reader))
+
     # copious timing info for those who enjoy these
     timer, full = util.Timer(), util.Timer()
 
@@ -113,7 +132,19 @@ def transform(inpname, outname, shift=0):
 
     fp = file(flat, 'wt')
     for linec, row in enumerate(reader):
-        chrom, start, end, strand = row[0], row[1], row[2], row[5]
+        try:
+            chrom, start, end, strand = row[CHROM], row[START], row[END], row[STRAND]
+        except Exception, exc:
+            first = row[0][0]
+            # may be hitting the end of the file with other comments
+            if  first == '>':
+                break # hit the sequence content of the gff file
+            elif first == '#':
+                continue # hit upon some comments
+            else:
+                logger.error(row)
+                raise Exception(exc) 
+
         if strand == '+':
             # on forward strand, 5' is at start
             idx = int(start) + shift
@@ -141,7 +172,7 @@ def transform(inpname, outname, shift=0):
     logger.debug("sorting finished in %s" % timer.report() )
 
     logger.debug("consolidating into '%s'" % outname)
-    consolidate( sorted, outname)
+    consolidate( sorted, outname, format=format)
     logger.debug("consolidate finished in %s" % timer.report() )
     logger.debug("output saved to '%s'" % outname)
     logger.debug("full run finished in %s" % full.report() )
@@ -173,6 +204,20 @@ def option_parser():
         help="output file name (required)"
     )
 
+    # file formats
+    parser.add_option(
+        '-f', '--format', action="store", 
+        dest="format", type="str", default='', 
+        help="input file format, bed or gff (required)",
+    )
+    
+    # correction shift added in 5' direction for start/end coordinates
+    parser.add_option(
+        '-s', '--shift', action="store", 
+        dest="shift", type="int", default=0, 
+        help="shift for the 5' end on each strand (default=0)",
+    )
+
     # verbosity can be 0,1 and 2 (increasing verbosity)
     parser.add_option(
         '-v', '--verbosity', action="store", 
@@ -180,13 +225,9 @@ def option_parser():
         help="sets the verbosity (0, 1) (default=1)",
     )
 
-    # correction shift added in 5' direction for start/end coordinates
-    parser.add_option(
-        '-s', '--shift', action="store", 
-        dest="shift", type="int", default=0, 
-        help="shift for the 5' end on each strand (default=0)",
-    )
-    
+
+
+
     return parser
 
 if __name__ == '__main__':
@@ -195,12 +236,20 @@ if __name__ == '__main__':
 
     options, args = parser.parse_args()
 
+    # uppercase the format
+    options.format = options.format.upper()
+
+    if options.format not in ('BED', 'GFF'):
+        parser.print_help()
+        sys.exit()
+
     # set verbosity
     if options.verbosity > 0:
         logger.disable(None)
 
     # missing file names
-    if not (options.inpname and options.outname):
+    if not (options.inpname and options.outname and options.format):
         parser.print_help()
     else:
-        transform(inpname=options.inpname, outname=options.outname, shift=options.shift)
+        transform(inpname=options.inpname, outname=options.outname,\
+            format=options.format, shift=options.shift)
