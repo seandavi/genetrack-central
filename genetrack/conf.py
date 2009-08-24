@@ -41,9 +41,20 @@ def module_check():
                 errflag = True
             logger.error('missing module: %s' % name)
 
+    # missing dependecies
     if errflag:
-        logger.error('-' * 20)
         sys.exit()
+
+    # verify some of the versions
+    module_versions = [ ('tables', '2.0'), ('numpy', '1.1') ]
+    for name, version in module_versions:
+        try:
+            mod = __import__(name)
+            if mod.__version__ < version:
+                raise Exception('%s of version %s or higher is required' % (name, version))
+        except Exception, exc:
+            logger.error( str(exc) )
+            sys.exit()
 
 #perform the module check    
 module_check()

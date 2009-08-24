@@ -51,7 +51,7 @@ class PositionalData(object):
     >>> from genetrack import conf
     >>>
     >>> fname = conf.testdata('test-hdflib-input.txt')
-    >>> index = PositionalData(fname=fname, workdir=conf.TEMP_DATA_DIR)   
+    >>> index = PositionalData(fname=fname, workdir=conf.TEMP_DATA_DIR, update=True)   
     
     Upon the first instantiation the index will be created if it did
     not exist or if the `update=True` parameter was set.
