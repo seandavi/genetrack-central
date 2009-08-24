@@ -56,14 +56,16 @@ if [ $# == 0 ]; then
 	echo '    $ genetrack.sh init populate jobs'
 	echo ''
 	echo 'Commands:'
-	echo '    init      initializes the database'
-	echo '    test      runs all tests'
-	echo '    docs      generates documentation'
-	echo '    api       generates API html via epydoc'
-	echo '    jobs      executes the jobrunner'
-	echo '    run       runs server'
-	echo '    delete    deletes all data in GeneTrack'
-	echo '    populate  populates the system with test data'
+	echo '    init       initializes the database'
+	echo '    test       runs all tests'
+    echo '    functest   runs functional tests'
+    echo '    djangotest runs the django tests'
+	echo '    docs       generates documentation'
+	echo '    api        generates API html via epydoc'
+	echo '    jobs       executes the jobrunner'
+	echo '    run        runs server'
+	echo '    delete     deletes all data in GeneTrack'
+	echo '    populate   populates the system with test data'
 fi
 
 while (( "$#" )); do
@@ -126,16 +128,26 @@ if [ "$1" = "run" ]; then
     $PYTHON_EXE $DJANGO_ADMIN runserver 127.0.0.1:8080 --settings=$DJANGO_SETTINGS_MODULE
 fi
 
-if [ "$1" = "test" ]; then 
+if [ "$1" = "djangotest" ]; then 
     echo ''
     echo '*** Running django tests ***'
     echo ''
     $PYTHON_EXE $DJANGO_ADMIN test --settings=$DJANGO_SETTINGS_MODULE
 
+fi
+
+if [ "$1" = "functest" ]; then 
     echo ''
     echo '*** Running functional tests ***'
     echo ''
     $PYTHON_EXE $TEST_DIR/functional.py
+fi
+
+if [ "$1" = "test" ]; then 
+    echo ''
+    echo '*** Running genetrack tests ***'
+    echo ''
+    $PYTHON_EXE $TEST_DIR/runtest.py
 fi
 
 shift
