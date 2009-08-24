@@ -82,7 +82,7 @@ if [ "$1" = "init" ]; then
     echo '*** Initializing the data ***'
     echo
     $PYTHON_EXE $DJANGO_ADMIN syncdb --noinput --settings=server_settings
-    $PYTHON_EXE -m server.scripts.initializer $GENETRACK_SERVER_HOME/init/initial-users.csv
+    $PYTHON_EXE -m genetrack.server.scripts.initializer $GENETRACK_SERVER_HOME/init/initial-users.csv
 fi
 
 if [ "$1" = "populate" ]; then 
