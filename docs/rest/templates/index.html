@@ -2,16 +2,26 @@
 {% set title = 'GeneTrack Overview' %}
 {% block body %}
   <h1>Welcome</h1>
-  <h2>July 21. 2009 - Work in progress.</h2>
-  <h2>Code in alpha stage.</h2>
+  
   <p>
-    
-
-    <b>GeneTrack</b> is a python based bioinformatics framework designed to 
-    visualize genomic data. Its main focus is accessiblity
-    while providing sophisticated features for advanced users. We aim 
-    to build a simple and flexible software tool that can be deployed 
-    with minimal effort withouth sacrificing efficiency and performance.
+    <b>GeneTrack</b> is a bioinformatics framework 
+    that allows scientists to: 
+    <ul>
+        <li>
+            Share sequencing data within a lab or organization using a project based access.
+        </li>
+        <li>
+            Automatically run statistical tools to generate quality
+            control results.
+        </li>
+        <li>
+            Visualize genomic data in various contexts via an easy
+            to use track builder. 
+        </li>
+        <li>
+            Generate peak calls and predictions for various binding events.
+        </li>
+    </ul>
     See the <a href="{{ pathto("installation") }}">Installation</a> page 
     for more details.
   </p>
@@ -59,14 +69,6 @@
   </table>
 
   <h2>Get GeneTrack</h2>
- 
-  <p>To accomodate new data analysis visualizations
-  <b>GeneTrack</b> is published in multiple (backward compatible) releases. 
-  The name has the form <tt>genetrack-2.0.0-2009-135.zip</tt> 
-  The first version numbers indicate the release version (<tt>2.0.0</tt>). 
-  The rest of version numbers indicate the year and day of the release 
-  <tt>2009-135</tt> means the 135th day of 2009.</p>
-
   <p>
     <ul>
       <li>

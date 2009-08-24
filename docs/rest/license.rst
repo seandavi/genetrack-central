@@ -17,16 +17,10 @@ Under the following conditions:
 - You must attribute the work in the manner specified by the author(s) or licensor(s)
   (but not in any way that suggests that they endorse you or your use of the work).
 
+Funding clause
+--------------
+
 Scientific teams submitting grants or proposals that rely in part on the operation of this 
 software should include funds to **support** it. These funds 
-will be used to improve the software and will also cover installation support 
-and basic consulting. Contact the team manager for more information.
-
-The conditions above may be relaxed one a case by case basis. 
-Contact the team for more information.
-
-GeneTrack requires python2.5 or higher, numpy, pytables and chartdirector.
-This latter is installed automatically.
-
-
-
+will be used to improve the software but will also cover **installation support** 
+and **basic consulting**. Contact the team manager for more information.
