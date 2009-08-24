@@ -8,13 +8,13 @@ class ScriptTests( unittest.TestCase ):
     Testing scripts
     """
     
-    def test_bed2genetrack(self):
+    def test_tabs2genetrack(self):
         "Testing bed2genetrack transformation"
-        from genetrack.scripts import bed2genetrack
+        from genetrack.scripts import tabs2genetrack
 
         inpfile = conf.testdata('short-data.bed', verify=True)
         outfile = conf.tempdata('short-data.genetrack')
-        bed2genetrack.transform(inpfile, outfile)
+        tabs2genetrack.transform(inpfile, outfile, format='BED')
 
 def get_suite():
     "Returns the testsuite"

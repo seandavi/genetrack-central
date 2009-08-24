@@ -71,6 +71,8 @@ if (%1)==() goto :usage
    if "%1"=="delete" goto :delete
    if "%1"=="populate" goto :populate
    if "%1"=="test" goto :test
+   if "%1"=="djangotest" goto :djangotest
+   if "%1"=="functest" goto :functest
    if "%1"=="editor" goto :editor
    if "%1"=="docs" goto :docs
    if "%1"=="api" goto :api
@@ -98,7 +100,8 @@ echo     genetrack.bat init populate jobrunner
 echo.
 echo Commands:
 echo     init      initializes the database
-echo     test      runs all tests
+echo     test      runs genetrack tests
+echo     functest  runs genetrack functional tests
 echo     docs      generates documentation
 echo     api       generates API html via epydoc
 echo     jobs      executes the jobrunner
@@ -149,19 +152,23 @@ goto :eof
 
 :test
 echo.
-echo *** Running django tests
-echo.
-%PYTHON_EXE% %DJANGO_MANAGER% test --settings=server_settings
-
-echo.
-echo *** Running server tests
-echo.
-%PYTHON_EXE% %GENETRACK_TESTDIR%\functional.py %2 %3 %4 %5 %6 %7 %8 %9
-
-echo.
 echo *** Running genetrack tests
 echo.
 %PYTHON_EXE% %GENETRACK_TESTDIR%\runtest.py %2 %3 %4 %5 %6 %7 %8 %9
+goto :back
+
+:functest
+echo.
+echo *** Running functional tests
+echo.
+%PYTHON_EXE% %GENETRACK_TESTDIR%\functional.py %2 %3 %4 %5 %6 %7 %8 %9
+goto :back
+
+:djangotest
+echo.
+echo *** Running django tests
+echo.
+%PYTHON_EXE% %DJANGO_MANAGER% test --settings=server_settings
 goto :back
 
 :editor
