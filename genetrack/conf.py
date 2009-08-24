@@ -59,6 +59,14 @@ def module_check():
 #perform the module check    
 module_check()
 
+try:
+    # monkeypath pytables to disable the Natural Name warning
+    import re
+    from tables import path
+    path._pythonIdRE = re.compile('.')
+except:
+    logger.warn( 'could not patch the Natural Name warning' )
+
 def reset_dir(path):
     "Resets a directory path"
     if os.path.isdir( path ):

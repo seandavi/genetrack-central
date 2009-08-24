@@ -17,7 +17,7 @@ Or in other python scripts::
 
 Run the script with no parameters to see the options that it takes.
 
-**Observed runtime**: tranformation rate of 2 million lines per minute
+**Observed runtime**: tranformation rate of 5 million lines per minute
 
 """
 import os, sys, csv
