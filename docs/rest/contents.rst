@@ -13,7 +13,7 @@ Contents:
     trackoptions
     tutorials/tutorial-index
     people
-	license
+    license
 
 
 * :ref:`genindex`

@@ -5,10 +5,10 @@ Copyright (c) 2008, 2009 Istvan Albert (istvan.albert@gmail.com) and GeneTrack t
 
 Website: http://genetrack.bx.psu.edu
 
-You are free
+You are free to:
 
-- to copy, distribute and transmit the work
-- to adapt and modify the work to fit your needs
+- use, copy, distribute and transmit the work
+- adapt and modify the work to fit your needs
 
 Under the following conditions:
 
@@ -21,6 +21,7 @@ Funding clause
 --------------
 
 Scientific teams submitting grants or proposals that rely in part on the operation of this 
-software should include funds to **support** it. These funds 
-will be used to improve the software but will also cover **installation support** 
+software must include funds to **support** it. 
+These funds will be used to improve the software but will also cover **installation support** 
 and **basic consulting**. Contact the team manager for more information.
+

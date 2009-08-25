@@ -29,7 +29,7 @@ from time import strftime, gmtime
 
 tstamp = strftime("%Y-%j", gmtime() )
 
-__version__ = '2.0.0-alpha-%s' % tstamp
+__version__ = '2.0.0-beta-1'
 
 # version check
 if sys.version_info < (2, 5):
