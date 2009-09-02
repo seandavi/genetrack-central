@@ -1,30 +1,38 @@
 GeneTrack Installation
 ======================
 
-GeneTrack works on Windows, Linux and OS X operating systems. It requires 
+
+
+GeneTrack works on **Windows**, **Linux** and **Mac OS X** operating systems. It requires 
 **Python** and several Python extension libraries. Most required libraries are
 open source but the plotting library used during visualization requires a License.
 GeneTrack has been designed to have *low* system requirements. It will run well even
 on a low end laptop.
 
+.. image:: static/logos.png
+    :align: center
+
 System requirements
 -------------------
 
-The actual system requirements depend on the amount of data (number of rows per file) 
-genome size of the organism that the data represents and
+The actual system requirements depend on the amount of data (number of rows), the 
+genome size and
 the number of simultanous analysis processes that are allowed to run. General rules:
 
 
-* each dataset of 10 million of reads will need approximately 300 MB of hard drive space. 
-* the server instance has very low memory requirements (around 50 MB or so)
+* each dataset of **10 million** of reads will need approximately **300 MB** of hard drive space. 
+* the server instance has relatively low memory requirement of around **100 MB** or less.
 * when executing simultanouse processes the overall memory usage will will add up
-* in general having 1 GB free memory will allow for a simultanous processing of multiple datasets for 
+* in general having **1 GB** free memory will allow for a simultanous processing of multiple datasets for 
   the largest genomes (such as of human).
+* once the data is uploaded GeneTrack will index it for speedy access. This 
+  transformation takes with a performance of approximately **2 minutes** for 
+  each **1 million** data rows.
 
 GeneTrack will run on any operating system for which the required python package and modules 
-are available, such as Microsoft Windows 2000, XP, Vista, and Mac OS X v10 or later, 
-and most Linux distributions: Red Hat Linux, SUSE, Ubuntu etc. 
-Please see the software requirement below for further information. In general we recommend
+are available, such as Microsoft Windows 2000, XP, Vista, and Mac OS X 10 or later, 
+and all Linux distributions: Red Hat Linux, SUSE, Ubuntu etc. 
+Please see the software requirements below for further information. In general we recommend
 that Mac and Linux users to use **package managers**, like ``rpm``, ``apt-get``, ``yum``, ``MacPorts``
 to install the dependecies rather than installing them from sources (see you operating system
 for details).
@@ -80,6 +88,8 @@ be organized in the following way.
 .. image:: static/installdir.png
     :align: center
 
+Once installation is complete you can move to the `Running Genetrack <running.html>`_ page.
+
 Unix installation
 ^^^^^^^^^^^^^^^^^
 
@@ -108,7 +118,7 @@ When compiled separately you may need to add the ``HDF`` to the library load pat
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ialbert/usr/hdf5
 
 
-Once installation is complete you can move to the `Running Genetrack <running.html>_ page
+Once installation is complete you can move to the `Running Genetrack <running.html>`_ page
 
 .. _os-x-tips:
 
@@ -142,3 +152,4 @@ familiarity with basic system administration may be necessary:
   
         $ easy_install django
 
+Once installation is complete you can move to the `Running Genetrack <running.html>`_ page.
