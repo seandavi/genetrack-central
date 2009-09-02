@@ -1,104 +1,119 @@
 GeneTrack Installation
 ======================
 
-On **Windows** installation is very straightforward. All packages are available 
-as binary installers, no compilation is necessary. Download then double click each package. 
-Some of them need to be unpacked and copied to the ``library`` folder.
+GeneTrack works on Windows, Linux and OS X operating systems. It requires 
+**Python** and several Python extension libraries. Most required libraries are
+open source but the plotting library used during visualization requires a License.
+GeneTrack has been designed to have *low* system requirements. It will run well even
+on a low end laptop.
 
-On **Unix** type systems we recommend that you use a *package manager* (``apt-get``, ``yum`` on Linux 
-or ``ports`` for MaxOSX) to install the proper dependecies for 
-the **python** instance that you wish to use. When compiled separately 
-you may need to add the ``HDF`` to the library load path like so ::
+System requirements
+-------------------
+
+The actual system requirements depend on the amount of data (number of rows per file) 
+genome size of the organism that the data represents and
+the number of simultanous analysis processes that are allowed to run. General rules:
+
+
+* each dataset of 10 million of reads will need approximately 300 MB of hard drive space. 
+* the server instance has very low memory requirements (around 50 MB or so)
+* when executing simultanouse processes the overall memory usage will will add up
+* in general having 1 GB free memory will allow for a simultanous processing of multiple datasets for 
+  the largest genomes (such as of human).
+
+GeneTrack will run on any operating system for which the required python package and modules 
+are available, such as Microsoft Windows 2000, XP, Vista, and Mac OS X v10 or later, 
+and most Linux distributions: Red Hat Linux, SUSE, Ubuntu etc. 
+Please see the software requirement below for further information. In general we recommend
+that Mac and Linux users to use **package managers**, like ``rpm``, ``apt-get``, ``yum``, ``MacPorts``
+to install the dependecies rather than installing them from sources (see you operating system
+for details).
+
+GeneTrack is designed to operate as a web-based application that will present 
+its user interface through any modern web browser such as Firefox 2.5 or later, 
+Safari 4.0, and Microsoft Internet Explorer 7.0 or later.
+
+Installation
+------------
+
+This section describes a basic installation of GeneTrack as a stand-alone deployment 
+on a single server. We offer details for a quick installation for Windows and 
+detailed instructions for all other platform. See bottom of the page for :ref:`os-x-tips`.
+
+Quick install for Windows
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+This section describes a quick installation for Windows users. 
+As a convenience Windows users may download 
+:download:`windows-quickstart-2.5.zip <static/windows-quickstart-2.5.zip>` (35 MB) 
+file that contains all the required libraries and files including **Python**:
+
+List of files in ``windows-quickstart-2.5.zip``:
+
+- readme.txt 		(General readme file)
+- python-2.5.4.msi 	(Python 2.5 for x86 processors)
+- numpy-1.3.0-win32-superpack-python2.5.exe 	(for Python 2.5)
+- tables-2.1.1.win32-py2.5.exe 			(for Python 2.5)
+- PIL-1.1.6.win32-py2.5.exe			(for Python 2.5)
+- Django-1.1-django_folder.zip	(including only the django folder of Django v1.1)
+- ChartDirector-5.0-lib_folder.zip 	(including only the lib folder of ChartDirector v5.0 for Python)
+
+
+.. image:: static/quicklist.png
+    :align: center
+
+then install them according to the following instructions:
+
+#. Download and unzip the **GeneTrack** system
+#. Download :download:`windows-quickstart-2.5.zip <static/windows-quickstart-2.5.zip>`
+#. Unzip the file into a separate directory (extract all)
+#. Install Python 2.5 with ``python-2.5.4.msi``.
+#. Install NumPy v1.3.0 with ``numpy-1.3.0-win32-superpack-python2.5.exe``.
+#. Install PyTable v2.1.1 with ``tables-2.1.1.win32-py2.5.exe``.
+#. Install the Python Imaging Library with ``tables-2.1.1.win32-py2.5.exe``.
+#. Move the ``django`` folder into the ``library`` folder of Genetrack
+#. Move the ``chartdirector`` folder into the ``library`` folder of Genetrack
+
+When you finish the quick installation, the final directory for GeneTrack will  
+be organized in the following way.
+
+.. image:: static/installdir.png
+    :align: center
+
+Unix installation
+^^^^^^^^^^^^^^^^^
+
+This section provides a full description for installation of the GeneTrack software. 
+Users may choose a specific version for software requirements for their own system. 
+It is important that the version of all software packages must be compatible with each other. 
+Mac and Linux users should use a software **package manager** to ensure that
+all dependecies are properly installed.  
+
+#. Install the `Python <http://www.python.org/>`_ programming language of version **2.5** or higher.
+#. Install `Numpy <http://numpy.scipy.org/>`_. 
+#. Install `PyTables <http://www.pytables.org/>`_.
+#. Install the `Python Imaging Library <http://www.pythonware.com/products/pil/>`_. 
+#. Install `django <http://www.djangoproject.com/>`_ 
+#. Download and install `ChartDirector <http://www.advsofteng.com/>`_. and place the modules
+   into your python path. By default the ``library`` folder of GeneTrack will be considered a 
+   python import location.
+
+For Unix type systems you will also need to unpack the content of
+this :download:`fonts.tar.gz <static/fonts.tar.gz>` file in place it into the same
+directory that chartdirector has been accessed from (for example ``library`` if 
+you followed the instructions above)
+
+When compiled separately you may need to add the ``HDF`` to the library load path like so ::
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/ialbert/usr/hdf5
 
-See bottom of the page for :ref:`os-x-tips`.
 
-Software requirements
----------------------
-
-#. You will need to install the `Python <http://www.python.org/>`_ programming language of version *2.5* or higher.
-
-#. Install `numpy <http://numpy.scipy.org/>`_. Make sure it matches the python version you have installed.
-
-#. Install `pytables <http://www.pytables.org>`_. Make sure it matches the python version you have installed.
-
-#. Install `git <http://git-scm.com/>`_ and check out the repository::
-
-      > git clone git://github.com/ialbert/genetrack-central.git
-   
-   We will provide downloadable packages later.
-
-#. Install `django <http://www.djangoproject.com/>`_. 
-   It is sufficent to download the compressed archive, unpack it then 
-   place the ``django`` folder in ``library`` folder of the ``genetrack``
-   distribution (installed above)
-
-#. Install `chartdirector <http://www.advsofteng.com/download.html>`_ . You will need to 
-   download the package that corresponds to your python version, 
-   then move the library modules into the library folder of **GeneTrack**. When done the ``library`` folder
-   will need to contain the file called ``pychartdir.py`` (and a few others like ``chartdir.dll`` or ``chartdir.so`` etc).
-   For ``Unix`` type systems you will need to unpack the content of this
-   :download:`fonts.tar.gz <static/fonts.tar.gz>` file in the ``library`` directory.
-   
-Running Genetrack
------------------
-
-The **GeneTrack** manager is called ``genetrack.bat`` on Windows and ``genetrack.sh`` on Unix type systems
-and is located it the main directory. You will need to run all the following commands from a
-command shell (terminal). Invoke the manager to see all the options::
-
-     > genetrack.bat (or genetrack.sh)
-
-First run the tests to ensure that the installation is correct.
-In a command shell type::
-
-     > genetrack.bat test
-
-Three types of tests must pass. Django tests, functional tests and genetrack internal tests. 
-Verify that all of them pass. 
-
-You may pass multiple commands to the manager. 
-To initialize your **Genetrack** server and populate it with some data you'll
-have to write::
-
-     > genetrack.bat init populate 
-
-This initializes **GeneTrack** with the content of the comma separated file stored in
-``home/init/initial-users.csv``. You may edit this file and add or remove users from it.
-It is used to maintain an initial set of users. At any time you may add a 
-new user to this list and rerun ``init`` command. You can also add users from
-the administration interface. When you log into an account that has 
-administration access you will see links that point to administration tasks.
-
-If you want to delete all data and reset the system's content run ::
-
-     > genetrack.bat delete
-
-.. warning:: The ``delete`` command removes all data and users stored in **GeneTrack**
-
-To completely reset your instance run the code below. Note that this 
-also runs the jobserver and indexes the files that were populated before::
-
-     > genetrack.bat delete init populate jobs
-
-To start the server run::
-     
-     > genetrack.bat run
-
-Visit http://127.0.0.1:8080 and log in as `admin`. A password has been generated for you and 
-is located in the ``home/SECRET-KEY`` file. You may edit and replace the content of this file 
-with something easier to remember then delete the content and repopulate. The ``populate`` command
-adds project to the ``admin`` user.
-
-To run jobs scheduled by **GeneTrack** execute::
-
-     > genetrack.bat jobs
+Once installation is complete you can move to the `Running Genetrack <running.html>_ page
 
 .. _os-x-tips:
 
 Mac OSX tips
-------------
+^^^^^^^^^^^^
 
 **GeneTrack** runs well on OSX. Set up is not complicated
 but somewhat tedious as several steps need to be followed in order and 
@@ -126,6 +141,4 @@ familiarity with basic system administration may be necessary:
   5. install django and bx-python::
   
         $ easy_install django
-        
-See above for details on running **GeneTrack**    
 

@@ -12,8 +12,8 @@ You are free to:
 
 Under the following conditions:
 
-- You may not use this work for **commercial purposes** without permission. 
-
+- You **may not** use this work for **commercial purposes** without permission. 
+- If applicable you must adhere to the **funding clause** detailed below
 - You must attribute the work in the manner specified by the author(s) or licensor(s)
   (but not in any way that suggests that they endorse you or your use of the work).
 
@@ -21,7 +21,7 @@ Funding clause
 --------------
 
 Scientific teams submitting grants or proposals that rely in part on the operation of this 
-software must include funds to **support** it. 
-These funds will be used to improve the software but will also cover **installation support** 
+software must explicitely include funds to **support** for it. 
+Note that these funds will provide you with **installation support** 
 and **basic consulting**. Contact the team manager for more information.
 

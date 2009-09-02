@@ -51,7 +51,7 @@ rem Adding genetrack and the server apps to the python path
 set PYTHON_PATH_1=%GENETRACK_HOME%;%GENETRACK_SERVER_HOME%
 
 rem Adding libraries to the python path
-set PYTHON_PATH_2=%GENETRACK_HOME%library;%GENETRACK_HOME%library\library.zip
+set PYTHON_PATH_2=%GENETRACK_HOME%library;%GENETRACK_HOME%library\library.zip;%GENETRACK_HOME%library\chartdirector 
 
 rem Adding the development version of bx python 
 rem not needed if you have it already installed
