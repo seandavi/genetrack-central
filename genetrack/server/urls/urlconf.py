@@ -23,6 +23,9 @@ urlpatterns = patterns('',
     # placeholder for pages that are not yet completed
     (r'^todo/', 'genetrack.server.web.views.main.todo'),
 
+    # placeholder for pages that are not yet completed
+    (r'^galaxy', 'genetrack.server.web.views.galaxy.index'),
+
     # project related urls
     (r'^project/',  include('genetrack.server.urls.project_urls')),
 

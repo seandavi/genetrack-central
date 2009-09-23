@@ -66,6 +66,10 @@ if not os.path.isfile(secret_fname):
 # loads up the secret key
 SECRET_KEY = file(secret_fname).read().strip()
 
+# tool secret for GALAXY integration, must match the value
+# for the key tool_secret located in universe_wsgi.ini
+GALAXY_TOOL_SECRET ="changethisinproduction"
+
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.

@@ -1,20 +1,26 @@
 """
-Galaxy controller for GeneTrack.
+Galaxy specific views
 """
-from genetrack.server.web.views import data
+import sys, binascii, hmac, hashlib
 
-import simplejson as json
-from galaxy import web
-from galaxy.web.base.controller import BaseController
-from galaxy.model.orm import *
+from django.conf import settings
+from genetrack import logger
+from genetrack.server.web import html, authorize
+from django.template import RequestContext
 
-# main controller
-class GeneTrackController( BaseController ):
+def index(request):
+    "Main index page"
+     # form submission
+    params = html.Params( )
+
+    # unpack the request parameters    
+    msg, value = request.GET['filename'].split( ":" )
+    filename = binascii.unhexlify( value )
+
+    # validate filename
+    verify = hmac.new( settings.GALAXY_TOOL_SECRET, filename, hashlib.sha1 ).hexdigest()
     
-    @web.expose
-    def default(self, trans, msg='?',**kwds):
-        return 'Invalid Genetrack action -> %s' % msg
+    if msg != verify:
+        raise Exception('Unable to validate key!')
 
-    @web.expose
-    def view(self, trans, id=123, auth=None, realm=None):
-        return '123'
+    return html.template( request, name='galaxy.html', params=params )

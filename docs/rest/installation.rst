@@ -26,7 +26,7 @@ the number of simultanous analysis processes that are allowed to run. General ru
 * in general having **1 GB** free memory will allow for a simultanous processing of multiple datasets for 
   the largest genomes (such as of human).
 * once the data is uploaded GeneTrack will index it for speedy access. This 
-  transformation takes with a performance of approximately **2 minutes** for 
+  transformation takes place with a performance of approximately **2 minutes** for 
   each **1 million** data rows.
 
 GeneTrack will run on any operating system for which the required python package and modules 
