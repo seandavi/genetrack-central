@@ -7,6 +7,40 @@ from genetrack.server.web.views import formspec
 # the limit over which smoothing will be disabled
 SMOOTH_LIMIT = 50000
 
+def extract_parameters(forms):
+    "Extracts search parameters from the forms"
+
+    params = html.Params()
+    params.update( formspec.ALL_DEFAULTS )
+    for form in (forms.search, forms.fitting, forms.peaks):
+        if form.is_valid():
+            params.update( form.cleaned_data )
+    
+    # now add the start and end regions
+    center = int(params.feature)
+    zoom_value = int( params.zoom_value )
+    
+    # the viewport is different from the size of the image
+    # the visible region has to cover the zoom level
+    zoom_factor = float(params.image_width)/params.viewport_width
+    zoom_value *= zoom_factor
+
+    # start and end based on zoom levels
+    params.start = center - zoom_value/2
+    params.end   = center + zoom_value/2
+
+    # needs to be scaled later
+    fullrange = (params.end - params.start)
+
+    # what range does a pixel correspond to
+    params.pixelscale  =  float(fullrange) / params.image_width
+
+    # this padding is empirical, 
+    # todo generate automatically
+    params.actual_size = params.image_width + 120
+
+    return params
+
 def modify_incoming(incoming, defaults):
     """
     Modifies the incoming parameters based on user actions.
