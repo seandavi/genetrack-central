@@ -24,3 +24,6 @@ def index(request):
         raise Exception('Unable to validate key!')
 
     return html.template( request, name='galaxy.html', params=params )
+
+def browse(request):
+    pass

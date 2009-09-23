@@ -8,7 +8,7 @@ from genetrack.visual import builder
 from genetrack import logger, conf, hdflib, util, fitlib
 from genetrack.server.web import html, status, webutil
 from genetrack.server.web import models, authorize
-from genetrack.server.web.views import formspec
+from genetrack.server.web.views import formspec, browserutils
 from genetrack.server.web import login_required, private_login_required
 from genetrack.visual import parsing, builder
 
@@ -98,52 +98,6 @@ def dataview_multiplot(index, params, debug=False):
     
     return multi
 
-def alter_incoming(incoming, defaults):
-    """
-    Alters the incoming parameters based on user actions
-    """
-    # return with defaults if nothing was sent
-    if not incoming:
-        return defaults
-
-    # attempt to extract the feature from a number or a search
-    try:
-        center = int( incoming.get('feature', 10000) )
-    except ValueError:
-        # non numeric feature, search for feature location
-        center = 10000
-
-    try:
-        # current zoom value
-        zoom_value = int( incoming.get('zoom_value', 1000) )
-    except ValueError:
-        msg( message='Invalid zoom value')
-        zoom_value = 1000
-
-    # alter parameters if navigation buttons were pressed
-    if 'zoom_in' in incoming:
-        zoom_value = formspec.zoom_change(zoom_value, -1) 
-    elif 'zoom_out' in incoming:
-        zoom_value = formspec.zoom_change(zoom_value, +1)
-    elif 'move_left' in incoming:
-        center -= zoom_value/2
-    elif 'move_right' in incoming:
-        center += zoom_value/2
-
-    # map it back to string to allow for form validation later
-    incoming['zoom_value'] = str(zoom_value)
-    incoming['feature'] = str(center)
-
-    # smoothing will be turned on if peak prediction is on
-    incoming['use_smoothing'] = incoming.get('use_smoothing') or incoming.get('use_predictor')
-
-    # turn off smoothing for large zoom levels 
-    # may be slow to do it live, and user may not be able to see anything useful anyhow
-    if zoom_value > 50000 and incoming['use_smoothing']:
-        incoming['use_smoothing'] = incoming['use_predictor'] = False
-    
-    return incoming
-
 def extract_parameters(forms):
     "Extracts search parameters from the forms"
 
@@ -183,9 +137,9 @@ def data_view(request, did):
     "Renders a simple view page"
     global FORM_DEFAULTS
 
+    # get the user information
     user = request.user
-    from django.contrib.auth.models import User
-    user = User.object.get(name='admin')
+    
     # verify access rights
     data = authorize.get_data(user=user, did=did)
 
@@ -193,7 +147,7 @@ def data_view(request, did):
     incoming = dict( request.POST.items() )
 
     # alters the incoming parameters based on user interaction
-    incoming = alter_incoming(incoming, FORM_DEFAULTS)
+    incoming = browserutils.modify_incoming(incoming, FORM_DEFAULTS)
 
     # get the data representation
     index = data.index()
