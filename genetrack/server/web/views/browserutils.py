@@ -12,26 +12,19 @@ SMOOTH_LIMIT = 50000
 # this padding is currently empirical, todo: generate automatically
 IMAGE_PADDING = 120
 
-# default composite plot
-DEFAULT_COMPOSITE = """
-color=BLACK; style=BAR; data=1; h=400; ylabel=Read count; legend=Reads; bpad=1;
-color=PURPLE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%%; threshold=%(minimum_peak)f
-color=PURPLE 10%%; style=SEGMENT; data=1; bpad=1; legend=Prediction;
-"""
-DEFAULT_COMPOSITE = filter(None, DEFAULT_COMPOSITE.splitlines())
+# default plot layouts
+COMPOSITE_READS = "color=BLACK; style=BAR; data=1; h=400; ylabel=Read count; legend=Reads; bpad=1;"
+COMPOSITE_FIT   = "color=PURPLE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%%; threshold=%(minimum_peak)f"
+COMPOSITE_PEAKS = "color=PURPLE 10%%; style=SEGMENT; data=1; bpad=1; legend=Prediction;"
 
-DEFAULT_TWO_STRAND = """
-color=BLUE; style=BAR; data=1; h=400; ylabel=Read count; legend=Forward reads; bpad=1; h=180; strand=+; 
-color=BLUE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; strand=+; 
+TWOSTRAND_READ1 = "color=BLUE; style=BAR; data=1; ylabel=Read count; legend=Forward reads; bpad=1; h=180; strand=+"
+TWOSTRAND_FIT1  = "color=BLUE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; strand=+"
 
-color=RED; style=BAR; data=1; h=400; ylabel=Read count; legend=Reverse reads; bpad=0; strand=-; h=180; scaling=-1; tpad=-1
-color=RED; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0;  legend=Forward; strand=-; scaling=-1
+TWOSTRAND_READ2 = "color=RED;  style=BAR; data=1; ylabel=Read count; legend=Reverse reads; bpad=0; strand=-; h=180; scaling=-1; tpad=-1"
+TWOSTRAND_FIT2  = "color=RED;  style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; strand=-; scaling=-1"
 
-color=BLUE 10%%; style=SEGMENT; data=1; bpad=1; legend=Forward peaks; strand=+;
-color=RED 10%%; style=SEGMENT; data=1; bpad=1; legend=Reverse peaks; strand=-;
-
-"""
-DEFAULT_TWO_STRAND = filter(None, DEFAULT_TWO_STRAND.splitlines())
+TWOSTRAND_PEAK1 = "color=BLUE 10%%; style=SEGMENT; data=1; bpad=1; legend=Forward peaks; strand=+; h=70; offset=25"
+TWOSTRAND_PEAK2 = "color=RED 10%%;  style=SEGMENT; data=1; bpad=1; legend=Reverse peaks; strand=-; target=last; offset=-25; label_offset=-15"
 
 def fit(x, y, params):
     "Fits the x and y data"
@@ -54,12 +47,9 @@ def index_populate(json, index, params):
     # peform the query
     res = index.query(start=params.start, end=params.end, label=params.chrom, aslist=True)
     
-    # separete strands
-    composite = (params.strand == 'ALL')
-
     # compute smoothing before plotting
     if params.use_smoothing:
-        if composite:
+        if params.merge_strands:
             res.fx, res.fy = fit(x=res.idx, y=res.val, params=params)
         else:
             res.fx1, res.fy1 = fit(x=res.idx, y=res.fwd, params=params)
@@ -69,7 +59,7 @@ def index_populate(json, index, params):
     # compute all peak predictions before plotting
     if params.use_predictor:
         assert params.use_smoothing, 'Smoothing has not been turned on!'
-        if composite:
+        if params.merge_strands:
             res.peaks = peaks(x=res.fx, y=res.fy, params=params)
         else:
             res.peaks1 = peaks(x=res.fx1, y=res.fy1, params=params)
@@ -79,7 +69,7 @@ def index_populate(json, index, params):
     isfit  = lambda x: x.startswith('FIT')
     ispred = lambda x: x.startswith('SEGMENT')
 
-    if composite:
+    if params.merge_strands:
         # composite plot
         for row in json:
             style = row['style']
@@ -97,7 +87,6 @@ def index_populate(json, index, params):
             style = row['style']
             positive = row.get('strand', '+') == '+'
 
-            print '>>>>>>', positive
             if isfit(style):
                 if positive:
                     row['data'] = (res.fx1, res.fy1)
@@ -109,7 +98,11 @@ def index_populate(json, index, params):
                 else:
                     row['data'] = res.peaks2
             else:
-                row['data'] = (res.idx, res.val)        
+                if positive:
+                    row['data'] = (res.idx, res.fwd)        
+                else:
+                    row['data'] = (res.idx, res.rev)        
+
             row['xscale'] = params.xscale
             row['w'] = params.image_width
     
@@ -119,22 +112,30 @@ def default_tracks(params):
     "Generates default tracks based on the parameter values"
     
     # detect which tracks to draw
-    if params.strand == 'ALL':
-        text = DEFAULT_COMPOSITE
+    if params.merge_strands:
+        lines = [ COMPOSITE_READS ]
+        if params.use_smoothing:
+             lines.append(COMPOSITE_FIT)
+        if params.use_predictor:
+             lines.append(COMPOSITE_PEAKS)
     else:
-        text = DEFAULT_TWO_STRAND
+        # the order of layers is important as they will be drawn on top of previous ones
+        if params.use_smoothing and params.use_predictor:
+            lines = [ 
+                TWOSTRAND_READ1, TWOSTRAND_FIT1, 
+                TWOSTRAND_READ2, TWOSTRAND_FIT2, 
+                TWOSTRAND_PEAK1, TWOSTRAND_PEAK2,
+            ]
+        elif params.use_smoothing:
+            lines = [ 
+                TWOSTRAND_READ1, TWOSTRAND_FIT1, 
+                TWOSTRAND_READ2, TWOSTRAND_FIT2, 
+            ]
+        else:
+            lines = [ TWOSTRAND_READ1, TWOSTRAND_READ2, ]
 
-    # draws everything as specified in the spec
-    if params.use_smoothing and params.use_predictor :
-        return "\n".join(text)
-
-    # only smoothing is performed
-    if params.use_smoothing:
-        # no smoothing no predictions
-        return "\n".join(text[:2] + text[3:-1])
-    
     # draws just the reads
-    return "\n".join(text[::3])
+    return "\n".join(lines)
 
 def parse_parameters(forms, defaults):
     """
@@ -179,6 +180,9 @@ def parse_parameters(forms, defaults):
     # negative or zero sigma turns off everything
     if params.sigma < 0:
         params.use_predictor = params.use_smoothing = False
+
+    # also set the twostrand option
+    params.merge_strands = (params.strand == 'ALL')
 
     return params
 
