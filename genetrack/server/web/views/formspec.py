@@ -17,6 +17,7 @@ class SubmitWidget( forms.widgets.Input) :
 ButtonWidget   = SubmitWidget( attrs={'class': 'nav_btn'} ) 
 FeatureWidget  = forms.TextInput( attrs={'size': '10', 'id': 'feature'}) 
 ImageWidget    = forms.TextInput( attrs={'size': '4'}) 
+FloatWidget    = forms.TextInput( attrs={'size': '1'}) 
 
 # generate zoom levels with user friendly numbers
 ZOOM_LEVELS  = "50 100 250 500 1000 2500 5000 10000 25000 50000 100000 250000 500000 1000000".split()
@@ -83,6 +84,7 @@ class FitForm( forms.Form ):
     use_smoothing = forms.BooleanField( initial=False, required=False )
     sigma = forms.FloatField( initial=20, max_value=1000, min_value=0, widget=ImageWidget )
     smoothing_func = forms.ChoiceField( initial='GK', choices=[ ('GK', 'Gaussian kernel') ] )
+    minimum_peak = forms.FloatField( initial=2, max_value=1000, min_value=0, widget=FloatWidget )
 
 FIT_DEFAULTS = get_defaults( FitForm() )
 
@@ -96,7 +98,6 @@ class PeakForm( forms.Form ):
     """
     use_predictor = forms.BooleanField( initial=False, required=False )
     feature_width = forms.IntegerField( initial=147, max_value=2000, min_value=0, widget=ImageWidget )
-    minimum_peak = forms.FloatField( initial=2, max_value=1000, min_value=0, widget=ImageWidget )
     pred_func = forms.ChoiceField( initial='FIX', choices=[ ('FIX', 'Fixed width'), ('TRS', 'Above threshold'), ('ALL', 'All maxima') ] )
 
 PEAK_DEFAULTS = get_defaults( PeakForm() )

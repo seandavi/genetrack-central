@@ -22,6 +22,9 @@ class Params(object):
     def update(self, data):
         self.__dict__.update(data)
 
+    def __getitem__(self, key):
+        return self.__dict__[key]
+
     def __repr__(self):
         return 'Params: %s' % self.__dict__
 

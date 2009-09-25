@@ -170,7 +170,7 @@ $(document).ready(function(){
     </div>
 </div>
 
-<div class="span-11">
+<div class="span-13">
     
     <fieldset>
         <legend>Smoothing</legend>
@@ -179,13 +179,14 @@ $(document).ready(function(){
             <label>Use: </label>{{forms.fitting.use_smoothing}}
             <label>Sigma: </label>{{forms.fitting.sigma}}
             <label>Function: </label>{{forms.fitting.smoothing_func}}
+            <label>Threshold: </label>{{forms.fitting.minimum_peak}}
         </div>
 
     </fieldset>
 
 </div>
 
-<div class="span-13 last">
+<div class="span-11 last">
     
      <fieldset>
         <legend>Peak predictions</legend>
@@ -195,7 +196,7 @@ $(document).ready(function(){
                 <label>Use: </label>{{forms.peaks.use_predictor}}
                 <label>Width: </label>{{forms.peaks.feature_width}}
                 <label>Function: </label>{{forms.peaks.pred_func}}
-                <label>Threshold: </label>{{forms.peaks.minimum_peak}}
+                
             </div>
         </div>
         <div></div>

@@ -45,31 +45,6 @@ def dataview_populate(json, index, params):
 
     return json
 
-def dataview_trackdef(params):
-    """
-    Returns the track specification based on parameters
-    """
-    
-    lines = [
-        # the default line that is always here
-        "color=BLACK; style=BAR; data=1; h=400; ylabel=Read count; legend=Reads; bpad=1"
-    ]
-    
-    if params.use_smoothing and params.sigma > 0:
-        # fitting is on
-        lines.append(
-            "color=PURPLE; style=FIT_LINE; lw=2; data=1; target=last; newaxis=0; ylabel=Cumulative sum; legend=Smoothed; color2=PURPLE 50%%; threshold=%f" % params.minimum_peak
-        )
-
-    if params.use_predictor and params.sigma > 0:
-        # fitting is on
-        lines.append(
-            "color=PURPLE 10%; style=SEGMENT; data=1; bpad=1; legend=Prediction;"
-        )
-
-    return "\n".join(lines)
-
-
 def dataview_multiplot(index, params, debug=False):
     "Generates a  dataview based on data id"
 
@@ -77,13 +52,14 @@ def dataview_multiplot(index, params, debug=False):
     timer = util.Timer()
     
     # create the track definition
-    text = dataview_trackdef(params)
+    text = browserutils.default_tracks(params)
+    text = text % params
 
     # parse the track definition into a json
     json = parsing.parse(text)
     
     # populates the json datafields with actual data
-    json = dataview_populate(json=json, index=index, params=params)
+    json = browserutils.index_populate(json=json, index=index, params=params)
 
     # timing the query lenght
     query_elapsed = timer.stop()
@@ -97,40 +73,6 @@ def dataview_multiplot(index, params, debug=False):
     print draw_elapsed
     
     return multi
-
-def extract_parameters(forms):
-    "Extracts search parameters from the forms"
-
-    params = html.Params()
-    params.update( formspec.ALL_DEFAULTS )
-    for form in (forms.search, forms.fitting, forms.peaks):
-        if form.is_valid():
-            params.update( form.cleaned_data )
-    
-    # now add the start and end regions
-    center = int(params.feature)
-    zoom_value = int( params.zoom_value )
-    
-    # the viewport is different from the size of the image
-    # the visible region has to cover the zoom level
-    zoom_factor = float(params.image_width)/params.viewport_width
-    zoom_value *= zoom_factor
-
-    # start and end based on zoom levels
-    params.start = center - zoom_value/2
-    params.end   = center + zoom_value/2
-
-    # needs to be scaled later
-    fullrange = (params.end - params.start)
-
-    # what range does a pixel correspond to
-    params.pixelscale  =  float(fullrange) / params.image_width
-
-    # this padding is empirical, 
-    # todo generate automatically
-    params.actual_size = params.image_width + 120
-
-    return params
 
 #@login_required
 def data_view(request, did):
@@ -160,7 +102,7 @@ def data_view(request, did):
     forms.peaks   = formspec.PeakForm( incoming )
 
     # extract the search parameters
-    params = extract_parameters(forms=forms)
+    params = browserutils.parse_parameters(forms=forms, defaults=formspec.ALL_DEFAULTS)
 
     # creates the multiplot
     multi = dataview_multiplot(index=index, params=params, debug=False)

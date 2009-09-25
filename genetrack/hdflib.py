@@ -240,7 +240,7 @@ class PositionalData(object):
         iend   = bisect.bisect_left( column, end  )
         return istart, iend
 
-    def query(self, label, start, end, pad=0 ):
+    def query(self, label, start, end, pad=0, aslist=False ):
         """
         Returns data that spans star to end as a class 
         with attributes for idx, fwd, rev and val
@@ -254,6 +254,11 @@ class PositionalData(object):
         fwd = table.cols.fwd[istart:iend:step]
         rev = table.cols.rev[istart:iend:step]
         val = table.cols.val[istart:iend:step]
+        
+        # sometimes we need all return values to belists
+        if aslist:
+            idx, fwd, rev, val = map(list, (idx, fwd, rev, val))
+
         params = util.Params( idx=idx, fwd=fwd, rev=rev, val=val )
         return params
     

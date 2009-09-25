@@ -17,9 +17,9 @@ color=RED; style=BAR; data=8946; row=new;
 
 color=blue; style  =ORF; data= 34555; row=same
 
-;color=GOLD; style=ORF; data=15664;  arrow=10 ;     
+;color=GOLD; style=ORF; data=15664;  arrow=10; strand=- ;     
 
-data=1; style=COVERAGE; color=#DD0000 10%; topaxis=true
+data=1; style=AREA; color=#DD0000 10%; topaxis=true; strand=+
 
 """
 
