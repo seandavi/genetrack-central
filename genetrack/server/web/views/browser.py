@@ -2,6 +2,7 @@
 Track related views
 """
 import os, mimetypes, string
+import sys, binascii, hmac, hashlib
 from django.conf import settings
 from django import forms
 from genetrack.visual import builder
@@ -69,15 +70,12 @@ def dataview_multiplot(index, params, debug=False):
 
     # timing the query lenght
     draw_elapsed = timer.stop()
-
-    print draw_elapsed
     
     return multi
 
-#@login_required
+@login_required
 def data_view(request, did):
-    "Renders a simple view page"
-    global FORM_DEFAULTS
+    "Renders a simple data view page"
 
     # get the user information
     user = request.user
@@ -85,14 +83,49 @@ def data_view(request, did):
     # verify access rights
     data = authorize.get_data(user=user, did=did)
 
+    # get the data index 
+    index = data.index()
+    url = "/data/browser/%s/" % did
+    return browser(request=request, index=index, url=url)
+
+def validate_filename(request):
+    "Validates a filename"
+    encoded  = request.GET['filename']
+    hashkey  = request.GET['hashkey']
+    filename = binascii.unhexlify( encoded )
+
+    # validate filename
+    hashcheck = hmac.new( settings.GALAXY_TOOL_SECRET, filename, hashlib.sha1 ).hexdigest()
+    
+    if hashkey != hashcheck:
+        raise Exception('Unable to validate key!')
+
+    return filename, encoded, hashkey
+
+def galaxy(request):
+    """
+    Returns a data view based on a galaxy forward
+    """
+
+    # validates a filename
+    filename, encoded, hashkey = validate_filename(request)
+   
+    # access the data on the filesystem
+    index = hdflib.PositionalData(filename, nobuild=True)
+
+    url = "/galaxy/?filename=%s&hashkey=%s" % (encoded, hashkey)
+    return browser(request=request, index=index, url=url)
+
+
+def browser(request, index, url):
+    ""
+    global FORM_DEFAULTS
+
     # incoming parameters cast into a dictionary
     incoming = dict( request.POST.items() )
 
     # alters the incoming parameters based on user interaction
     incoming = browserutils.modify_incoming(incoming, FORM_DEFAULTS)
-
-    # get the data representation
-    index = data.index()
 
     # create the necessary forms
     forms  = html.Params()
@@ -121,7 +154,7 @@ def data_view(request, did):
     multi.save(image_path)
     params.image_name = image_name
 
-    return html.template( request=request, name='data-browse.html', forms=forms, data=data, params=params)
+    return html.template( request=request, name='data-browse.html', forms=forms, params=params, url=url)
 
 if __name__ == '__main__':
     from genetrack.server.web import models

@@ -3,6 +3,7 @@ Main url configuration
 """
 from django.conf.urls.defaults import *
 from django.conf import settings
+from genetrack.server.web.views import browser
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -24,7 +25,7 @@ urlpatterns = patterns('',
     (r'^todo/', 'genetrack.server.web.views.main.todo'),
 
     # placeholder for pages that are not yet completed
-    (r'^galaxy', 'genetrack.server.web.views.galaxy.index'),
+    (r'^galaxy', 'genetrack.server.web.views.browser.galaxy'),
 
     # project related urls
     (r'^project/',  include('genetrack.server.urls.project_urls')),

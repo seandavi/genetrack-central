@@ -38,7 +38,7 @@ that is substantially faster under Unix than Windows.
 """
 import os, sys, csv
 from itertools import *
-from genetrack import logger, conf, util
+from genetrack import logger, conf, util, hdflib
 
 def consolidate( inpname, outname, format):
     """
@@ -78,7 +78,7 @@ def consolidate( inpname, outname, format):
 
     fp.close()
 
-def transform(inpname, outname, format, shift=0,):
+def transform(inpname, outname, format, shift=0, index=False):
     """
     Transforms reads stored in bedfile to a genetrack input file.
     Requires at least 6 bed columns to access the strand.
@@ -175,18 +175,24 @@ def transform(inpname, outname, format, shift=0,):
     consolidate( sorted, outname, format=format)
     logger.debug("consolidate finished in %s" % timer.report() )
     logger.debug("output saved to '%s'" % outname)
-    logger.debug("full run finished in %s" % full.report() )
+    logger.debug("full conversion finished in %s" % full.report() )
 
     # attempting to cleanup the remaining files
     for name in (flat, sorted):
         logger.debug("removing temporary file '%s'" % name )
         os.remove(name)
 
+    # also runs the indexing on it
+    if index:
+        logger.debug("loading the index from '%s'" % outname)
+        result = hdflib.PositionalData(fname=outname, update=True)
+        logger.debug("indexing finished in %s" % timer.report() )
+
 def option_parser():
     "The option parser may be constructed in other tools invoking this script"
     import optparse
 
-    usage = "usage: %prog -i inputfile -o outputfile"
+    usage = "usage: %prog -i inputfile -o outputfile -f format"
 
     parser = optparse.OptionParser(usage=usage)
 
@@ -225,8 +231,9 @@ def option_parser():
         help="sets the verbosity (0, 1) (default=1)",
     )
 
-
-
+    parser.add_option("-x", "--index",
+        action="store_true", dest="index", default=False,
+        help="also creates an hdf index for the file")
 
     return parser
 
@@ -240,8 +247,9 @@ if __name__ == '__main__':
     options.format = options.format.upper()
 
     if options.format not in ('BED', 'GFF'):
+        sys.stdout = sys.stderr
         parser.print_help()
-        sys.exit()
+        sys.exit(-1)
 
     # set verbosity
     if options.verbosity > 0:
@@ -250,6 +258,7 @@ if __name__ == '__main__':
     # missing file names
     if not (options.inpname and options.outname and options.format):
         parser.print_help()
+        sys.exit(-1)
     else:
         transform(inpname=options.inpname, outname=options.outname,\
-            format=options.format, shift=options.shift)
+            format=options.format, shift=options.shift, index=options.index)

@@ -23,28 +23,32 @@ TEST_DATA_DIR = path_join( TEST_DIR, 'testdata' )
 TEMP_DATA_DIR = path_join( TEST_DIR, 'tempdir' )
 COVERAGE_DIR = path_join( TEST_DIR, 'coverage' )
 
-def module_check():
+
+def module_check(names, loglevel, exit=True):
     "Verifies that required modules are present"
 
     # required modules
     errflag = False
-    names = ( 'numpy', 'tables', 'django', 'pychartdir', 'Image' )
+    
 
+    loglevel = loglevel
     for name in names:
         try:
             __import__(name)
         except ImportError, exc:
             if not errflag:
-                logger.error('Software requirements not met!')
-                logger.error('See http://genetrack.bx.psu.edu for installation instructions')
-                logger.error('-' * 20)
+                loglevel('Software requirements not met!')
+                loglevel('See http://genetrack.bx.psu.edu for installation instructions')
+                loglevel('-' * 20)
                 errflag = True
-            logger.error('missing module: %s' % name)
-
+            loglevel('missing module: %s' % name)
+    
     # missing dependecies
-    if errflag:
+    if exit and errflag:
         sys.exit()
 
+
+def version_check():
     # verify some of the versions
     module_versions = [ ('tables', '2.0'), ('numpy', '1.1') ]
     for name, version in module_versions:
@@ -57,7 +61,12 @@ def module_check():
             sys.exit()
 
 #perform the module check    
-module_check()
+required = ( 'numpy', 'tables', )
+module_check( required, loglevel=logger.error )
+version_check()
+
+optional = ( 'django', 'pychartdir', 'Image' )
+module_check( optional, exit=False, loglevel=logger.warn )
 
 try:
     # monkeypath pytables to disable the Natural Name warning
