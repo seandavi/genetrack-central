@@ -121,8 +121,8 @@ if __name__ == '__main__':
     logger.disable(options.verbosity)
 
     # override as text
-    options.inpname = conf.testdata('short-good-input.gtrack')
-    options.outname = conf.tempdata('predictions-short-good-input.bed')
+    options.inpname = conf.testdata('test-hdflib-input.gtrack')
+    options.outname = conf.testdata('predictions.bed')
 
     # missing input file name
     if not options.inpname and not options.outname:

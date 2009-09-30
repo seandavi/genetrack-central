@@ -25,7 +25,10 @@ fi
 #
 export GENETRACK_SERVER_HOME=$GENETRACK_HOME/home
 echo GENETRACK_SERVER_HOME=$GENETRACK_SERVER_HOME
- 
+
+export HOSTNAME=`hostname -f`
+export PORT=8080
+
 export DJANGO_ADMIN=$GENETRACK_HOME/genetrack/server/manage.py
 export TEST_DIR=$GENETRACK_HOME/tests
 #
@@ -125,7 +128,7 @@ if [ "$1" = "run" ]; then
     echo '*** Running webserver ***'
     echo ''
     $PYTHON_EXE $DJANGO_ADMIN syncdb --noinput --settings=$DJANGO_SETTINGS_MODULE
-    $PYTHON_EXE $DJANGO_ADMIN runserver 127.0.0.1:8080 --settings=$DJANGO_SETTINGS_MODULE
+    $PYTHON_EXE $DJANGO_ADMIN runserver $HOSTNAME:$PORT --settings=$DJANGO_SETTINGS_MODULE
 fi
 
 if [ "$1" = "djangotest" ]; then 

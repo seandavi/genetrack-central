@@ -99,8 +99,7 @@ if __name__ == '__main__':
     options, args = parser.parse_args()
 
     # set verbosity
-    if options.verbosity > 0:
-        logger.disable(None)
+    logger.disable(options.verbosity)
 
     # missing file names
     if not options.inpname:

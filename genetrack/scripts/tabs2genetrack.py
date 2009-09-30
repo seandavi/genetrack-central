@@ -165,6 +165,8 @@ def transform(inpname, outname, format, shift=0, index=False):
     linet = util.commify(linec)
     logger.debug("parsing %s lines finished in %s" % (linet, timer.report()))
 
+    # if it is producing coverage then it will expand reads into full intervaals
+
     # now let the sorting commence
     cmd = "sort %s > %s" % (flat, sorted)
     logger.debug("sorting into '%s'" % sorted)
@@ -251,9 +253,7 @@ if __name__ == '__main__':
         parser.print_help()
         sys.exit(-1)
 
-    # set verbosity
-    if options.verbosity > 0:
-        logger.disable(None)
+    logger.disable(options.verbosity)
 
     # missing file names
     if not (options.inpname and options.outname and options.format):
