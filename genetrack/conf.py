@@ -65,8 +65,10 @@ required = ( 'numpy', 'tables', )
 module_check( required, loglevel=logger.error )
 version_check()
 
-optional = ( 'django', 'pychartdir', 'Image' )
-module_check( optional, exit=False, loglevel=logger.warn )
+def check_server():
+    "Checks for modules that are required to run the server"
+    optional = ( 'django', 'pychartdir', 'Image' )
+    module_check( optional, loglevel=logger.error )
 
 try:
     # monkeypath pytables to disable the Natural Name warning

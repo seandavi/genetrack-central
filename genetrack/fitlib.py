@@ -39,8 +39,9 @@ def gaussian_smoothing(x, y, sigma=20, epsilon=0.1 ):
 
     Returns a tuple of with the new x, and y coordinates.
     """
-    if not x:
+    if len(x)==0:
         return x, y
+
     # this is a joyfully simple, marvelously elegant and superfast solution 
     # that's possible thanks to numpy. I bow before thy greatness, NumPY!!!
 

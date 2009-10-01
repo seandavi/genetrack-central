@@ -22,29 +22,77 @@ Run the script with no parameters to see the options that it takes.
 
 """
 import os, sys, csv
-from genetrack import logger, conf, util, hdflib
+from genetrack import logger, util, hdflib, fitlib
+
+TWOSTRAND = "two"
+
+commify = util.commify
+
+def output(stream, peaks, chrom, w=73, strand='+', ):
+    "Outputs peaks to a stream"
+
+    logger.debug('writing %s peaks on strand %s' % (commify(len(peaks)), strand))
+    for mid, value in peaks:
+        start, end = mid - w, mid + w
+        stream.write("%s\t%d\t%d\tp%s\t%f\t%s\n" % (chrom, start, end, mid, value, strand))
 
 def predict(inpname, outname, options):
     """
     Generate the peak predictions on a genome wide scale
     """
+    if options.strand == TWOSTRAND:
+            logger.info('operating in twostrand mode')
+
     index = hdflib.PositionalData(inpname, nobuild=True)
     
+    fp = file(outname, 'wt')
+
     for label in index.labels:
         table = index.table(label)
-        size = len(table)
-        info = util.commify(size)
+        size  = table.cols.idx[-1]
+        info  = util.commify(size)
         logger.info('predicting on %s of total size %s' % (label, info))
         lo = 0
         hi = min( (size, options.maxsize) )
         
+        
+
         while True:
             if lo >= size:
                 break
-            perc = '%4.1f%%' % (100.0*hi/size)
+            perc = '%.1f%%' % (100.0*lo/size)
             logger.info('processing %s %s:%s (%s)' % (label, lo, hi, perc))
+            
+            # get the data
+            res = index.query(start=lo, end=hi, label=label)
+
+            
+            # exclusion zone
+            w = options.exclude/2
+
+            def predict(x, y):
+                fx, fy = fitlib.gaussian_smoothing(x=x, y=y, sigma=options.sigma, epsilon=options.level )
+                peaks = fitlib.detect_peaks(x=fx, y=fy )
+                if options.mode != 'all':
+                    peaks = fitlib.select_peaks(peaks=peaks, exclusion=options.exclude, threshold=options.level)
+                return peaks
+
+            if options.strand == TWOSTRAND:
+                # operates in two strand mode
+                for yval, strand in [ (res.fwd, '+'), (res.rev, '-') ]:
+                    logger.debug('processing strand %s' % strand)
+                    peaks = predict(x=res.idx, y=yval)
+                    output(stream=fp, peaks=peaks, chrom=label, w=w, strand=strand)
+            else:
+                # combine strands
+                peaks = predict(x=res.idx, y=res.val)
+                output(stream=fp, peaks=peaks, chrom=label, w=w, strand='+')
+
+            # switching to a higher interval
             lo = hi
             hi += options.maxsize
+        
+    fp.close()
 
 def option_parser():
     "The option parser may be constructed in other tools invoking this script"
@@ -89,6 +137,13 @@ def option_parser():
         help="the exclusion zone",
     )
 
+    # the exclusion zone
+    parser.add_option(
+        '--strand', action="store", 
+        dest="strand", type="str", default="ALL", 
+        help="strand",
+    )
+
     # threshold
     parser.add_option(
         '--level', action="store", 
@@ -108,6 +163,13 @@ def option_parser():
         dest="maxsize", type="int", default=10**7, 
         help="the size of the largest internal array allocated (default=10 million)",
     )
+
+    parser.add_option(
+        '--test', action="store_true", 
+        dest="test", default=False, 
+        help="demo mode used in testing",
+    )
+
     return parser
 
 
@@ -120,12 +182,19 @@ if __name__ == '__main__':
 
     logger.disable(options.verbosity)
 
-    # override as text
-    options.inpname = conf.testdata('test-hdflib-input.gtrack')
-    options.outname = conf.testdata('predictions.bed')
+    from genetrack import conf
+
+    # trigger test mode
+    if options.test:
+        options.inpname = conf.testdata('test-hdflib-input.gtrack')
+        options.outname = conf.testdata('predictions.bed')
 
     # missing input file name
     if not options.inpname and not options.outname:
         parser.print_help()
     else:
+        print 'Sigma = %s' % options.sigma
+        print 'Minimum peak = %s' % options.level
+        print 'Peak-to-peak = %s' % options.exclude
+
         predict(options.inpname, options.outname, options)
