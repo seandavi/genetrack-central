@@ -1,7 +1,7 @@
 """
 Track related views
 """
-import os, mimetypes, string
+import os, mimetypes, string, urllib
 import sys, binascii, hmac, hashlib
 from django.conf import settings
 from django import forms
@@ -92,6 +92,7 @@ def validate_filename(request):
     "Validates a filename"
     encoded  = request.GET['filename']
     hashkey  = request.GET['hashkey']
+    dataid   = request.GET['id']
     filename = binascii.unhexlify( encoded )
 
     # validate filename
@@ -100,7 +101,7 @@ def validate_filename(request):
     if hashkey != hashcheck:
         raise Exception('Unable to validate key!')
 
-    return filename, encoded, hashkey
+    return filename, encoded, hashkey, dataid
 
 def galaxy(request):
     """
@@ -108,16 +109,16 @@ def galaxy(request):
     """
 
     # validates a filename
-    filename, encoded, hashkey = validate_filename(request)
+    filename, encoded, hashkey, dataid = validate_filename(request)
    
     # access the data on the filesystem
     index = hdflib.PositionalData(filename, nobuild=True)
 
-    url = "/galaxy/?filename=%s&hashkey=%s" % (encoded, hashkey)
-    return browser(request=request, index=index, url=url)
+    url = "/galaxy/?filename=%s&hashkey=%s&id=%s" % (encoded, hashkey, dataid)
+    return browser(request=request, index=index, url=url, dataid=dataid)
 
 
-def browser(request, index, url):
+def browser(request, index, url, dataid=0):
     ""
     global FORM_DEFAULTS
 
@@ -137,6 +138,30 @@ def browser(request, index, url):
     # extract the search parameters
     params = browserutils.parse_parameters(forms=forms, defaults=formspec.ALL_DEFAULTS)
 
+    # run the tool or return an image
+    if 'runtool' in incoming:
+        # need to run the tool
+        # form the url with dictionary substitution
+        
+        # TODO make parameters names consistent across Galaxy, GeneTrack and script!
+        strand = 'all' if params.strand=='ALL' else 'two'
+        mode = 'nolap' if params.smoothing_func =='GK' else 'all'
+
+        urlparams = dict(
+            strand = strand,
+            exclusion=params.feature_width,
+            level=int(params.minimum_peak),
+            mode=mode,
+            sigma=int(params.sigma),
+            input=dataid,
+            method='gauss',
+            runtool_btn="Execute"
+        )
+
+        url = "%s&%s" % (settings.GALAXY_TOOL_URL, urllib.urlencode( urlparams ))
+
+        return html.redirect(url)
+       
     # creates the multiplot
     multi = dataview_multiplot(index=index, params=params, debug=False)
     params.image_height = multi.h
