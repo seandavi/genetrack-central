@@ -2,7 +2,7 @@
 GeneTrack documentation
 =======================
 
-Browse the Python API `class documentation <epydoc/index.html>`_ 
+Browse the Python API `class documentation <epydoc/index.html>`_
 
 Contents:
 
@@ -15,7 +15,6 @@ Contents:
     tutorials/tutorial-index
     people
     license
-
 
 * :ref:`genindex`
 * :ref:`modindex`

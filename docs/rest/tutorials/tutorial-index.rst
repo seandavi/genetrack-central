@@ -4,5 +4,5 @@ Tutorials
 .. toctree::
     :maxdepth: 3
 
-    ../installation
-    galaxy-tutorial
+    galaxy-interop
+    galaxy-tools
