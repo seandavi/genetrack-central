@@ -147,7 +147,7 @@ echo.
 echo *** Starting the test server ***
 echo.
 %PYTHON_EXE% %DJANGO_MANAGER% syncdb --noinput --settings=%DJANGO_SETTINGS_MODULE%
-%PYTHON_EXE% %DJANGO_MANAGER% runserver 127.0.0.1:8080 --settings=%DJANGO_SETTINGS_MODULE%
+%PYTHON_EXE% %DJANGO_MANAGER% runserver 127.0.0.1:8000 --settings=%DJANGO_SETTINGS_MODULE%
 goto :eof
 
 :test

@@ -35,7 +35,8 @@ __version__ = '2.0.0-beta-1'
 if sys.version_info < (2, 5):
     error( 'genetrack requires python 2.5 or higher' )
 
-from hdflib import PositionalData
+from genetrack.hdflib import PositionalData
 
-
+if __name__ == '__main__':
+    print '\n*** GeneTrack import successful ***'
 

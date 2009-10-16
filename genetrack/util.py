@@ -3,10 +3,12 @@ Utility functions.
 
 
 """
-import roman
 import logger, conf
 import os, sys, random, hashlib, re, string, csv, gc
 import tempfile, os, random, glob, time
+
+# dealing with roman numerals for chromosomes
+from genetrack import roman
 
 def path_join(*args):
     "Builds absolute path"
@@ -24,6 +26,10 @@ def chromosome_remap(text):
     ['chr1', 'chr6', 'chr9', 'chr2', 'chr12', 'chr5']
     >>>
     """
+
+    if not text.startswith('chr'):
+        return text
+
     text = text.replace('chrom','')
     text = text.replace('chr','')
     
