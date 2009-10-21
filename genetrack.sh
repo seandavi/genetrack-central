@@ -30,6 +30,7 @@ echo GENETRACK_SERVER_HOME=$GENETRACK_SERVER_HOME
 
 if [ -z "$GENETRACK_HOSTNAME" ]; then
     export HOSTNAME=`hostname -f`
+    export PORT=8080
     echo "*** GENETRACK_HOSTNAME variable not found setting it automatically"
 fi
 
@@ -137,7 +138,7 @@ if [ "$1" = "run" ]; then
     echo "*** Running the webserver on $HOSTNAME"
     echo ''
     $PYTHON_EXE $DJANGO_ADMIN syncdb --noinput --settings=$DJANGO_SETTINGS_MODULE
-    $PYTHON_EXE $DJANGO_ADMIN runserver $HOSTNAME --settings=$DJANGO_SETTINGS_MODULE
+    $PYTHON_EXE $DJANGO_ADMIN runserver $HOSTNAME:$PORT --settings=$DJANGO_SETTINGS_MODULE
 fi
 
 if [ "$1" = "djangotest" ]; then 
