@@ -78,7 +78,7 @@ then install them according to the following instructions:
 #. Install Python 2.5 with ``python-2.5.4.msi``.
 #. Install NumPy v1.3.0 with ``numpy-1.3.0-win32-superpack-python2.5.exe``.
 #. Install PyTable v2.1.1 with ``tables-2.1.1.win32-py2.5.exe``.
-#. Install the Python Imaging Library with ``tables-2.1.1.win32-py2.5.exe``.
+#. Install the Python Imaging Library with ``PIL-1.1.6.win32-py2.5.exe``.
 #. Move the ``django`` folder into the ``library`` folder of Genetrack
 #. Move the ``chartdirector`` folder into the ``library`` folder of Genetrack
 
