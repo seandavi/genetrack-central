@@ -18,7 +18,9 @@ echo 'PYTHON='$PYTHON_EXE
 #
 if [ -z "$GENETRACK_HOME" ]; then
    export GENETRACK_HOME=`dirname $0`
+   echo "*** GENETRACK_HOME variable not found setting it automatically"
 fi
+echo GENETRACK_HOME=$GENETRACK_HOME
 
 #
 # The default server home directory
@@ -26,15 +28,22 @@ fi
 export GENETRACK_SERVER_HOME=$GENETRACK_HOME/home
 echo GENETRACK_SERVER_HOME=$GENETRACK_SERVER_HOME
 
-export HOSTNAME=`hostname -f`
-export PORT=8080
+if [ -z "$GENETRACK_HOSTNAME" ]; then
+	export HOSTNAME=`hostname -f`
+	echo "*** GENETRACK_HOSTNAME variable not found setting it automatically"
+fi
 
 export DJANGO_ADMIN=$GENETRACK_HOME/genetrack/server/manage.py
 export TEST_DIR=$GENETRACK_HOME/tests
 #
 # This is only required when running it with django_admin.py
 #
-export DJANGO_SETTINGS_MODULE=server_settings
+
+if [ -z "$DJANGO_SETTINGS_MODULE" ]; then
+   export DJANGO_SETTINGS_MODULE=server_settings
+   echo "DJANGO_SETTINGS_MODULE variable not found setting it automatically"
+fi
+
 echo DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 echo '*********************'
  
@@ -128,7 +137,7 @@ if [ "$1" = "run" ]; then
     echo '*** Running webserver ***'
     echo ''
     $PYTHON_EXE $DJANGO_ADMIN syncdb --noinput --settings=$DJANGO_SETTINGS_MODULE
-    $PYTHON_EXE $DJANGO_ADMIN runserver $HOSTNAME:$PORT --settings=$DJANGO_SETTINGS_MODULE
+    $PYTHON_EXE $DJANGO_ADMIN runserver $HOSTNAME --settings=$DJANGO_SETTINGS_MODULE
 fi
 
 if [ "$1" = "djangotest" ]; then 
