@@ -29,8 +29,8 @@ export GENETRACK_SERVER_HOME=$GENETRACK_HOME/home
 echo GENETRACK_SERVER_HOME=$GENETRACK_SERVER_HOME
 
 if [ -z "$GENETRACK_HOSTNAME" ]; then
-	export HOSTNAME=`hostname -f`
-	echo "*** GENETRACK_HOSTNAME variable not found setting it automatically"
+    export HOSTNAME=`hostname -f`
+    echo "*** GENETRACK_HOSTNAME variable not found setting it automatically"
 fi
 
 export DJANGO_ADMIN=$GENETRACK_HOME/genetrack/server/manage.py
@@ -134,7 +134,7 @@ fi
 
 if [ "$1" = "run" ]; then 
     echo ''
-    echo '*** Running webserver ***'
+    echo "*** Running the webserver on $HOSTNAME"
     echo ''
     $PYTHON_EXE $DJANGO_ADMIN syncdb --noinput --settings=$DJANGO_SETTINGS_MODULE
     $PYTHON_EXE $DJANGO_ADMIN runserver $HOSTNAME --settings=$DJANGO_SETTINGS_MODULE
