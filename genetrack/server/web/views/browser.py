@@ -93,6 +93,7 @@ def validate_filename(request):
     encoded  = request.GET['filename']
     hashkey  = request.GET['hashkey']
     dataid   = request.GET['id']
+    base_url = request.GET['base_url']
     filename = binascii.unhexlify( encoded )
 
     # validate filename
@@ -101,7 +102,7 @@ def validate_filename(request):
     if hashkey != hashcheck:
         raise Exception('Unable to validate key!')
 
-    return filename, encoded, hashkey, dataid
+    return filename, encoded, hashkey, dataid, base_url
 
 def galaxy(request):
     """
@@ -109,16 +110,16 @@ def galaxy(request):
     """
 
     # validates a filename
-    filename, encoded, hashkey, dataid = validate_filename(request)
+    filename, encoded, hashkey, dataid, base_url = validate_filename(request)
    
     # access the data on the filesystem
     index = hdflib.PositionalData(filename, nobuild=True)
+    #url = urlib.urlencode()
+    url = "/galaxy/?filename=%s&hashkey=%s&id=%s&base_url=%s" % (encoded, hashkey, dataid, base_url)
+    return browser(request=request, index=index, url=url, dataid=dataid, base_url=base_url)
 
-    url = "/galaxy/?filename=%s&hashkey=%s&id=%s" % (encoded, hashkey, dataid)
-    return browser(request=request, index=index, url=url, dataid=dataid)
 
-
-def browser(request, index, url, dataid=0):
+def browser(request, index, url, base_url, dataid=0):
     ""
     global FORM_DEFAULTS
 
@@ -158,7 +159,7 @@ def browser(request, index, url, dataid=0):
             runtool_btn="Execute"
         )
 
-        url = "%s&%s" % (settings.GALAXY_TOOL_URL, urllib.urlencode( urlparams ))
+        url = "%s/%s&%s" % (base_url, settings.GALAXY_TOOL_URL, urllib.urlencode( urlparams ))
 
         return html.redirect(url)
        

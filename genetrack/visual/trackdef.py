@@ -9,6 +9,7 @@ from genetrack import logger
 from StringIO import StringIO
 
 import pychartdir
+
 # load and set the chartdirector license
 CHARTDIRECTOR_LICENSE = os.getenv('CHARTDIRECTOR_LICENSE', '')
 if CHARTDIRECTOR_LICENSE:
