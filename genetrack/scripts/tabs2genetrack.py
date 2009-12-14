@@ -78,7 +78,7 @@ def consolidate( inpname, outname, format):
 
     fp.close()
 
-def transform(inpname, outname, format, shift=0, index=False):
+def transform(inpname, outname, format, shift=0, index=False, options=None):
     """
     Transforms reads stored in bedfile to a genetrack input file.
     Requires at least 6 bed columns to access the strand.
@@ -270,4 +270,4 @@ if __name__ == '__main__':
         sys.exit(-1)
     else:
         transform(inpname=options.inpname, outname=options.outname,\
-            format=options.format, shift=options.shift, index=options.index)
+            format=options.format, shift=options.shift, index=options.index, options=options)
