@@ -113,7 +113,13 @@ def galaxy(request):
     filename, encoded, hashkey, dataid, galaxy_url = validate_filename(request)
    
     # access the data on the filesystem
-    index = hdflib.PositionalData(filename, nobuild=True)
+    # extract the work directory from the filename
+    path, fname = os.path.split(filename)
+    name, ext = os.path.splitext(fname)
+    workdir = conf.path_join(path, name+"_files")
+    print workdir
+    
+    index = hdflib.PositionalData(filename, nobuild=True, workdir=workdir)
     #url = urlib.urlencode()
     url = "/galaxy/?filename=%s&hashkey=%s&id=%s&GALAXY_URL=%s" % (encoded, hashkey, dataid, galaxy_url)
     return browser(request=request, index=index, url=url, dataid=dataid, galaxy_url=galaxy_url)

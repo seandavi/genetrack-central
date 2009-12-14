@@ -43,7 +43,7 @@ def predict(inpname, outname, options):
     if options.strand == TWOSTRAND:
             logger.info('operating in twostrand mode')
 
-    index = hdflib.PositionalData(inpname, nobuild=True)
+    index = hdflib.PositionalData(inpname, nobuild=True, workdir=options.workdir)
     
     fp = file(outname, 'wt')
 
@@ -168,6 +168,12 @@ def option_parser():
         '--test', action="store_true", 
         dest="test", default=False, 
         help="demo mode used in testing",
+    )
+
+    parser.add_option(
+        '-w', '--workdir', action="store", 
+        dest="workdir", type='str', default=None,
+        help="work directory (optional)"
     )
 
     return parser

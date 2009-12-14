@@ -187,7 +187,10 @@ def transform(inpname, outname, format, shift=0, index=False):
     # also runs the indexing on it
     if index:
         logger.debug("loading the index from '%s'" % outname)
-        result = hdflib.PositionalData(fname=outname, update=True)
+        # create the work directory
+        if options.workdir and not os.path.isdir(options.workdir):
+            os.mkdir(options.workdir)
+        result = hdflib.PositionalData(fname=outname, update=True, workdir=options.workdir)
         logger.debug("indexing finished in %s" % timer.report() )
 
 def option_parser():
@@ -236,6 +239,12 @@ def option_parser():
     parser.add_option("-x", "--index",
         action="store_true", dest="index", default=False,
         help="also creates an hdf index for the file")
+
+    parser.add_option(
+        '-w', '--workdir', action="store", 
+        dest="workdir", type='str', default=None,
+        help="work directory (optional)"
+    )
 
     return parser
 
