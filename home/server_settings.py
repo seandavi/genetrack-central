@@ -68,7 +68,7 @@ SECRET_KEY = file(secret_fname).read().strip()
 
 # tool secret for GALAXY integration, must match the value
 # for the key tool_secret located in universe_wsgi.ini
-GALAXY_TOOL_SECRET ="changethisinproduction"
+GALAXY_TOOL_SECRET ="1"
 GALAXY_TOOL_URL = "tool_runner?tool_id=predict2genetrack"
 
 # Local time zone for this installation. Choices can be found here:
