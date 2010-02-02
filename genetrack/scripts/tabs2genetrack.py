@@ -36,7 +36,7 @@ when the process is complete.
 that is substantially faster under Unix than Windows.
 
 """
-import os, sys, csv
+import os, sys, csv, shutil
 from itertools import *
 from genetrack import logger, conf, util, hdflib
 
@@ -192,6 +192,15 @@ def transform(inpname, outname, format, shift=0, index=False, options=None):
             os.mkdir(options.workdir)
         result = hdflib.PositionalData(fname=outname, update=True, workdir=options.workdir)
         logger.debug("indexing finished in %s" % timer.report() )
+        result.close()
+
+        logger.debug("moving index to main output '%s'" % outname )
+
+        # remove the intermediate file
+        os.remove(outname)
+
+        # move the index as the output file
+        shutil.move(result.index, outname)
 
 def option_parser():
     "The option parser may be constructed in other tools invoking this script"

@@ -119,7 +119,7 @@ def galaxy(request):
     workdir = conf.path_join(path, name+"_files")
     print workdir
     
-    index = hdflib.PositionalData(filename, nobuild=True, workdir=workdir)
+    index = hdflib.PositionalData(index=filename, nobuild=True, workdir=workdir)
     #url = urlib.urlencode()
     url = "/galaxy/?filename=%s&hashkey=%s&id=%s&GALAXY_URL=%s" % (encoded, hashkey, dataid, galaxy_url)
     return browser(request=request, index=index, url=url, dataid=dataid, galaxy_url=galaxy_url)

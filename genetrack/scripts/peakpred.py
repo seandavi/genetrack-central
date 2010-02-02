@@ -34,7 +34,7 @@ def output(stream, peaks, chrom, w=73, strand='+', ):
     logger.debug('writing %s peaks on strand %s' % (commify(len(peaks)), strand))
     for mid, value in peaks:
         start, end = mid - w, mid + w
-        stream.write("%s\t%d\t%d\tp%s\t%f\t%s\n" % (chrom, start, end, mid, value, strand))
+        stream.write("%s\t%d\t%d\t.\t%f\t%s\n" % (chrom, start, end, value, strand))
 
 def predict(inpname, outname, options):
     """
@@ -43,8 +43,11 @@ def predict(inpname, outname, options):
     if options.strand == TWOSTRAND:
             logger.info('operating in twostrand mode')
 
-    index = hdflib.PositionalData(inpname, nobuild=True, workdir=options.workdir)
-    
+    if options.index:
+        index = hdflib.PositionalData(fname='', index=inpname, nobuild=True, workdir=options.workdir)
+    else:
+        index = hdflib.PositionalData(fname=inpname, nobuild=True, workdir=options.workdir)
+
     fp = file(outname, 'wt')
 
     for label in index.labels:
@@ -54,8 +57,6 @@ def predict(inpname, outname, options):
         logger.info('predicting on %s of total size %s' % (label, info))
         lo = 0
         hi = min( (size, options.maxsize) )
-        
-        
 
         while True:
             if lo >= size:
@@ -174,6 +175,12 @@ def option_parser():
         '-w', '--workdir', action="store", 
         dest="workdir", type='str', default=None,
         help="work directory (optional)"
+    )
+
+    parser.add_option(
+        '-x', '--index', action="store_true", 
+        dest="index", default=False,
+        help="treat input file as binary index"
     )
 
     return parser
