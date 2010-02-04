@@ -165,8 +165,7 @@ def browser(request, index, url, galaxy_url, dataid=0):
             runtool_btn="Execute"
         )
 
-        url = "%s/%s&%s" % (galaxy_url, settings.GALAXY_TOOL_URL, urllib.urlencode( urlparams ))
-
+        url = "%s&%s" % (galaxy_url, urllib.urlencode( urlparams ))
         return html.redirect(url)
        
     # creates the multiplot
