@@ -92,7 +92,7 @@ def validate_filename(request):
     "Validates a filename"
     encoded  = request.GET['filename']
     hashkey  = request.GET['hashkey']
-    dataid   = request.GET['id']
+    dataid   = request.GET['input']
     galaxy_url = request.GET['GALAXY_URL']
     filename = binascii.unhexlify( encoded )
 
@@ -121,7 +121,7 @@ def galaxy(request):
     
     index = hdflib.PositionalData(fname='', index=filename, nobuild=True, workdir=workdir)
     #url = urlib.urlencode()
-    url = "/galaxy/?filename=%s&hashkey=%s&id=%s&GALAXY_URL=%s" % (encoded, hashkey, dataid, galaxy_url)
+    url = "/galaxy/?filename=%s&hashkey=%s&input=%s&GALAXY_URL=%s" % (encoded, hashkey, dataid, galaxy_url)
     return browser(request=request, index=index, url=url, dataid=dataid, galaxy_url=galaxy_url)
 
 
